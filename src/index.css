@@ -1,0 +1,75 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Smooth transition when switching themes */
+html.dark {
+  color-scheme: dark;
+}
+
+body {
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* =========================================================================
+   GLOBAL SCROLLBAR HIDING (Preserves full scrolling functionality)
+   ========================================================================= */
+
+/* Chrome, Safari, Edge, Opera */
+*::-webkit-scrollbar,
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  background: transparent !important;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: none !important;
+}
+
+html,
+body {
+  scrollbar-width: none !important;
+}
+
+/* IE 10+ and legacy Edge */
+* {
+  -ms-overflow-style: none !important;
+}
+
+html,
+body {
+  -ms-overflow-style: none !important;
+}
+
+/* Utility class for explicit scrollbar-none targets */
+.scrollbar-none::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.scrollbar-none {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+/* =========================================================================
+   OFF-CANVAS SIDE DRAWER ANIMATIONS
+   ========================================================================= */
+@keyframes drawerSlideInLeft {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.animate-drawer-left {
+  animation: drawerSlideInLeft 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+

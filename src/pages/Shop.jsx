@@ -1,0 +1,417 @@
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import api from '../api/axios';
+import { ProductCard } from '../components/product/ProductCard';
+import {
+  SlidersHorizontal,
+  Search,
+  RotateCcw,
+  X,
+  Check,
+  Star,
+} from 'lucide-react';
+
+export const Shop = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [products, setProducts] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [productsError, setProductsError] = useState('');
+
+  // Filters state initialized from URL query params
+  const [keyword, setKeyword] = useState(searchParams.get('keyword') || '');
+  const [category, setCategory] = useState(searchParams.get('category') || 'All');
+  const [minPrice, setMinPrice] = useState(searchParams.get('minPrice') || '');
+  const [maxPrice, setMaxPrice] = useState(searchParams.get('maxPrice') || '');
+  const [rating, setRating] = useState(searchParams.get('rating') || '');
+  const [inStock, setInStock] = useState(searchParams.get('inStock') === 'true');
+  const [sort, setSort] = useState(searchParams.get('sort') || 'newest');
+
+  const [categoriesList, setCategoriesList] = useState([]);
+  const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+
+  useEffect(() => {
+    const urlCategory = searchParams.get('category');
+    const urlKeyword = searchParams.get('keyword');
+    if (urlCategory) setCategory(urlCategory);
+    if (urlKeyword !== null) setKeyword(urlKeyword);
+  }, [searchParams]);
+
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const { data } = await api.get('/products/categories');
+        const categories = Array.isArray(data)
+          ? data
+          : Array.isArray(data?.categories)
+            ? data.categories
+            : null;
+
+        if (!categories) {
+          throw new Error('Expected an array of product categories.');
+        }
+        setCategoriesList(categories);
+      } catch (err) {
+        console.error('Error fetching product categories:', err.message);
+      }
+    };
+    loadCategories();
+  }, []);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setLoading(true);
+      setProductsError('');
+      try {
+        const params = new URLSearchParams();
+        if (keyword) params.append('keyword', keyword);
+        if (category && category !== 'All') params.append('category', category);
+        if (minPrice) params.append('minPrice', minPrice);
+        if (maxPrice) params.append('maxPrice', maxPrice);
+        if (rating) params.append('rating', rating);
+        if (inStock) params.append('inStock', 'true');
+        if (sort) params.append('sort', sort);
+
+        const { data } = await api.get(`/products?${params.toString()}`);
+        const productList = Array.isArray(data)
+          ? data
+          : Array.isArray(data?.products)
+            ? data.products
+            : null;
+
+        if (!productList) {
+          throw new Error('Expected an array of products from the catalog API.');
+        }
+
+        setProducts(productList);
+        setTotal(Number.isFinite(data?.total) ? data.total : productList.length);
+      } catch (err) {
+        console.error('Error fetching products:', err.message);
+        setProducts([]);
+        setTotal(0);
+        setProductsError('The product catalog is temporarily unavailable. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, [keyword, category, minPrice, maxPrice, rating, inStock, sort]);
+
+  const handleResetFilters = () => {
+    setKeyword('');
+    setCategory('All');
+    setMinPrice('');
+    setMaxPrice('');
+    setRating('');
+    setInStock(false);
+    setSort('newest');
+    setSearchParams({});
+  };
+
+  return (
+    <div className="bg-white text-zinc-900 min-h-screen py-10">
+      <div className="max-w-[1560px] mx-auto px-3 sm:px-6 lg:px-8">
+        {/* Page Header */}
+        <div className="mb-6 border-b border-zinc-200 dark:border-slate-800 pb-5 flex flex-col md:flex-row justify-between items-start md:items-end gap-3">
+          <div>
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-amber-600 dark:text-amber-400">
+              Complete Marketplace
+            </span>
+            <h1 className="text-2xl sm:text-3xl font-black text-zinc-950 dark:text-white mt-0.5">
+              Curated Catalog
+            </h1>
+            <p className="text-xs text-zinc-500 dark:text-slate-400 mt-0.5 font-medium">
+              Showing {total} certified luxury and precision items
+            </p>
+          </div>
+
+          {/* Controls: Sort Dropdown & Mobile Filter Button */}
+          <div className="flex items-center gap-2.5 w-full md:w-auto justify-between md:justify-end">
+            <button
+              onClick={() => setMobileFilterOpen(true)}
+              className="lg:hidden flex items-center gap-1.5 bg-zinc-100 dark:bg-slate-800 border border-zinc-200 dark:border-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold text-zinc-800 dark:text-zinc-200 hover:bg-zinc-200 dark:hover:bg-slate-700 transition-colors"
+            >
+              <SlidersHorizontal className="w-3.5 h-3.5 text-amber-600" />
+              <span>Filters</span>
+            </button>
+
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-zinc-500 dark:text-slate-400 font-medium hidden sm:inline">Sort:</span>
+              <select
+                value={sort}
+                onChange={(e) => setSort(e.target.value)}
+                className="bg-zinc-50 dark:bg-[#0f172a] border border-zinc-200 dark:border-slate-700 text-xs font-semibold text-zinc-800 dark:text-zinc-200 py-1.5 px-2.5 rounded-lg focus:outline-none focus:border-zinc-400 dark:focus:border-slate-500 cursor-pointer"
+              >
+                <option value="newest">Newest Arrivals</option>
+                <option value="price-asc">Price: Low to High</option>
+                <option value="price-desc">Price: High to Low</option>
+                <option value="rating">Highest Rated</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Layout: Sidebar Filters + Product Grid */}
+        <div className="flex flex-col lg:flex-row gap-6 items-start">
+          {/* Desktop Filter Sidebar (Proper Balanced Width: 240px - 256px) */}
+          <aside className="hidden lg:block w-60 xl:w-64 shrink-0">
+            <div className="bg-zinc-50 dark:bg-[#0f172a] border border-zinc-200 dark:border-slate-800 rounded-2xl p-4 space-y-4.5 sticky top-20 shadow-2xs">
+              <div className="flex items-center justify-between border-b border-zinc-200 dark:border-slate-800 pb-3">
+                <span className="text-xs font-bold text-zinc-900 dark:text-white flex items-center gap-1.5">
+                  <SlidersHorizontal className="w-3.5 h-3.5 text-amber-600" /> Filter Selection
+                </span>
+                <button
+                  onClick={handleResetFilters}
+                  className="text-[11px] font-semibold text-zinc-500 hover:text-zinc-950 dark:hover:text-white flex items-center gap-1 transition-colors"
+                >
+                  <RotateCcw className="w-3 h-3" /> Reset
+                </button>
+              </div>
+
+              {/* Keyword Search */}
+              <div>
+                <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 dark:text-slate-400 block mb-1.5">
+                  Search Keywords
+                </label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={keyword}
+                    onChange={(e) => setKeyword(e.target.value)}
+                    placeholder="E.g. Watch, ANC..."
+                    className="w-full bg-white dark:bg-[#131d2e] border border-zinc-200 dark:border-slate-700 rounded-xl px-3 py-1.5 pl-8.5 text-xs text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:border-zinc-400 dark:focus:border-slate-500 transition-colors"
+                  />
+                  <Search className="w-3.5 h-3.5 text-zinc-400 absolute left-2.5 top-2.5" />
+                </div>
+              </div>
+
+              {/* Categories */}
+              <div>
+                <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 dark:text-slate-400 block mb-1.5">
+                  Categories
+                </label>
+                <div className="space-y-1">
+                  <button
+                    onClick={() => setCategory('All')}
+                    className={`w-full text-left text-xs font-semibold px-3 py-1.5 rounded-xl transition-all flex items-center justify-between ${
+                      category === 'All'
+                        ? 'bg-zinc-950 dark:bg-blue-600 text-white shadow-xs'
+                        : 'text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-slate-800 hover:text-zinc-950 dark:hover:text-white'
+                    }`}
+                  >
+                    <span>All Categories</span>
+                    {category === 'All' && <Check className="w-3.5 h-3.5" />}
+                  </button>
+
+                  {categoriesList.map((cat, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setCategory(cat.name)}
+                      className={`w-full text-left text-xs font-medium px-3 py-1.5 rounded-xl transition-all flex items-center justify-between ${
+                        category.toLowerCase() === cat.name.toLowerCase()
+                          ? 'bg-zinc-950 dark:bg-blue-600 text-white font-semibold shadow-xs'
+                          : 'text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-slate-800 hover:text-zinc-950 dark:hover:text-white'
+                      }`}
+                    >
+                      <span className="truncate pr-1">{cat.name}</span>
+                      <span
+                        className={`text-[10px] px-1.5 py-0.5 rounded-md shrink-0 ${
+                          category.toLowerCase() === cat.name.toLowerCase()
+                            ? 'bg-zinc-800 text-zinc-200 dark:bg-blue-800'
+                            : 'bg-zinc-200 dark:bg-slate-800 text-zinc-600 dark:text-slate-400'
+                        }`}
+                      >
+                        {cat.count}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Price Range */}
+              <div>
+                <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 dark:text-slate-400 block mb-1.5">
+                  Price Range (₹)
+                </label>
+                <div className="grid grid-cols-2 gap-2">
+                  <input
+                    type="number"
+                    placeholder="Min"
+                    value={minPrice}
+                    onChange={(e) => setMinPrice(e.target.value)}
+                    className="w-full bg-white dark:bg-[#131d2e] border border-zinc-200 dark:border-slate-700 rounded-xl px-2.5 py-1.5 text-xs text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:border-zinc-400 dark:focus:border-slate-500"
+                  />
+                  <input
+                    type="number"
+                    placeholder="Max"
+                    value={maxPrice}
+                    onChange={(e) => setMaxPrice(e.target.value)}
+                    className="w-full bg-white dark:bg-[#131d2e] border border-zinc-200 dark:border-slate-700 rounded-xl px-2.5 py-1.5 text-xs text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:border-zinc-400 dark:focus:border-slate-500"
+                  />
+                </div>
+              </div>
+
+              {/* Rating Filter */}
+              <div>
+                <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 dark:text-slate-400 block mb-1.5">
+                  Minimum Rating
+                </label>
+                <div className="flex gap-1.5">
+                  {['', '4', '4.5'].map((rateVal, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setRating(rateVal)}
+                      className={`flex-1 py-1.5 px-1.5 rounded-xl border text-xs font-bold flex items-center justify-center gap-1 transition-all ${
+                        rating === rateVal
+                          ? 'bg-amber-500 text-zinc-950 border-amber-500 shadow-2xs'
+                          : 'bg-white dark:bg-[#131d2e] border-zinc-200 dark:border-slate-700 text-zinc-600 dark:text-zinc-300 hover:border-zinc-300'
+                      }`}
+                    >
+                      {rateVal === '' ? (
+                        'All'
+                      ) : (
+                        <>
+                          <Star className="w-3 h-3 fill-amber-400 text-amber-500" />
+                          <span>{rateVal}+</span>
+                        </>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* In Stock Only Toggle */}
+              <div className="pt-2 border-t border-zinc-200 dark:border-slate-800">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={inStock}
+                    onChange={(e) => setInStock(e.target.checked)}
+                    className="w-4 h-4 rounded border-zinc-300 dark:border-slate-700 text-blue-600 bg-white dark:bg-[#131d2e]"
+                  />
+                  <span className="text-xs font-semibold text-zinc-800 dark:text-slate-200">
+                    Ready to Ship (In Stock Only)
+                  </span>
+                </label>
+              </div>
+            </div>
+          </aside>
+
+          {/* Product Grid Area - Reclaims Space for 5 Cards/Row */}
+          <main className="flex-1 min-w-0 w-full">
+            {loading ? (
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-3.5 lg:gap-4">
+                {[...Array(10)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="bg-zinc-100 dark:bg-slate-800/60 border border-zinc-200 dark:border-slate-800 rounded-2xl aspect-[3/4] animate-pulse"
+                  ></div>
+                ))}
+              </div>
+            ) : productsError ? (
+              <div
+                role="alert"
+                className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-3xl p-12 text-center max-w-lg mx-auto my-12"
+              >
+                <h3 className="text-lg font-bold text-zinc-900 dark:text-white mb-2">
+                  Catalog Unavailable
+                </h3>
+                <p className="text-xs text-zinc-600 dark:text-slate-300">
+                  {productsError}
+                </p>
+              </div>
+            ) : products.length === 0 ? (
+              <div className="bg-zinc-50 dark:bg-[#0f172a] border border-zinc-200 dark:border-slate-800 rounded-3xl p-12 text-center max-w-lg mx-auto my-12">
+                <div className="w-16 h-16 rounded-full bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 text-amber-600 mx-auto flex items-center justify-center mb-4">
+                  <Search className="w-8 h-8" />
+                </div>
+                <h3 className="text-lg font-bold text-zinc-900 dark:text-white mb-2">No Matching Vault Items</h3>
+                <p className="text-xs text-zinc-500 dark:text-slate-400 mb-6">
+                  We couldn't find any items matching your selected criteria. Try loosening your price filters or search terms.
+                </p>
+                <button
+                  onClick={handleResetFilters}
+                  className="bg-zinc-900 dark:bg-blue-600 hover:bg-zinc-800 dark:hover:bg-blue-500 text-white text-xs font-bold px-5 py-2.5 rounded-xl transition-all shadow-xs"
+                >
+                  Reset All Filters
+                </button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-3.5 lg:gap-4">
+                {products.map((product) => (
+                  <ProductCard key={product._id} product={product} />
+                ))}
+              </div>
+            )}
+          </main>
+        </div>
+      </div>
+
+      {/* Mobile Filters Slide-over Modal */}
+      {mobileFilterOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden flex">
+          <div
+            className="fixed inset-0 bg-black/40 backdrop-blur-xs"
+            onClick={() => setMobileFilterOpen(false)}
+          ></div>
+
+          <div className="relative ml-auto w-64 max-w-[calc(100vw-32px)] bg-white dark:bg-[#0f172a] border-l border-zinc-200 dark:border-slate-800 p-4 flex flex-col justify-between h-full z-10 overflow-y-auto shadow-2xl">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between border-b border-zinc-200 dark:border-slate-800 pb-3">
+                <h3 className="text-sm font-bold text-zinc-900 dark:text-white">Filters</h3>
+                <button onClick={() => setMobileFilterOpen(false)} className="text-zinc-500 hover:text-zinc-900 dark:hover:text-white">
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              <div>
+                <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 dark:text-slate-400 block mb-1.5">
+                  Category
+                </label>
+                <div className="space-y-0.5">
+                  <button
+                    onClick={() => {
+                      setCategory('All');
+                      setMobileFilterOpen(false);
+                    }}
+                    className={`w-full text-left text-xs py-1.5 px-2.5 rounded-lg font-medium transition-colors ${
+                      category === 'All'
+                        ? 'bg-zinc-950 dark:bg-blue-600 text-white'
+                        : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-slate-800'
+                    }`}
+                  >
+                    All Categories
+                  </button>
+                  {categoriesList.map((c, i) => (
+                    <button
+                      key={i}
+                      onClick={() => {
+                        setCategory(c.name);
+                        setMobileFilterOpen(false);
+                      }}
+                      className={`w-full text-left text-xs py-1.5 px-2.5 rounded-lg font-medium transition-colors ${
+                        category.toLowerCase() === c.name.toLowerCase()
+                          ? 'bg-zinc-950 dark:bg-blue-600 text-white font-semibold'
+                          : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-slate-800'
+                      }`}
+                    >
+                      {c.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <button
+              onClick={() => setMobileFilterOpen(false)}
+              className="w-full mt-4 bg-zinc-950 hover:bg-zinc-800 dark:bg-blue-600 dark:hover:bg-blue-500 text-white font-bold text-xs py-2.5 rounded-lg shadow-sm"
+            >
+              Apply & View ({total})
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
