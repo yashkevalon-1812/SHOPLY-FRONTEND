@@ -1,8 +1,31 @@
 import axios from 'axios';
 
-// Ensure baseURL is normalized without trailing slash
-const rawBaseURL = import.meta.env.VITE_API_BASE_URL || '/api';
-const baseURL = rawBaseURL.trim().replace(/\/+$/, '');
+// Live Render Backend API Endpoint
+const LIVE_RENDER_API = 'https://shoply-backend-d9gk.onrender.com/api';
+
+const resolveBaseURL = () => {
+  const envUrl = import.meta.env.VITE_API_BASE_URL;
+
+  // 1. If explicit absolute HTTP/HTTPS URL is provided, use it
+  if (envUrl && envUrl.startsWith('http')) {
+    return envUrl.trim().replace(/\/+$/, '');
+  }
+
+  // 2. If running in a live browser on Render or any public domain (outside localhost)
+  if (
+    typeof window !== 'undefined' &&
+    window.location.hostname &&
+    !window.location.hostname.includes('localhost') &&
+    !window.location.hostname.includes('127.0.0.1')
+  ) {
+    return LIVE_RENDER_API;
+  }
+
+  // 3. In local development, use envUrl or fallback to '/api' for Vite proxy
+  return (envUrl || '/api').trim().replace(/\/+$/, '');
+};
+
+const baseURL = resolveBaseURL();
 
 const api = axios.create({
   baseURL,
