@@ -38,7 +38,7 @@ export const AdminLayout = () => {
     { to: '/admin/coupons', label: 'Discount Coupons', icon: Tag },
     { to: '/admin/mega-sale', label: 'Mega Sale & Events', icon: Flame },
     { to: '/admin/sellers', label: 'Seller Approvals', icon: Store },
-    { to: '/admin/seller-products', label: 'Seller Products', icon: Boxes },
+    { to: '/admin/seller-products', label: 'Seller Products & Approvals', icon: Boxes },
     { to: '/admin/products', label: 'Product Moderation', icon: Package },
     { to: '/admin/orders', label: 'Global Orders', icon: ShoppingBag },
     { to: '/admin/users', label: 'User Directory', icon: Users },

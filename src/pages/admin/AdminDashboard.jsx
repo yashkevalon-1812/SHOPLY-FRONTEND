@@ -115,12 +115,37 @@ export const AdminDashboard = () => {
           <div className="w-9 h-9 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center mb-3">
             <Clock className="w-5 h-5 animate-pulse" />
           </div>
-          <p className="text-[11px] font-bold text-amber-800">Pending Approvals</p>
+          <p className="text-[11px] font-bold text-amber-800">Pending Sellers</p>
           <p className="text-2xl font-black text-amber-900 mt-0.5">
             {stats?.pendingSellers || 0}
           </p>
         </div>
       </div>
+
+      {/* Pending Product Reviews Alert Banner */}
+      {stats?.pendingProductsCount > 0 && (
+        <div className="bg-gradient-to-r from-amber-500 to-amber-600 rounded-3xl p-5 text-slate-950 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-md">
+          <div className="flex items-center gap-3.5">
+            <div className="w-11 h-11 rounded-2xl bg-slate-950 text-amber-400 flex items-center justify-center shrink-0">
+              <Package className="w-6 h-6" />
+            </div>
+            <div>
+              <h3 className="font-black text-base text-slate-950">
+                {stats.pendingProductsCount} Seller Listing{stats.pendingProductsCount > 1 ? 's' : ''} Awaiting Approval
+              </h3>
+              <p className="text-xs text-slate-900/80 font-medium">
+                Merchants have submitted new listings that are held in queue until approved by administration.
+              </p>
+            </div>
+          </div>
+          <Link
+            to="/admin/seller-products"
+            className="bg-slate-950 text-amber-400 hover:bg-slate-900 px-5 py-2.5 rounded-xl font-bold text-xs shrink-0 shadow-sm transition-all hover:scale-105"
+          >
+            Review Products Now →
+          </Link>
+        </div>
+      )}
 
       {/* Pending Sellers Quick Approval Widget */}
       <div className="bg-white border border-slate-200 rounded-3xl p-6 space-y-4 shadow-sm">

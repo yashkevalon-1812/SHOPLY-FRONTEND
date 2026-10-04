@@ -13,6 +13,11 @@ import {
   Tag,
   Check,
   RotateCcw,
+  CheckCircle2,
+  Clock,
+  AlertCircle,
+  ExternalLink,
+  ShieldCheck,
 } from 'lucide-react';
 import { formatINR } from '../../utils/format';
 
@@ -20,6 +25,7 @@ export const SellerProducts = () => {
   const [searchParams] = useSearchParams();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [approvalStatusFilter, setApprovalStatusFilter] = useState('all');
   const [modalOpen, setModalOpen] = useState(searchParams.get('action') === 'new');
   const [editingProduct, setEditingProduct] = useState(null);
   const [submitting, setSubmitting] = useState(false);
@@ -189,10 +195,14 @@ export const SellerProducts = () => {
 
       if (editingProduct) {
         await api.put(`/seller/products/${editingProduct._id}`, payload);
-        addToast('Product updated successfully!', 'success');
+        if (editingProduct.approvalStatus === 'rejected') {
+          addToast('Listing updated and resubmitted for admin review!', 'success');
+        } else {
+          addToast('Product updated successfully!', 'success');
+        }
       } else {
         await api.post('/seller/products', payload);
-        addToast('New product published to marketplace!', 'success');
+        addToast('Product submitted! It is now pending admin approval before appearing on the public store.', 'success');
       }
 
       setModalOpen(false);
@@ -215,6 +225,19 @@ export const SellerProducts = () => {
     }
   };
 
+  // Metrics and approval counts
+  const totalCount = products.length;
+  const approvedCount = products.filter((p) => p.approvalStatus === 'approved').length;
+  const pendingCount = products.filter((p) => p.approvalStatus === 'pending').length;
+  const rejectedCount = products.filter((p) => p.approvalStatus === 'rejected').length;
+
+  const filteredProducts = products.filter((p) => {
+    if (approvalStatusFilter !== 'all' && p.approvalStatus !== approvalStatusFilter) {
+      return false;
+    }
+    return true;
+  });
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -225,7 +248,7 @@ export const SellerProducts = () => {
           </span>
           <h1 className="text-3xl font-black text-slate-900 mt-1">My Products Catalog</h1>
           <p className="text-xs text-slate-500 mt-1 font-medium">
-            Create new luxury listings, modify pricing, and maintain stock levels.
+            Create new luxury listings, modify pricing, and track administrator approval status.
           </p>
         </div>
 
@@ -238,121 +261,259 @@ export const SellerProducts = () => {
         </Link>
       </div>
 
+      {/* Approval Status Explanatory Notices */}
+      {pendingCount > 0 && (
+        <div className="bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 rounded-2xl p-4 flex items-center gap-3.5 shadow-2xs">
+          <div className="w-9 h-9 rounded-xl bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-400 flex items-center justify-center shrink-0">
+            <Clock className="w-5 h-5 animate-pulse" />
+          </div>
+          <div className="text-xs">
+            <p className="font-bold text-amber-900 dark:text-amber-200">
+              {pendingCount} product listing(s) pending Administrator approval
+            </p>
+            <p className="text-amber-700 dark:text-amber-400 mt-0.5">
+              Newly submitted items go directly to Shoply Admin for review before becoming visible to public shoppers on the website.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {rejectedCount > 0 && (
+        <div className="bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 rounded-2xl p-4 flex items-center gap-3.5 shadow-2xs">
+          <div className="w-9 h-9 rounded-xl bg-rose-100 dark:bg-rose-900/50 text-rose-700 dark:text-rose-400 flex items-center justify-center shrink-0">
+            <AlertCircle className="w-5 h-5" />
+          </div>
+          <div className="text-xs">
+            <p className="font-bold text-rose-900 dark:text-rose-200">
+              {rejectedCount} product listing(s) require revision
+            </p>
+            <p className="text-rose-700 dark:text-rose-400 mt-0.5">
+              Administrator has returned these listings with feedback. Click "Edit & Resubmit" to make changes and submit for approval again.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Status Filter Tabs */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-1 text-xs">
+        <span className="text-slate-400 text-[11px] font-bold shrink-0">Filter Status:</span>
+        {[
+          { id: 'all', label: 'All Listings', count: totalCount },
+          { id: 'approved', label: 'Approved & Live', count: approvedCount, isGreen: true },
+          { id: 'pending', label: 'Pending Review', count: pendingCount, isAmber: true },
+          { id: 'rejected', label: 'Rejected', count: rejectedCount, isRed: true },
+        ].map((tab) => (
+          <button
+            key={tab.id}
+            type="button"
+            onClick={() => setApprovalStatusFilter(tab.id)}
+            className={`px-3 py-1.5 rounded-xl font-bold uppercase text-[10px] tracking-wider transition-all flex items-center gap-1.5 cursor-pointer ${
+              approvalStatusFilter === tab.id
+                ? 'bg-slate-900 text-white dark:bg-amber-500 dark:text-slate-950 shadow-xs'
+                : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+            }`}
+          >
+            <span>{tab.label}</span>
+            <span
+              className={`px-1.5 py-0.2 rounded-full text-[9px] ${
+                approvalStatusFilter === tab.id
+                  ? 'bg-white/20 text-white dark:text-slate-950'
+                  : tab.isAmber && tab.count > 0
+                  ? 'bg-amber-500 text-white'
+                  : tab.isRed && tab.count > 0
+                  ? 'bg-rose-500 text-white'
+                  : 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
+              }`}
+            >
+              {tab.count}
+            </span>
+          </button>
+        ))}
+      </div>
+
       {/* Products Table */}
       <div className="bg-white dark:bg-[#0c1427] border border-slate-200 dark:border-slate-800 rounded-2xl sm:rounded-3xl overflow-hidden shadow-sm transition-colors">
         {loading ? (
           <div className="p-12 flex justify-center">
             <div className="w-8 h-8 border-4 border-amber-500 border-t-transparent rounded-full animate-spin"></div>
           </div>
-        ) : products.length === 0 ? (
+        ) : filteredProducts.length === 0 ? (
           <div className="p-12 text-center text-slate-400 dark:text-slate-500 text-xs font-medium">
-            You haven't listed any products yet. Click "Add New Product" above to publish your first piece!
+            {approvalStatusFilter !== 'all'
+              ? `No products found with status "${approvalStatusFilter}".`
+              : "You haven't listed any products yet. Click 'Add New Product' above to publish your first piece!"}
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs min-w-[700px]">
+            <table className="w-full text-left text-xs min-w-[760px]">
               <thead className="border-b border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/40 text-slate-600 dark:text-slate-400 uppercase tracking-wider text-[10px] font-bold">
                 <tr>
                   <th className="py-4 px-5">Product Details</th>
                   <th className="py-4 px-4">Category</th>
                   <th className="py-4 px-4">Price / Discount</th>
-                  <th className="py-4 px-4">Available Units</th>
+                  <th className="py-4 px-4">Stock</th>
+                  <th className="py-4 px-4">Storefront Status</th>
                   <th className="py-4 px-4">Promotions</th>
                   <th className="py-4 px-5 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
-                {products.map((p) => (
-                  <tr key={p._id} className="hover:bg-slate-50/80 dark:hover:bg-slate-900/30 transition-colors">
-                    <td className="py-4 px-5">
-                      <div className="flex items-center gap-3">
-                        <img
-                          src={p.images?.[0]}
-                          alt={p.title}
-                          className="w-12 h-12 rounded-xl object-cover bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-800 shrink-0"
-                        />
-                        <div>
-                          <p className="font-bold text-slate-900 dark:text-white text-xs">{p.title}</p>
-                          <p className="text-[11px] text-slate-500 dark:text-slate-400">{p.brand}</p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="py-4 px-4 text-slate-700 dark:text-slate-300">{p.category}</td>
-                    <td className="py-4 px-4">
-                      <span className="font-bold text-slate-900 dark:text-white">{formatINR(p.price)}</span>
-                      {p.discountPrice > 0 && (
-                        <div className="mt-0.5">
-                          <span className="text-emerald-700 font-bold block text-[11px]">
-                            Sale: {formatINR(p.discountPrice)}
-                          </span>
-                          <span className="text-[10px] text-amber-700 font-semibold bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200 inline-block mt-0.5">
-                            {Math.round(((p.price - p.discountPrice) / p.price) * 100)}% OFF
-                          </span>
-                        </div>
-                      )}
-                    </td>
-                    <td className="py-4 px-4">
-                      <span
-                        className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full ${
-                          p.stock > 0
-                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                            : 'bg-rose-50 text-rose-700 border border-rose-200'
-                        }`}
-                      >
-                        {p.stock} units
-                      </span>
-                    </td>
-                    <td className="py-4 px-4">
-                      <div className="flex items-center gap-1.5">
-                        {p.isFlashDeal && (
-                          <span className="bg-amber-50 text-amber-800 border border-amber-200 px-2 py-0.5 rounded text-[10px] font-bold flex items-center gap-1">
-                            <Flame className="w-3 h-3 text-amber-600" /> Flash
-                          </span>
-                        )}
-                        {p.isFeatured && (
-                          <span className="bg-rose-50 text-rose-700 border border-rose-200 px-2 py-0.5 rounded text-[10px] font-bold flex items-center gap-1">
-                            <Sparkles className="w-3 h-3 text-rose-600" /> Featured
-                          </span>
-                        )}
-                        {!p.isFlashDeal && !p.isFeatured && (
-                          <span className="text-slate-400 text-[11px]">Standard</span>
-                        )}
-                      </div>
-                    </td>
-                    <td className="py-4 px-5 text-right">
-                      <div className="inline-flex items-center gap-2">
-                        {/* Dedicated Product Discount Button */}
-                        <button
-                          onClick={() => openDiscountModal(p)}
-                          className={`px-2 py-1 rounded-lg border text-xs font-bold flex items-center gap-1 transition-all ${
-                            p.discountPrice > 0
-                              ? 'bg-amber-50 border-amber-300 text-amber-800'
-                              : 'bg-slate-100 border-slate-200 text-slate-600 hover:text-blue-600'
-                          }`}
-                          title="Set discount exclusively for this product"
-                        >
-                          <Percent className="w-3.5 h-3.5 text-amber-600" />
-                          <span className="hidden sm:inline">Discount</span>
-                        </button>
+                {filteredProducts.map((p) => {
+                  const isPending = p.approvalStatus === 'pending';
+                  const isApproved = p.approvalStatus === 'approved';
+                  const isRejected = p.approvalStatus === 'rejected';
 
-                        <Link
-                          to={`/seller/products/edit/${p._id}`}
-                          className="p-1.5 text-slate-500 hover:text-amber-600 transition-colors"
-                          title="Edit product in Studio"
+                  return (
+                    <tr
+                      key={p._id}
+                      className={`hover:bg-slate-50/80 dark:hover:bg-slate-900/30 transition-colors ${
+                        isPending ? 'bg-amber-50/20 dark:bg-amber-950/10' : ''
+                      }`}
+                    >
+                      <td className="py-4 px-5">
+                        <div className="flex items-center gap-3">
+                          <img
+                            src={p.images?.[0] || 'https://placehold.co/100x100?text=No+Image'}
+                            alt={p.title}
+                            className="w-12 h-12 rounded-xl object-cover bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-800 shrink-0"
+                          />
+                          <div className="min-w-0">
+                            <p className="font-bold text-slate-900 dark:text-white text-xs line-clamp-1">{p.title}</p>
+                            <p className="text-[11px] text-slate-500 dark:text-slate-400">{p.brand}</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="py-4 px-4 text-slate-700 dark:text-slate-300">{p.category}</td>
+                      <td className="py-4 px-4">
+                        <span className="font-bold text-slate-900 dark:text-white">{formatINR(p.price)}</span>
+                        {p.discountPrice > 0 && (
+                          <div className="mt-0.5">
+                            <span className="text-emerald-700 font-bold block text-[11px]">
+                              Sale: {formatINR(p.discountPrice)}
+                            </span>
+                            <span className="text-[10px] text-amber-700 font-semibold bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200 inline-block mt-0.5">
+                              {Math.round(((p.price - p.discountPrice) / p.price) * 100)}% OFF
+                            </span>
+                          </div>
+                        )}
+                      </td>
+                      <td className="py-4 px-4">
+                        <span
+                          className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full ${
+                            p.stock > 0
+                              ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                              : 'bg-rose-50 text-rose-700 border border-rose-200'
+                          }`}
                         >
-                          <Edit className="w-4 h-4" />
-                        </Link>
-                        <button
-                          onClick={() => handleDelete(p._id, p.title)}
-                          className="p-1.5 text-slate-400 hover:text-rose-600 transition-colors"
-                          title="Delete product"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                          {p.stock} units
+                        </span>
+                      </td>
+
+                      {/* Storefront Catalog Status */}
+                      <td className="py-4 px-4">
+                        {isPending && (
+                          <div className="space-y-0.5">
+                            <span className="inline-flex items-center gap-1.5 bg-amber-50 dark:bg-amber-950/50 text-amber-800 dark:text-amber-400 border border-amber-300 dark:border-amber-800 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider">
+                              <Clock className="w-3 h-3 text-amber-500 animate-pulse" />
+                              <span>Pending Review</span>
+                            </span>
+                            <p className="text-[10px] text-slate-400">Not live on store yet</p>
+                          </div>
+                        )}
+                        {isApproved && (
+                          <div className="space-y-0.5">
+                            <span className="inline-flex items-center gap-1.5 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-800 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider">
+                              <CheckCircle2 className="w-3 h-3 text-emerald-500" />
+                              <span>Live on Store</span>
+                            </span>
+                            <p className="text-[10px] text-emerald-600/80">Publicly visible</p>
+                          </div>
+                        )}
+                        {isRejected && (
+                          <div className="space-y-1">
+                            <span className="inline-flex items-center gap-1.5 bg-rose-50 dark:bg-rose-950/50 text-rose-700 dark:text-rose-400 border border-rose-300 dark:border-rose-800 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider">
+                              <AlertCircle className="w-3 h-3 text-rose-500" />
+                              <span>Rejected</span>
+                            </span>
+                            {p.rejectionReason && (
+                              <p className="text-[10px] text-rose-600 dark:text-rose-400 max-w-xs font-medium" title={p.rejectionReason}>
+                                {p.rejectionReason}
+                              </p>
+                            )}
+                            <Link
+                              to={`/seller/products/edit/${p._id}`}
+                              className="text-[10px] font-bold text-amber-600 hover:underline block"
+                            >
+                              Edit & Resubmit →
+                            </Link>
+                          </div>
+                        )}
+                      </td>
+
+                      <td className="py-4 px-4">
+                        <div className="flex items-center gap-1.5">
+                          {p.isFlashDeal && (
+                            <span className="bg-amber-50 text-amber-800 border border-amber-200 px-2 py-0.5 rounded text-[10px] font-bold flex items-center gap-1">
+                              <Flame className="w-3 h-3 text-amber-600" /> Flash
+                            </span>
+                          )}
+                          {p.isFeatured && (
+                            <span className="bg-rose-50 text-rose-700 border border-rose-200 px-2 py-0.5 rounded text-[10px] font-bold flex items-center gap-1">
+                              <Sparkles className="w-3 h-3 text-rose-600" /> Featured
+                            </span>
+                          )}
+                          {!p.isFlashDeal && !p.isFeatured && (
+                            <span className="text-slate-400 text-[11px]">Standard</span>
+                          )}
+                        </div>
+                      </td>
+                      <td className="py-4 px-5 text-right">
+                        <div className="inline-flex items-center gap-2">
+                          {/* Live preview link if approved */}
+                          {isApproved && (
+                            <Link
+                              to={`/product/${p._id}`}
+                              target="_blank"
+                              className="p-1.5 text-slate-500 hover:text-slate-900 transition-colors"
+                              title="View live on website"
+                            >
+                              <ExternalLink className="w-4 h-4" />
+                            </Link>
+                          )}
+
+                          {/* Dedicated Product Discount Button */}
+                          <button
+                            onClick={() => openDiscountModal(p)}
+                            className={`px-2 py-1 rounded-lg border text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ${
+                              p.discountPrice > 0
+                                ? 'bg-amber-50 border-amber-300 text-amber-800'
+                                : 'bg-slate-100 border-slate-200 text-slate-600 hover:text-blue-600'
+                            }`}
+                            title="Set discount exclusively for this product"
+                          >
+                            <Percent className="w-3.5 h-3.5 text-amber-600" />
+                            <span className="hidden sm:inline">Discount</span>
+                          </button>
+
+                          <Link
+                            to={`/seller/products/edit/${p._id}`}
+                            className="p-1.5 text-slate-500 hover:text-amber-600 transition-colors cursor-pointer"
+                            title="Edit product in Studio"
+                          >
+                            <Edit className="w-4 h-4" />
+                          </Link>
+                          <button
+                            onClick={() => handleDelete(p._id, p.title)}
+                            className="p-1.5 text-slate-400 hover:text-rose-600 transition-colors cursor-pointer"
+                            title="Delete product"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

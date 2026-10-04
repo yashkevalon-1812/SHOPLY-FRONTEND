@@ -8,6 +8,9 @@ import {
   Package,
   Boxes,
   Clock,
+  CheckCircle2,
+  AlertCircle,
+  ArrowRight,
 } from 'lucide-react';
 import { formatINR } from '../../utils/format';
 
@@ -89,6 +92,78 @@ export const SellerDashboard = () => {
           </div>
           <p className="text-xs font-semibold text-slate-500">Units Dispatched</p>
           <p className="text-2xl font-black text-slate-900 mt-1">{stats?.unitsSold || 0}</p>
+        </div>
+      </div>
+
+      {/* Catalog Listing Governance & Approval Status */}
+      <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm space-y-4">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-100 pb-3">
+          <div>
+            <h2 className="text-base font-black text-slate-900 flex items-center gap-2">
+              <Package className="w-4 h-4 text-amber-600" />
+              <span>Catalog Listings & Moderation Pipeline</span>
+            </h2>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Track which items are active on the website and which are undergoing administrator verification.
+            </p>
+          </div>
+          <Link
+            to="/seller/products"
+            className="text-xs font-bold text-amber-700 hover:text-amber-800 flex items-center gap-1 cursor-pointer"
+          >
+            <span>Manage Catalog</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+          {/* Approved */}
+          <div className="p-4 rounded-2xl bg-emerald-50/60 border border-emerald-200/80 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
+                <CheckCircle2 className="w-4 h-4" />
+              </div>
+              <div>
+                <p className="font-bold text-emerald-950">Live on Storefront</p>
+                <p className="text-[11px] text-emerald-700">Approved & Shoppable</p>
+              </div>
+            </div>
+            <span className="text-xl font-black text-emerald-800">
+              {stats?.approvedProducts ?? stats?.totalProducts ?? 0}
+            </span>
+          </div>
+
+          {/* Pending */}
+          <div className="p-4 rounded-2xl bg-amber-50/60 border border-amber-200/80 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold">
+                <Clock className="w-4 h-4 animate-pulse" />
+              </div>
+              <div>
+                <p className="font-bold text-amber-950">Pending Admin Review</p>
+                <p className="text-[11px] text-amber-700">Awaiting Approval</p>
+              </div>
+            </div>
+            <span className="text-xl font-black text-amber-800">
+              {stats?.pendingProducts ?? 0}
+            </span>
+          </div>
+
+          {/* Rejected */}
+          <div className="p-4 rounded-2xl bg-rose-50/60 border border-rose-200/80 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-xl bg-rose-100 text-rose-700 flex items-center justify-center font-bold">
+                <AlertCircle className="w-4 h-4" />
+              </div>
+              <div>
+                <p className="font-bold text-rose-950">Needs Revision</p>
+                <p className="text-[11px] text-rose-700">Rejected Listings</p>
+              </div>
+            </div>
+            <span className="text-xl font-black text-rose-800">
+              {stats?.rejectedProducts ?? 0}
+            </span>
+          </div>
         </div>
       </div>
 

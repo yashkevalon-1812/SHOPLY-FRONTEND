@@ -26,6 +26,7 @@ import {
   Info,
   Save,
   HelpCircle,
+  Clock,
 } from 'lucide-react';
 
 const CATEGORIES = [
@@ -397,6 +398,15 @@ export const ProductAddStudio = ({
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-2xl font-medium">
               Structure complete vital data, Amazon-standard 5 bullet points, high-definition photo gallery, and pricing with instant storefront preview.
             </p>
+
+            {mode === 'seller' && (
+              <div className="mt-2.5 inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 text-[11px] text-amber-800 dark:text-amber-300 font-semibold">
+                <Clock className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                <span>
+                  Admin Moderation Policy: New seller listings will be reviewed by administrators before going live on the storefront.
+                </span>
+              </div>
+            )}
           </div>
 
           {/* Quick Header Actions */}
@@ -415,7 +425,15 @@ export const ProductAddStudio = ({
               className="flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-400 text-slate-950 px-4 sm:px-5 py-2.5 rounded-xl text-xs font-black shadow-md hover:scale-102 transition-all cursor-pointer disabled:opacity-50"
             >
               <Save className="w-4 h-4" />
-              <span>{submitting ? 'Publishing...' : isEditing ? 'Save Changes' : 'Publish Listing'}</span>
+              <span>
+                {submitting
+                  ? 'Saving...'
+                  : isEditing
+                  ? 'Save Changes'
+                  : mode === 'seller'
+                  ? 'Submit for Approval'
+                  : 'Publish Listing'}
+              </span>
             </button>
           </div>
         </div>

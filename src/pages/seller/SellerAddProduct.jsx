@@ -36,10 +36,17 @@ export const SellerAddProduct = () => {
     try {
       if (isEditing) {
         await api.put(`/seller/products/${id}`, payload);
-        addToast(`Listing "${payload.title}" updated successfully!`, 'success');
+        if (product?.approvalStatus === 'rejected') {
+          addToast(`Listing "${payload.title}" updated and resubmitted for admin review!`, 'success');
+        } else {
+          addToast(`Listing "${payload.title}" updated successfully!`, 'success');
+        }
       } else {
         await api.post('/seller/products', payload);
-        addToast(`New product "${payload.title}" published to marketplace!`, 'success');
+        addToast(
+          `Product "${payload.title}" submitted successfully! It is now pending admin approval before appearing on the public store.`,
+          'success'
+        );
       }
       navigate('/seller/products');
     } catch (err) {
