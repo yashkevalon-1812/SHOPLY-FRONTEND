@@ -102,18 +102,6 @@ export const NotificationDropdown = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Prevent background scroll on mobile when notifications modal is open
-  useEffect(() => {
-    if (isOpen && window.innerWidth < 640) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [isOpen]);
-
   const unreadCount = notifications.filter((n) => !n.read).length;
 
   const markAllAsRead = async () => {
@@ -208,20 +196,27 @@ export const NotificationDropdown = () => {
         )}
       </button>
 
-      {/* Dropdown Panel / Mobile Modal */}
+      {/* Dropdown Panel / Mobile Popover */}
       {isOpen && (
         <>
-          {/* Mobile Backdrop Overlay - closes on tap outside */}
+          {/* Transparent click-outside layer - does NOT hide or dim the phone screen */}
           <div
-            className="fixed inset-0 bg-black/50 backdrop-blur-xs z-40 sm:hidden transition-opacity"
+            className="fixed inset-0 z-40 bg-transparent"
             onClick={() => setIsOpen(false)}
             aria-hidden="true"
           />
 
-          {/* Notification Card Modal / Dropdown */}
-          <div className="fixed inset-x-3.5 top-16 sm:inset-x-auto sm:right-0 sm:absolute sm:top-full sm:mt-2 w-auto sm:w-84 max-w-full sm:max-w-[420px] bg-white dark:bg-[#0f172a] border border-zinc-200 dark:border-slate-800 rounded-2xl shadow-2xl py-2 z-50 animate-fade-up max-h-[82vh] flex flex-col">
+          {/* Compact Notification Card - Never cuts off, never blocks the screen */}
+          <div
+            className="
+              fixed top-15 sm:top-16 left-3.5 right-3.5 sm:left-auto sm:right-0 sm:absolute sm:top-full sm:mt-2
+              w-auto sm:w-80 md:w-84 max-w-sm sm:max-w-none mx-auto sm:mx-0
+              bg-white dark:bg-[#0f172a] border border-zinc-200 dark:border-slate-800 rounded-2xl shadow-xl py-2 z-50
+              flex flex-col max-h-[50vh] sm:max-h-[420px] transition-all
+            "
+          >
             {/* Header */}
-            <div className="px-3.5 py-2.5 border-b border-zinc-100 dark:border-slate-800 flex items-center justify-between shrink-0">
+            <div className="px-3.5 py-2 border-b border-zinc-100 dark:border-slate-800 flex items-center justify-between shrink-0">
               <div className="flex items-center gap-2">
                 <h3 className="font-bold text-xs sm:text-sm text-zinc-900 dark:text-white">
                   Notifications
@@ -267,10 +262,10 @@ export const NotificationDropdown = () => {
 
             {/* Filter Tabs */}
             {notifications.length > 0 && (
-              <div className="px-3.5 py-2 flex gap-1.5 border-b border-zinc-100 dark:border-slate-800/80 shrink-0">
+              <div className="px-3.5 py-1.5 flex gap-1.5 border-b border-zinc-100 dark:border-slate-800/80 shrink-0">
                 <button
                   onClick={() => setActiveTab('all')}
-                  className={`text-xs px-2.5 py-1 rounded-lg font-semibold transition-colors ${
+                  className={`text-xs px-2.5 py-0.5 rounded-lg font-semibold transition-colors ${
                     activeTab === 'all'
                       ? 'bg-zinc-900 dark:bg-slate-700 text-white'
                       : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-slate-800'
@@ -280,7 +275,7 @@ export const NotificationDropdown = () => {
                 </button>
                 <button
                   onClick={() => setActiveTab('unread')}
-                  className={`text-xs px-2.5 py-1 rounded-lg font-semibold transition-colors ${
+                  className={`text-xs px-2.5 py-0.5 rounded-lg font-semibold transition-colors ${
                     activeTab === 'unread'
                       ? 'bg-zinc-900 dark:bg-slate-700 text-white'
                       : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-slate-800'
@@ -292,16 +287,16 @@ export const NotificationDropdown = () => {
             )}
 
             {/* Notification List */}
-            <div className="flex-1 max-h-[55vh] sm:max-h-72 overflow-y-auto divide-y divide-zinc-100 dark:divide-slate-800/70 overscroll-contain scrollbar-none">
+            <div className="flex-1 max-h-[32vh] sm:max-h-60 overflow-y-auto divide-y divide-zinc-100 dark:divide-slate-800/70 overscroll-contain scrollbar-none">
               {filteredNotifications.length === 0 ? (
-                <div className="py-8 text-center px-4">
-                  <div className="w-10 h-10 rounded-full bg-zinc-100 dark:bg-slate-800 text-zinc-400 dark:text-slate-500 mx-auto flex items-center justify-center mb-2">
-                    <Bell className="w-4 h-4" />
+                <div className="py-6 text-center px-4">
+                  <div className="w-8 h-8 rounded-full bg-zinc-100 dark:bg-slate-800 text-zinc-400 dark:text-slate-500 mx-auto flex items-center justify-center mb-1.5">
+                    <Bell className="w-3.5 h-3.5" />
                   </div>
                   <p className="text-xs font-bold text-zinc-800 dark:text-zinc-200">
                     {activeTab === 'unread' ? 'No unread notifications' : 'No notifications'}
                   </p>
-                  <p className="text-[10px] text-zinc-500 dark:text-slate-400 mt-1">
+                  <p className="text-[10px] text-zinc-500 dark:text-slate-400 mt-0.5">
                     You are all caught up with your Shoply updates!
                   </p>
                 </div>
@@ -310,7 +305,7 @@ export const NotificationDropdown = () => {
                   <div
                     key={item.id}
                     onClick={() => handleNotificationClick(item)}
-                    className={`p-3 sm:p-2.5 hover:bg-zinc-50 dark:hover:bg-slate-800/60 cursor-pointer transition-colors flex items-start gap-2.5 relative group ${
+                    className={`p-2.5 hover:bg-zinc-50 dark:hover:bg-slate-800/60 cursor-pointer transition-colors flex items-start gap-2.5 relative group ${
                       !item.read
                         ? 'bg-blue-50/40 dark:bg-blue-950/20'
                         : 'bg-transparent'
