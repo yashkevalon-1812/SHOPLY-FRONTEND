@@ -98,6 +98,26 @@ export const Shop = () => {
     fetchProducts();
   }, [keyword, category, minPrice, maxPrice, rating, inStock, sort]);
 
+  useEffect(() => {
+    if (mobileFilterOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [mobileFilterOpen]);
+
+  const activeFilterCount = [
+    Boolean(keyword),
+    category && category !== 'All',
+    Boolean(minPrice),
+    Boolean(maxPrice),
+    Boolean(rating),
+    Boolean(inStock),
+  ].filter(Boolean).length;
+
   const handleResetFilters = () => {
     setKeyword('');
     setCategory('All');
@@ -110,7 +130,7 @@ export const Shop = () => {
   };
 
   return (
-    <div className="bg-white text-zinc-900 min-h-screen py-10">
+    <div className="bg-white dark:bg-[#0b1120] text-zinc-900 dark:text-white min-h-screen py-10">
       <div className="max-w-[1560px] mx-auto px-3 sm:px-6 lg:px-8">
         {/* Page Header */}
         <div className="mb-6 border-b border-zinc-200 dark:border-slate-800 pb-5 flex flex-col md:flex-row justify-between items-start md:items-end gap-3">
@@ -130,10 +150,15 @@ export const Shop = () => {
           <div className="flex items-center gap-2.5 w-full md:w-auto justify-between md:justify-end">
             <button
               onClick={() => setMobileFilterOpen(true)}
-              className="lg:hidden flex items-center gap-1.5 bg-zinc-100 dark:bg-slate-800 border border-zinc-200 dark:border-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold text-zinc-800 dark:text-zinc-200 hover:bg-zinc-200 dark:hover:bg-slate-700 transition-colors"
+              className="lg:hidden flex items-center gap-1.5 bg-zinc-100 dark:bg-slate-800 border border-zinc-200 dark:border-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold text-zinc-800 dark:text-zinc-200 hover:bg-zinc-200 dark:hover:bg-slate-700 transition-colors shadow-2xs"
             >
-              <SlidersHorizontal className="w-3.5 h-3.5 text-amber-600" />
+              <SlidersHorizontal className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
               <span>Filters</span>
+              {activeFilterCount > 0 && (
+                <span className="min-w-4.5 h-4.5 px-1 rounded-full bg-amber-600 text-[10px] text-white font-bold flex items-center justify-center">
+                  {activeFilterCount}
+                </span>
+              )}
             </button>
 
             <div className="flex items-center gap-2">
@@ -348,67 +373,229 @@ export const Shop = () => {
         </div>
       </div>
 
-      {/* Mobile Filters Slide-over Modal */}
+      {/* Mobile Filters Slide-over Drawer (Left Side) */}
       {mobileFilterOpen && (
         <div className="fixed inset-0 z-50 lg:hidden flex">
+          {/* Backdrop */}
           <div
-            className="fixed inset-0 bg-black/40 backdrop-blur-xs"
+            className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity"
             onClick={() => setMobileFilterOpen(false)}
-          ></div>
+            aria-hidden="true"
+          />
 
-          <div className="relative ml-auto w-64 max-w-[calc(100vw-32px)] bg-white dark:bg-[#0f172a] border-l border-zinc-200 dark:border-slate-800 p-4 flex flex-col justify-between h-full z-10 overflow-y-auto shadow-2xl">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between border-b border-zinc-200 dark:border-slate-800 pb-3">
-                <h3 className="text-sm font-bold text-zinc-900 dark:text-white">Filters</h3>
-                <button onClick={() => setMobileFilterOpen(false)} className="text-zinc-500 hover:text-zinc-900 dark:hover:text-white">
-                  <X className="w-4 h-4" />
+          {/* Drawer content: slides in from LEFT */}
+          <div className="relative mr-auto w-[310px] sm:w-[350px] max-w-[85vw] bg-white dark:bg-[#0f172a] border-r border-zinc-200 dark:border-slate-800 flex flex-col h-full z-10 shadow-2xl animate-drawer-left">
+            {/* Header: Sticky Top */}
+            <div className="flex items-center justify-between px-4 py-3.5 border-b border-zinc-200 dark:border-slate-800 shrink-0 bg-white dark:bg-[#0f172a]">
+              <div className="flex items-center gap-2">
+                <SlidersHorizontal className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+                <h3 className="text-sm font-bold text-zinc-950 dark:text-white">Filters</h3>
+                {activeFilterCount > 0 && (
+                  <span className="px-2 py-0.5 text-[10px] font-bold rounded-full bg-amber-500/15 text-amber-700 dark:text-amber-300">
+                    {activeFilterCount} active
+                  </span>
+                )}
+              </div>
+              <div className="flex items-center gap-2">
+                {activeFilterCount > 0 && (
+                  <button
+                    onClick={handleResetFilters}
+                    className="text-[11px] font-semibold text-zinc-500 hover:text-zinc-900 dark:hover:text-white flex items-center gap-1 transition-colors px-2 py-1 rounded-md hover:bg-zinc-100 dark:hover:bg-slate-800"
+                  >
+                    <RotateCcw className="w-3 h-3" /> Reset
+                  </button>
+                )}
+                <button
+                  onClick={() => setMobileFilterOpen(false)}
+                  className="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors"
+                  aria-label="Close filters"
+                >
+                  <X className="w-4.5 h-4.5" />
                 </button>
               </div>
+            </div>
 
+            {/* Scrollable Filter Body - All Filter Options Responsive */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-5 scrollbar-none overscroll-contain">
+              {/* Keyword Search */}
               <div>
                 <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 dark:text-slate-400 block mb-1.5">
-                  Category
+                  Search Keywords
                 </label>
-                <div className="space-y-0.5">
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={keyword}
+                    onChange={(e) => setKeyword(e.target.value)}
+                    placeholder="E.g. Watch, ANC..."
+                    className="w-full bg-zinc-50 dark:bg-[#131d2e] border border-zinc-200 dark:border-slate-700 rounded-xl px-3 py-2 pl-8.5 text-xs text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:border-zinc-400 dark:focus:border-slate-500"
+                  />
+                  <Search className="w-3.5 h-3.5 text-zinc-400 absolute left-2.5 top-2.5" />
+                  {keyword && (
+                    <button
+                      onClick={() => setKeyword('')}
+                      className="absolute right-2.5 top-2.5 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 p-0.5"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Sort selector */}
+              <div>
+                <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 dark:text-slate-400 block mb-1.5">
+                  Sort By
+                </label>
+                <select
+                  value={sort}
+                  onChange={(e) => setSort(e.target.value)}
+                  className="w-full bg-zinc-50 dark:bg-[#131d2e] border border-zinc-200 dark:border-slate-700 text-xs font-medium text-zinc-800 dark:text-zinc-200 py-2 px-3 rounded-xl focus:outline-none focus:border-zinc-400 dark:focus:border-slate-500 cursor-pointer"
+                >
+                  <option value="newest">Newest Arrivals</option>
+                  <option value="price-asc">Price: Low to High</option>
+                  <option value="price-desc">Price: High to Low</option>
+                  <option value="rating">Highest Rated</option>
+                </select>
+              </div>
+
+              {/* Categories */}
+              <div>
+                <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 dark:text-slate-400 block mb-1.5">
+                  Categories
+                </label>
+                <div className="space-y-1">
                   <button
-                    onClick={() => {
-                      setCategory('All');
-                      setMobileFilterOpen(false);
-                    }}
-                    className={`w-full text-left text-xs py-1.5 px-2.5 rounded-lg font-medium transition-colors ${
+                    onClick={() => setCategory('All')}
+                    className={`w-full text-left text-xs font-semibold px-3 py-2 rounded-xl transition-all flex items-center justify-between ${
                       category === 'All'
-                        ? 'bg-zinc-950 dark:bg-blue-600 text-white'
+                        ? 'bg-zinc-950 dark:bg-blue-600 text-white shadow-xs'
                         : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-slate-800'
                     }`}
                   >
-                    All Categories
+                    <span>All Categories</span>
+                    {category === 'All' && <Check className="w-3.5 h-3.5" />}
                   </button>
-                  {categoriesList.map((c, i) => (
+
+                  {categoriesList.map((cat, idx) => (
                     <button
-                      key={i}
-                      onClick={() => {
-                        setCategory(c.name);
-                        setMobileFilterOpen(false);
-                      }}
-                      className={`w-full text-left text-xs py-1.5 px-2.5 rounded-lg font-medium transition-colors ${
-                        category.toLowerCase() === c.name.toLowerCase()
-                          ? 'bg-zinc-950 dark:bg-blue-600 text-white font-semibold'
+                      key={idx}
+                      onClick={() => setCategory(cat.name)}
+                      className={`w-full text-left text-xs font-medium px-3 py-2 rounded-xl transition-all flex items-center justify-between ${
+                        category.toLowerCase() === cat.name.toLowerCase()
+                          ? 'bg-zinc-950 dark:bg-blue-600 text-white font-semibold shadow-xs'
                           : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-slate-800'
                       }`}
                     >
-                      {c.name}
+                      <span className="truncate pr-1">{cat.name}</span>
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        <span
+                          className={`text-[10px] px-1.5 py-0.5 rounded-md ${
+                            category.toLowerCase() === cat.name.toLowerCase()
+                              ? 'bg-zinc-800 text-zinc-200 dark:bg-blue-800'
+                              : 'bg-zinc-200 dark:bg-slate-800 text-zinc-600 dark:text-slate-400'
+                          }`}
+                        >
+                          {cat.count}
+                        </span>
+                        {category.toLowerCase() === cat.name.toLowerCase() && (
+                          <Check className="w-3.5 h-3.5" />
+                        )}
+                      </div>
                     </button>
                   ))}
                 </div>
               </div>
+
+              {/* Price Range */}
+              <div>
+                <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 dark:text-slate-400 block mb-1.5">
+                  Price Range (₹)
+                </label>
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="relative">
+                    <span className="absolute left-2.5 top-2 text-xs text-zinc-400">₹</span>
+                    <input
+                      type="number"
+                      placeholder="Min"
+                      value={minPrice}
+                      onChange={(e) => setMinPrice(e.target.value)}
+                      className="w-full bg-zinc-50 dark:bg-[#131d2e] border border-zinc-200 dark:border-slate-700 rounded-xl pl-6 pr-2.5 py-1.5 text-xs text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:border-zinc-400 dark:focus:border-slate-500"
+                    />
+                  </div>
+                  <div className="relative">
+                    <span className="absolute left-2.5 top-2 text-xs text-zinc-400">₹</span>
+                    <input
+                      type="number"
+                      placeholder="Max"
+                      value={maxPrice}
+                      onChange={(e) => setMaxPrice(e.target.value)}
+                      className="w-full bg-zinc-50 dark:bg-[#131d2e] border border-zinc-200 dark:border-slate-700 rounded-xl pl-6 pr-2.5 py-1.5 text-xs text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:border-zinc-400 dark:focus:border-slate-500"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Rating Filter */}
+              <div>
+                <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 dark:text-slate-400 block mb-1.5">
+                  Minimum Rating
+                </label>
+                <div className="flex gap-2">
+                  {['', '4', '4.5'].map((rateVal, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setRating(rateVal)}
+                      className={`flex-1 py-2 px-2 rounded-xl border text-xs font-bold flex items-center justify-center gap-1 transition-all ${
+                        rating === rateVal
+                          ? 'bg-amber-500 text-zinc-950 border-amber-500 shadow-2xs'
+                          : 'bg-zinc-50 dark:bg-[#131d2e] border-zinc-200 dark:border-slate-700 text-zinc-600 dark:text-zinc-300 hover:border-zinc-300'
+                      }`}
+                    >
+                      {rateVal === '' ? (
+                        'All'
+                      ) : (
+                        <>
+                          <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-500" />
+                          <span>{rateVal}+</span>
+                        </>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* In Stock Only Toggle */}
+              <div className="pt-2 border-t border-zinc-200 dark:border-slate-800">
+                <label className="flex items-center gap-2.5 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={inStock}
+                    onChange={(e) => setInStock(e.target.checked)}
+                    className="w-4 h-4 rounded border-zinc-300 dark:border-slate-700 text-blue-600 bg-white dark:bg-[#131d2e] focus:ring-blue-500"
+                  />
+                  <span className="text-xs font-semibold text-zinc-800 dark:text-slate-200">
+                    Ready to Ship (In Stock Only)
+                  </span>
+                </label>
+              </div>
             </div>
 
-            <button
-              onClick={() => setMobileFilterOpen(false)}
-              className="w-full mt-4 bg-zinc-950 hover:bg-zinc-800 dark:bg-blue-600 dark:hover:bg-blue-500 text-white font-bold text-xs py-2.5 rounded-lg shadow-sm"
-            >
-              Apply & View ({total})
-            </button>
+            {/* Sticky Bottom Actions */}
+            <div className="p-4 border-t border-zinc-200 dark:border-slate-800 bg-zinc-50 dark:bg-[#0c1322] shrink-0 flex gap-2.5">
+              <button
+                onClick={handleResetFilters}
+                className="w-1/3 py-2.5 px-3 rounded-xl border border-zinc-200 dark:border-slate-700 text-zinc-700 dark:text-zinc-300 text-xs font-bold hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors"
+              >
+                Reset
+              </button>
+              <button
+                onClick={() => setMobileFilterOpen(false)}
+                className="w-2/3 bg-zinc-950 hover:bg-zinc-800 dark:bg-blue-600 dark:hover:bg-blue-500 text-white font-bold text-xs py-2.5 px-4 rounded-xl shadow-sm transition-all"
+              >
+                Show Results ({total})
+              </button>
+            </div>
           </div>
         </div>
       )}
