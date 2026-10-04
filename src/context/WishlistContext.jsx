@@ -58,13 +58,11 @@ export const WishlistProvider = ({ children }) => {
   const removeFromWishlist = (productId) => {
     if (!productId) return;
     const targetId = typeof productId === 'object' ? (productId._id || productId.id) : productId;
-    setWishlistItems((prev) => {
-      const removed = prev.find((item) => (item._id || item.id) === targetId);
-      if (removed) {
-        addToast(`Removed "${removed.title || 'Product'}" from wishlist`, 'info');
-      }
-      return prev.filter((item) => (item._id || item.id) !== targetId);
-    });
+    const removed = wishlistItems.find((item) => (item._id || item.id) === targetId);
+    setWishlistItems((prev) => prev.filter((item) => (item._id || item.id) !== targetId));
+    if (removed) {
+      addToast(`Removed "${removed.title || 'Product'}" from wishlist`, 'info');
+    }
   };
 
   const toggleWishlist = (product) => {

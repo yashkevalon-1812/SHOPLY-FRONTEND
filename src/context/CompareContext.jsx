@@ -42,13 +42,11 @@ export const CompareProvider = ({ children }) => {
   };
 
   const removeFromCompare = (productId) => {
-    setCompareItems((prev) => {
-      const removed = prev.find((item) => item._id === productId);
-      if (removed) {
-        addToast(`Removed "${removed.title}" from compare`, 'info');
-      }
-      return prev.filter((item) => item._id !== productId);
-    });
+    const removed = compareItems.find((item) => item._id === productId);
+    setCompareItems((prev) => prev.filter((item) => item._id !== productId));
+    if (removed) {
+      addToast(`Removed "${removed.title}" from compare`, 'info');
+    }
   };
 
   const clearCompare = () => {
