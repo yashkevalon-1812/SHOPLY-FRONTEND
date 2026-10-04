@@ -11,7 +11,6 @@ import {
   ArrowRight,
   Sparkles,
   ChevronRight,
-  Flame,
 } from 'lucide-react';
 
 export const Wishlist = () => {
@@ -114,21 +113,14 @@ export const Wishlist = () => {
               You haven't liked any products yet. Browse through our catalog and tap the heart icon on any product to add it here!
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <div className="flex justify-center">
               <Link
                 to="/shop"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 dark:bg-amber-500 dark:hover:bg-amber-400 text-white dark:text-slate-950 text-xs sm:text-sm font-bold px-6 py-3 rounded-xl transition-all shadow-md active:scale-95"
+                className="inline-flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 dark:bg-amber-500 dark:hover:bg-amber-400 text-white dark:text-slate-950 text-xs sm:text-sm font-bold px-6 py-3 rounded-xl transition-all shadow-md active:scale-95"
               >
                 <ShoppingBag className="w-4 h-4" />
                 <span>Explore Products</span>
                 <ArrowRight className="w-4 h-4" />
-              </Link>
-              <Link
-                to="/offers"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 bg-zinc-100 dark:bg-slate-800 hover:bg-zinc-200 dark:hover:bg-slate-700 text-zinc-800 dark:text-slate-200 text-xs sm:text-sm font-semibold px-5 py-3 rounded-xl transition-all border border-zinc-200 dark:border-slate-700"
-              >
-                <Flame className="w-4 h-4 text-amber-500" />
-                <span>Offers & Deals</span>
               </Link>
             </div>
           </div>
