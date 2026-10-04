@@ -22,6 +22,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
 import { useTheme } from '../../context/ThemeContext';
 import { useCompare } from '../../context/CompareContext';
+import { useWishlist } from '../../context/WishlistContext';
 import { NotificationDropdown } from './NotificationDropdown';
 import { ShoplyLogoMark } from './ShoplyLogo';
 
@@ -64,15 +65,8 @@ export const Navbar = () => {
       .catch(() => {});
   }, []);
 
-  // Safe wishlist count
-  const [wishlistCount] = useState(() => {
-    try {
-      const saved = localStorage.getItem('shoply_wishlist') || localStorage.getItem('velora_wishlist') || localStorage.getItem('shopsphere_wishlist');
-      return saved ? JSON.parse(saved).length : 0;
-    } catch {
-      return 0;
-    }
-  });
+  // Reactive wishlist count
+  const { wishlistCount } = useWishlist();
 
   const departmentsRef = useRef(null);
   const accountRef = useRef(null);
@@ -397,7 +391,7 @@ export const Navbar = () => {
 
             {/* Wishlist Heart Icon */}
             <Link
-              to="/shop?filter=wishlist"
+              to="/wishlist"
               className="relative w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/60 hover:bg-slate-100 dark:hover:bg-slate-800/80 text-slate-700 dark:text-slate-200 hover:text-rose-600 dark:hover:text-rose-400 flex items-center justify-center transition-colors shadow-2xs shrink-0 cursor-pointer"
               title="Wishlist"
               aria-label="Wishlist"
@@ -651,6 +645,23 @@ export const Navbar = () => {
                     }`}
                   >
                     All Products
+                  </Link>
+                  <Link
+                    to="/wishlist"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`p-2.5 rounded-xl border text-xs font-bold flex items-center justify-center gap-1.5 text-center transition-all ${
+                      location.pathname === '/wishlist'
+                        ? 'bg-rose-600 text-white border-rose-600 shadow-xs'
+                        : 'bg-slate-50 dark:bg-slate-800/60 border-slate-200/60 dark:border-slate-800 text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
+                    }`}
+                  >
+                    <Heart className="w-3.5 h-3.5 fill-current" />
+                    <span>Wishlist</span>
+                    {wishlistCount > 0 && (
+                      <span className="px-1.5 py-0.2 rounded-full bg-rose-500 text-white text-[10px] font-black">
+                        {wishlistCount}
+                      </span>
+                    )}
                   </Link>
                   <Link
                     to="/about"

@@ -5,6 +5,7 @@ import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { useCompare } from '../context/CompareContext';
+import { useWishlist } from '../context/WishlistContext';
 import { ProductCard } from '../components/product/ProductCard';
 import { SellerComparisonModal } from '../components/product/SellerComparisonModal';
 import { getSellerOffers } from '../utils/productOffers';
@@ -27,6 +28,7 @@ import {
   Award,
   Tag,
   Copy,
+  Heart,
 } from 'lucide-react';
 import { formatINR } from '../utils/format';
 import { handleImageError } from '../utils/imageHelper';
@@ -38,6 +40,7 @@ export const ProductDetails = () => {
   const { isAuthenticated } = useAuth();
   const { addToast } = useToast();
   const { addToCompare, isInCompare, openCompare } = useCompare();
+  const { toggleWishlist, isInWishlist } = useWishlist();
 
   const [product, setProduct] = useState(null);
   const [related, setRelated] = useState([]);
@@ -214,6 +217,7 @@ export const ProductDetails = () => {
     product.seller?.name ||
     'Shoply Official Direct';
   const lowestOfferPrice = offers.length > 0 ? Math.min(...offers.map((o) => o.price)) : effectivePrice;
+  const isWishlisted = isInWishlist(product?._id);
 
   return (
     <div className="bg-white text-zinc-900 min-h-screen py-10">
@@ -255,6 +259,21 @@ export const ProductDetails = () => {
                   SAVE {discountPercent}%
                 </div>
               )}
+
+              {/* Like / Wishlist Button on Hero Image */}
+              <button
+                type="button"
+                onClick={() => toggleWishlist(product)}
+                className={`absolute top-4 right-4 z-10 p-2.5 rounded-full backdrop-blur-md transition-all shadow-md cursor-pointer ${
+                  isWishlisted
+                    ? 'bg-rose-600 text-white shadow-rose-600/30 scale-105'
+                    : 'bg-white/90 text-zinc-700 hover:text-rose-600 hover:bg-white'
+                }`}
+                title={isWishlisted ? 'Remove from Wishlist' : 'Add to Wishlist'}
+                aria-label={isWishlisted ? 'Remove from Wishlist' : 'Add to Wishlist'}
+              >
+                <Heart className={`w-5 h-5 ${isWishlisted ? 'fill-white stroke-white' : ''}`} />
+              </button>
             </div>
 
             {/* Thumbnail switcher */}
@@ -513,18 +532,36 @@ export const ProductDetails = () => {
                   <span>Add to Shopping Cart</span>
                 </button>
 
-                {/* Add to Compare Action */}
-                <button
-                  onClick={() => addToCompare(product)}
-                  className={`w-full py-2.5 px-3 rounded-2xl border text-xs font-bold flex items-center justify-center gap-2 transition-all ${
-                    isInCompare(product._id)
-                      ? 'bg-blue-600 text-white border-blue-600 shadow-xs'
-                      : 'bg-zinc-50 hover:bg-zinc-100 dark:bg-slate-800 dark:hover:bg-slate-700 border-zinc-200 dark:border-slate-700 text-zinc-700 dark:text-slate-200'
-                  }`}
-                >
-                  <ArrowLeftRight className="w-3.5 h-3.5" />
-                  <span>{isInCompare(product._id) ? 'Item Added to Compare ✓ (Click to Remove)' : 'Compare with Other Products'}</span>
-                </button>
+                {/* Wishlist & Compare Quick Actions */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                  {/* Add to Wishlist Action */}
+                  <button
+                    type="button"
+                    onClick={() => toggleWishlist(product)}
+                    className={`w-full py-2.5 px-3 rounded-2xl border text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                      isWishlisted
+                        ? 'bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 border-rose-200 dark:border-rose-800 shadow-xs'
+                        : 'bg-zinc-50 hover:bg-zinc-100 dark:bg-slate-800 dark:hover:bg-slate-700 border-zinc-200 dark:border-slate-700 text-zinc-700 dark:text-slate-200'
+                    }`}
+                  >
+                    <Heart className={`w-3.5 h-3.5 ${isWishlisted ? 'fill-rose-600 dark:fill-rose-400 text-rose-600 dark:text-rose-400' : ''}`} />
+                    <span>{isWishlisted ? 'Saved in Wishlist ♥' : 'Add to Wishlist'}</span>
+                  </button>
+
+                  {/* Add to Compare Action */}
+                  <button
+                    type="button"
+                    onClick={() => addToCompare(product)}
+                    className={`w-full py-2.5 px-3 rounded-2xl border text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                      isInCompare(product._id)
+                        ? 'bg-blue-600 text-white border-blue-600 shadow-xs'
+                        : 'bg-zinc-50 hover:bg-zinc-100 dark:bg-slate-800 dark:hover:bg-slate-700 border-zinc-200 dark:border-slate-700 text-zinc-700 dark:text-slate-200'
+                    }`}
+                  >
+                    <ArrowLeftRight className="w-3.5 h-3.5" />
+                    <span>{isInCompare(product._id) ? 'In Compare ✓' : 'Compare Product'}</span>
+                  </button>
+                </div>
               </div>
 
               {/* Seller Trust Attribution */}

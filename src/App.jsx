@@ -4,6 +4,7 @@ import { ToastProvider } from './context/ToastContext';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import { CompareProvider } from './context/CompareContext';
+import { WishlistProvider } from './context/WishlistContext';
 
 // Common Components
 import { Navbar } from './components/common/Navbar';
@@ -15,6 +16,7 @@ import { CompareModal } from './components/product/CompareModal';
 // Storefront Pages
 import { Home } from './pages/Home';
 import { Shop } from './pages/Shop';
+import { Wishlist } from './pages/Wishlist';
 import { ProductDetails } from './pages/ProductDetails';
 import { Cart } from './pages/Cart';
 import { Checkout } from './pages/Checkout';
@@ -89,12 +91,14 @@ function App() {
         <AuthProvider>
           <CartProvider>
             <CompareProvider>
-              <BrowserRouter>
+              <WishlistProvider>
+                <BrowserRouter>
                 <Routes>
                   {/* Storefront Layout */}
                   <Route element={<StorefrontLayout />}>
                     <Route path="/" element={<Home />} />
                     <Route path="/shop" element={<Shop />} />
+                    <Route path="/wishlist" element={<Wishlist />} />
                     <Route path="/product/:id" element={<ProductDetails />} />
                   <Route path="/cart" element={<Cart />} />
                   <Route path="/checkout" element={<Checkout />} />
@@ -170,7 +174,8 @@ function App() {
                 </Route>
               </Routes>
             </BrowserRouter>
-          </CompareProvider>
+              </WishlistProvider>
+            </CompareProvider>
         </CartProvider>
       </AuthProvider>
     </ToastProvider>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import { ProductCard } from '../components/product/ProductCard';
 import {
@@ -13,6 +13,7 @@ import {
 
 export const Shop = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -31,11 +32,15 @@ export const Shop = () => {
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
   useEffect(() => {
+    if (searchParams.get('filter') === 'wishlist') {
+      navigate('/wishlist', { replace: true });
+      return;
+    }
     const urlCategory = searchParams.get('category');
     const urlKeyword = searchParams.get('keyword');
     if (urlCategory) setCategory(urlCategory);
     if (urlKeyword !== null) setKeyword(urlKeyword);
-  }, [searchParams]);
+  }, [searchParams, navigate]);
 
   useEffect(() => {
     const loadCategories = async () => {

@@ -2,7 +2,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import { useToast } from '../../context/ToastContext';
 import { useCompare } from '../../context/CompareContext';
-import { Star, ShoppingBag, Zap, Flame, ArrowLeftRight } from 'lucide-react';
+import { useWishlist } from '../../context/WishlistContext';
+import { Star, ShoppingBag, Zap, Flame, ArrowLeftRight, Heart } from 'lucide-react';
 import { formatINR } from '../../utils/format';
 import { handleImageError } from '../../utils/imageHelper';
 
@@ -10,9 +11,17 @@ export const ProductCard = ({ product }) => {
   const { addToCart } = useCart();
   const { addToast } = useToast();
   const { addToCompare, isInCompare } = useCompare();
+  const { toggleWishlist, isInWishlist } = useWishlist();
   const navigate = useNavigate();
 
   const inCompare = isInCompare(product._id);
+  const isWishlisted = isInWishlist(product._id);
+
+  const handleToggleWishlist = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleWishlist(product);
+  };
 
   const effectivePrice = product.discountPrice > 0 ? product.discountPrice : product.price;
   const hasDiscount = product.discountPrice > 0 && product.discountPrice < product.price;
@@ -72,15 +81,32 @@ export const ProductCard = ({ product }) => {
           ) : null}
         </div>
 
-        {/* Top-Right Compare Button */}
-        <div className="absolute top-2.5 right-2.5 z-10">
+        {/* Top-Right Action Buttons: Wishlist & Compare */}
+        <div className="absolute top-2.5 right-2.5 z-10 flex flex-col gap-1.5">
+          {/* Wishlist Like Heart Button */}
           <button
+            type="button"
+            onClick={handleToggleWishlist}
+            className={`p-1.5 rounded-full backdrop-blur-md transition-all duration-200 shadow-sm cursor-pointer ${
+              isWishlisted
+                ? 'bg-rose-600 text-white shadow-rose-600/30 scale-105'
+                : 'bg-white/90 dark:bg-slate-900/90 text-zinc-600 dark:text-slate-300 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-white shadow-2xs'
+            }`}
+            title={isWishlisted ? 'Remove from Wishlist' : 'Add to Wishlist'}
+            aria-label={isWishlisted ? 'Remove from Wishlist' : 'Add to Wishlist'}
+          >
+            <Heart className={`w-3.5 h-3.5 ${isWishlisted ? 'fill-white stroke-white' : ''}`} />
+          </button>
+
+          {/* Compare Button */}
+          <button
+            type="button"
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
               addToCompare(product);
             }}
-            className={`p-1.5 rounded-full backdrop-blur-md transition-all duration-200 ${
+            className={`p-1.5 rounded-full backdrop-blur-md transition-all duration-200 cursor-pointer ${
               inCompare
                 ? 'bg-blue-600 text-white shadow-md scale-105'
                 : 'bg-white/90 dark:bg-slate-900/90 text-zinc-600 dark:text-slate-300 hover:text-blue-600 hover:bg-white shadow-2xs opacity-90 sm:opacity-0 sm:group-hover:opacity-100'
