@@ -271,57 +271,57 @@ export const AdminBroadcast = () => {
         </button>
       </div>
 
-      {/* Metric Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Metric Cards - Responsive 2-Col Mobile, 4-Col Desktop */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
         {/* Total Broadcasts */}
-        <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#131d2e] border border-slate-200 dark:border-slate-800 shadow-xs flex items-center justify-between">
-          <div>
-            <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Broadcasts</p>
-            <p className="text-2xl font-black text-slate-900 dark:text-white mt-1">
+        <div className="p-3.5 sm:p-5 rounded-2xl bg-white dark:bg-[#131d2e] border border-slate-200 dark:border-slate-800 shadow-xs flex items-center justify-between min-w-0">
+          <div className="min-w-0 flex-1 pr-2">
+            <p className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-wider truncate">Total Broadcasts</p>
+            <p className="text-base sm:text-xl md:text-2xl font-black text-slate-900 dark:text-white mt-1 truncate">
               {stats.totalBroadcasts}
             </p>
           </div>
-          <div className="w-11 h-11 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 flex items-center justify-center">
-            <Radio className="w-5 h-5" />
+          <div className="w-8 h-8 sm:w-11 sm:h-11 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
+            <Radio className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
         </div>
 
         {/* Storewide Community Reach */}
-        <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#131d2e] border border-slate-200 dark:border-slate-800 shadow-xs flex items-center justify-between">
-          <div>
-            <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">All-Users Broadcasts</p>
-            <p className="text-2xl font-black text-slate-900 dark:text-white mt-1">
+        <div className="p-3.5 sm:p-5 rounded-2xl bg-white dark:bg-[#131d2e] border border-slate-200 dark:border-slate-800 shadow-xs flex items-center justify-between min-w-0">
+          <div className="min-w-0 flex-1 pr-2">
+            <p className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-wider truncate">All-Users Broadcasts</p>
+            <p className="text-base sm:text-xl md:text-2xl font-black text-slate-900 dark:text-white mt-1 truncate">
               {stats.audienceStats?.all || 0}
             </p>
           </div>
-          <div className="w-11 h-11 rounded-xl bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400 flex items-center justify-center">
-            <Users className="w-5 h-5" />
+          <div className="w-8 h-8 sm:w-11 sm:h-11 rounded-xl bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0">
+            <Users className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
         </div>
 
         {/* Seller Studio Targeted */}
-        <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#131d2e] border border-slate-200 dark:border-slate-800 shadow-xs flex items-center justify-between">
-          <div>
-            <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Merchant Specific</p>
-            <p className="text-2xl font-black text-slate-900 dark:text-white mt-1">
+        <div className="p-3.5 sm:p-5 rounded-2xl bg-white dark:bg-[#131d2e] border border-slate-200 dark:border-slate-800 shadow-xs flex items-center justify-between min-w-0">
+          <div className="min-w-0 flex-1 pr-2">
+            <p className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-wider truncate">Merchant Specific</p>
+            <p className="text-base sm:text-xl md:text-2xl font-black text-slate-900 dark:text-white mt-1 truncate">
               {stats.audienceStats?.sellers || 0}
             </p>
           </div>
-          <div className="w-11 h-11 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 flex items-center justify-center">
-            <Store className="w-5 h-5" />
+          <div className="w-8 h-8 sm:w-11 sm:h-11 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+            <Store className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
         </div>
 
         {/* Total Reads */}
-        <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#131d2e] border border-slate-200 dark:border-slate-800 shadow-xs flex items-center justify-between">
-          <div>
-            <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">User Read Receipts</p>
-            <p className="text-2xl font-black text-emerald-600 dark:text-emerald-400 mt-1">
+        <div className="p-3.5 sm:p-5 rounded-2xl bg-white dark:bg-[#131d2e] border border-slate-200 dark:border-slate-800 shadow-xs flex items-center justify-between min-w-0">
+          <div className="min-w-0 flex-1 pr-2">
+            <p className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-wider truncate">Read Receipts</p>
+            <p className="text-base sm:text-xl md:text-2xl font-black text-emerald-600 dark:text-emerald-400 mt-1 truncate">
               {stats.totalReads}
             </p>
           </div>
-          <div className="w-11 h-11 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
-            <CheckCircle2 className="w-5 h-5" />
+          <div className="w-8 h-8 sm:w-11 sm:h-11 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+            <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
         </div>
       </div>

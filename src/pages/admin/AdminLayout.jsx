@@ -218,8 +218,8 @@ export const AdminLayout = () => {
           </div>
         </header>
 
-        {/* Page Content Canvas */}
-        <main className="flex-1 p-6 sm:p-8 lg:p-10">
+        {/* Page Content Canvas - Responsive Padding */}
+        <main className="flex-1 p-3.5 sm:p-6 lg:p-8 xl:p-10 min-w-0">
           <Outlet />
         </main>
       </div>

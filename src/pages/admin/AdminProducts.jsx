@@ -157,40 +157,46 @@ export const AdminProducts = () => {
         </Link>
       </div>
 
-      {/* KPI Overview Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-white dark:bg-[#0c1427] border border-slate-200 dark:border-slate-800 p-4 sm:p-5 rounded-2xl shadow-xs transition-colors">
-          <div className="w-9 h-9 rounded-xl bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800/60 text-amber-600 dark:text-amber-400 flex items-center justify-center mb-2.5">
-            <Package className="w-4 h-4" />
+      {/* KPI Overview Cards - Responsive 2-Col Mobile (Span-2 for Valuation), 3-Col Desktop */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 sm:gap-4">
+        <div className="bg-white dark:bg-[#0c1427] border border-slate-200 dark:border-slate-800 p-3.5 sm:p-5 rounded-2xl shadow-xs transition-colors flex flex-col justify-between min-w-0">
+          <div>
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800/60 text-amber-600 dark:text-amber-400 flex items-center justify-center mb-2 sm:mb-2.5">
+              <Package className="w-4 h-4" />
+            </div>
+            <p className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-wider truncate">
+              Official Products
+            </p>
           </div>
-          <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-            Official Products
-          </p>
-          <p className="text-2xl font-black text-slate-900 dark:text-white mt-1">
+          <p className="text-base sm:text-xl md:text-2xl font-black text-slate-900 dark:text-white mt-1 truncate">
             {products.length}
           </p>
         </div>
 
-        <div className="bg-white dark:bg-[#0c1427] border border-slate-200 dark:border-slate-800 p-4 sm:p-5 rounded-2xl shadow-xs transition-colors">
-          <div className="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-2.5">
-            <Layers className="w-4 h-4" />
+        <div className="bg-white dark:bg-[#0c1427] border border-slate-200 dark:border-slate-800 p-3.5 sm:p-5 rounded-2xl shadow-xs transition-colors flex flex-col justify-between min-w-0">
+          <div>
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-2 sm:mb-2.5">
+              <Layers className="w-4 h-4" />
+            </div>
+            <p className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-wider truncate">
+              Available Inventory
+            </p>
           </div>
-          <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-            Available Inventory
-          </p>
-          <p className="text-2xl font-black text-slate-900 dark:text-white mt-1">
+          <p className="text-base sm:text-xl md:text-2xl font-black text-slate-900 dark:text-white mt-1 truncate">
             {totalStock} Units
           </p>
         </div>
 
-        <div className="bg-white dark:bg-[#0c1427] border border-slate-200 dark:border-slate-800 p-4 sm:p-5 rounded-2xl shadow-xs transition-colors">
-          <div className="w-9 h-9 rounded-xl bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-900/50 text-rose-600 dark:text-rose-400 flex items-center justify-center mb-2.5">
-            <IndianRupee className="w-4 h-4" />
+        <div className="col-span-2 sm:col-span-1 bg-white dark:bg-[#0c1427] border border-slate-200 dark:border-slate-800 p-3.5 sm:p-5 rounded-2xl shadow-xs transition-colors flex flex-col justify-between min-w-0">
+          <div>
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-900/50 text-rose-600 dark:text-rose-400 flex items-center justify-center mb-2 sm:mb-2.5">
+              <IndianRupee className="w-4 h-4" />
+            </div>
+            <p className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-wider truncate">
+              Admin Catalog Valuation
+            </p>
           </div>
-          <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-            Admin Catalog Valuation
-          </p>
-          <p className="text-2xl font-black text-slate-900 dark:text-white mt-1">
+          <p className="text-base sm:text-xl md:text-2xl font-black text-slate-900 dark:text-white mt-1 truncate" title={formatINR(totalValue)}>
             {formatINR(totalValue)}
           </p>
         </div>

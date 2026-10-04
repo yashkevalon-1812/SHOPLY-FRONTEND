@@ -321,37 +321,41 @@ export const AdminSellerProducts = () => {
         </button>
       </div>
 
-      {/* KPI Overview Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-        <div className="bg-white dark:bg-[#0c1427] border border-slate-200 dark:border-slate-800 p-5 rounded-2xl shadow-xs transition-colors">
-          <div className="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-950/50 border border-indigo-200 dark:border-indigo-800/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center mb-3">
-            <Store className="w-5 h-5" />
+      {/* KPI Overview Cards - Responsive 2-Col Mobile, 4-Col Desktop */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 lg:gap-5">
+        <div className="bg-white dark:bg-[#0c1427] border border-slate-200 dark:border-slate-800 p-3.5 sm:p-5 rounded-2xl shadow-xs transition-colors flex flex-col justify-between min-w-0">
+          <div>
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-indigo-50 dark:bg-indigo-950/50 border border-indigo-200 dark:border-indigo-800/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center mb-2 sm:mb-3">
+              <Store className="w-4 h-4 sm:w-5 sm:h-5" />
+            </div>
+            <p className="text-[10px] sm:text-xs font-semibold text-slate-500 dark:text-slate-400 truncate">Registered Sellers</p>
           </div>
-          <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">Registered Sellers</p>
-          <p className="text-2xl font-black text-slate-900 dark:text-white mt-1">{totalSellers}</p>
+          <p className="text-base sm:text-xl md:text-2xl font-black text-slate-900 dark:text-white mt-1 truncate">{totalSellers}</p>
         </div>
 
         {/* Pending Products Highlight Card */}
         <div
           onClick={() => setApprovalFilter('pending')}
-          className={`bg-white dark:bg-[#0c1427] border p-5 rounded-2xl shadow-xs transition-all cursor-pointer ${
+          className={`bg-white dark:bg-[#0c1427] border p-3.5 sm:p-5 rounded-2xl shadow-xs transition-all cursor-pointer flex flex-col justify-between min-w-0 ${
             approvalFilter === 'pending'
               ? 'border-amber-500 ring-2 ring-amber-400/30'
               : 'border-slate-200 dark:border-slate-800 hover:border-amber-400'
           }`}
         >
-          <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800/60 text-amber-600 dark:text-amber-400 flex items-center justify-center mb-3">
-            <Clock className="w-5 h-5" />
+          <div>
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800/60 text-amber-600 dark:text-amber-400 flex items-center justify-center mb-2 sm:mb-3">
+              <Clock className="w-4 h-4 sm:w-5 sm:h-5" />
+            </div>
+            <div className="flex items-center justify-between gap-1">
+              <p className="text-[10px] sm:text-xs font-semibold text-slate-500 dark:text-slate-400 truncate">Pending Approval</p>
+              {totalPendingProducts > 0 && (
+                <span className="text-[9px] sm:text-[10px] font-bold text-amber-600 bg-amber-100 dark:bg-amber-950/80 px-1.5 sm:px-2 py-0.5 rounded-full shrink-0">
+                  Action
+                </span>
+              )}
+            </div>
           </div>
-          <div className="flex items-center justify-between">
-            <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">Awaiting Admin Approval</p>
-            {totalPendingProducts > 0 && (
-              <span className="text-[10px] font-bold text-amber-600 bg-amber-100 dark:bg-amber-950/80 px-2 py-0.5 rounded-full">
-                Action Required
-              </span>
-            )}
-          </div>
-          <p className="text-2xl font-black text-amber-600 dark:text-amber-400 mt-1">
+          <p className="text-base sm:text-xl md:text-2xl font-black text-amber-600 dark:text-amber-400 mt-1 truncate">
             {totalPendingProducts}
           </p>
         </div>
@@ -359,27 +363,31 @@ export const AdminSellerProducts = () => {
         {/* Live Approved Products Card */}
         <div
           onClick={() => setApprovalFilter('approved')}
-          className={`bg-white dark:bg-[#0c1427] border p-5 rounded-2xl shadow-xs transition-all cursor-pointer ${
+          className={`bg-white dark:bg-[#0c1427] border p-3.5 sm:p-5 rounded-2xl shadow-xs transition-all cursor-pointer flex flex-col justify-between min-w-0 ${
             approvalFilter === 'approved'
               ? 'border-emerald-500 ring-2 ring-emerald-400/30'
               : 'border-slate-200 dark:border-slate-800 hover:border-emerald-400'
           }`}
         >
-          <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-3">
-            <CheckCircle2 className="w-5 h-5" />
+          <div>
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-2 sm:mb-3">
+              <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" />
+            </div>
+            <p className="text-[10px] sm:text-xs font-semibold text-slate-500 dark:text-slate-400 truncate">Live on Storefront</p>
           </div>
-          <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">Live on Storefront</p>
-          <p className="text-2xl font-black text-emerald-600 dark:text-emerald-400 mt-1">
+          <p className="text-base sm:text-xl md:text-2xl font-black text-emerald-600 dark:text-emerald-400 mt-1 truncate">
             {totalApprovedProducts}
           </p>
         </div>
 
-        <div className="bg-white dark:bg-[#0c1427] border border-slate-200 dark:border-slate-800 p-5 rounded-2xl shadow-xs transition-colors">
-          <div className="w-10 h-10 rounded-xl bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-900/50 text-rose-600 dark:text-rose-400 flex items-center justify-center mb-3">
-            <IndianRupee className="w-5 h-5" />
+        <div className="bg-white dark:bg-[#0c1427] border border-slate-200 dark:border-slate-800 p-3.5 sm:p-5 rounded-2xl shadow-xs transition-colors flex flex-col justify-between min-w-0">
+          <div>
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-900/50 text-rose-600 dark:text-rose-400 flex items-center justify-center mb-2 sm:mb-3">
+              <IndianRupee className="w-4 h-4 sm:w-5 sm:h-5" />
+            </div>
+            <p className="text-[10px] sm:text-xs font-semibold text-slate-500 dark:text-slate-400 truncate">Catalog Valuation</p>
           </div>
-          <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">Total Catalog Valuation</p>
-          <p className="text-2xl font-black text-slate-900 dark:text-white mt-1">
+          <p className="text-base sm:text-xl md:text-2xl font-black text-slate-900 dark:text-white mt-1 truncate" title={formatINR(totalCatalogValue)}>
             {formatINR(totalCatalogValue)}
           </p>
         </div>
