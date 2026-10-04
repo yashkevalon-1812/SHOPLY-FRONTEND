@@ -102,6 +102,18 @@ export const NotificationDropdown = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // Prevent background scroll on mobile when notifications modal is open
+  useEffect(() => {
+    if (isOpen && window.innerWidth < 640) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
+
   const unreadCount = notifications.filter((n) => !n.read).length;
 
   const markAllAsRead = async () => {
@@ -196,156 +208,175 @@ export const NotificationDropdown = () => {
         )}
       </button>
 
-      {/* Dropdown Panel */}
+      {/* Dropdown Panel / Mobile Modal */}
       {isOpen && (
-        <div className="absolute right-0 mt-1.5 w-72 sm:w-80 md:w-84 max-w-[calc(100vw-20px)] bg-white dark:bg-[#0f172a] border border-zinc-200 dark:border-slate-800 rounded-xl shadow-xl py-2 z-50 animate-fade-up">
-          {/* Header */}
-          <div className="px-3 pb-2 border-b border-zinc-100 dark:border-slate-800 flex items-center justify-between">
-            <div className="flex items-center gap-1.5">
-              <h3 className="font-bold text-xs text-zinc-900 dark:text-white">
-                Notifications
-              </h3>
-              {unreadCount > 0 && (
-                <span className="bg-blue-50 dark:bg-blue-950/70 text-blue-600 dark:text-blue-400 text-[9px] font-extrabold px-1.5 py-0.2 rounded-full">
-                  {unreadCount} new
-                </span>
-              )}
-            </div>
+        <>
+          {/* Mobile Backdrop Overlay - closes on tap outside */}
+          <div
+            className="fixed inset-0 bg-black/50 backdrop-blur-xs z-40 sm:hidden transition-opacity"
+            onClick={() => setIsOpen(false)}
+            aria-hidden="true"
+          />
 
-            {notifications.length > 0 && (
-              <div className="flex items-center gap-1.5">
+          {/* Notification Card Modal / Dropdown */}
+          <div className="fixed inset-x-3.5 top-16 sm:inset-x-auto sm:right-0 sm:absolute sm:top-full sm:mt-2 w-auto sm:w-84 max-w-full sm:max-w-[420px] bg-white dark:bg-[#0f172a] border border-zinc-200 dark:border-slate-800 rounded-2xl shadow-2xl py-2 z-50 animate-fade-up max-h-[82vh] flex flex-col">
+            {/* Header */}
+            <div className="px-3.5 py-2.5 border-b border-zinc-100 dark:border-slate-800 flex items-center justify-between shrink-0">
+              <div className="flex items-center gap-2">
+                <h3 className="font-bold text-xs sm:text-sm text-zinc-900 dark:text-white">
+                  Notifications
+                </h3>
+                {unreadCount > 0 && (
+                  <span className="bg-blue-50 dark:bg-blue-950/70 text-blue-600 dark:text-blue-400 text-[9px] sm:text-[10px] font-extrabold px-1.5 py-0.2 rounded-full">
+                    {unreadCount} new
+                  </span>
+                )}
+              </div>
+
+              <div className="flex items-center gap-2">
                 {unreadCount > 0 && (
                   <button
                     onClick={markAllAsRead}
-                    className="text-[10px] font-semibold text-blue-600 hover:text-blue-700 dark:text-blue-400 flex items-center gap-0.5 hover:underline transition-all"
+                    className="text-[10px] sm:text-[11px] font-semibold text-blue-600 hover:text-blue-700 dark:text-blue-400 flex items-center gap-1 hover:underline transition-all"
                     title="Mark all as read"
                   >
-                    <CheckCheck className="w-3 h-3" />
+                    <CheckCheck className="w-3.5 h-3.5" />
                     <span>Read all</span>
                   </button>
                 )}
+                {notifications.length > 0 && (
+                  <button
+                    onClick={clearAllNotifications}
+                    className="text-zinc-400 hover:text-rose-600 dark:hover:text-rose-400 p-1 rounded-md transition-colors"
+                    title="Clear all notifications"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                )}
+                {/* Mobile Close Button */}
                 <button
-                  onClick={clearAllNotifications}
-                  className="text-zinc-400 hover:text-rose-600 dark:hover:text-rose-400 p-0.5 rounded transition-colors"
-                  title="Clear all notifications"
+                  onClick={() => setIsOpen(false)}
+                  className="sm:hidden text-zinc-400 hover:text-zinc-700 dark:hover:text-white p-1 rounded-md transition-colors"
+                  title="Close"
+                  aria-label="Close notifications"
                 >
-                  <Trash2 className="w-3 h-3" />
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+            {/* Filter Tabs */}
+            {notifications.length > 0 && (
+              <div className="px-3.5 py-2 flex gap-1.5 border-b border-zinc-100 dark:border-slate-800/80 shrink-0">
+                <button
+                  onClick={() => setActiveTab('all')}
+                  className={`text-xs px-2.5 py-1 rounded-lg font-semibold transition-colors ${
+                    activeTab === 'all'
+                      ? 'bg-zinc-900 dark:bg-slate-700 text-white'
+                      : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-slate-800'
+                  }`}
+                >
+                  All ({notifications.length})
+                </button>
+                <button
+                  onClick={() => setActiveTab('unread')}
+                  className={`text-xs px-2.5 py-1 rounded-lg font-semibold transition-colors ${
+                    activeTab === 'unread'
+                      ? 'bg-zinc-900 dark:bg-slate-700 text-white'
+                      : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-slate-800'
+                  }`}
+                >
+                  Unread ({unreadCount})
                 </button>
               </div>
             )}
-          </div>
 
-          {/* Filter Tabs */}
-          {notifications.length > 0 && (
-            <div className="px-3 pt-1.5 pb-1 flex gap-1 border-b border-zinc-100 dark:border-slate-800/80">
+            {/* Notification List */}
+            <div className="flex-1 max-h-[55vh] sm:max-h-72 overflow-y-auto divide-y divide-zinc-100 dark:divide-slate-800/70 overscroll-contain scrollbar-none">
+              {filteredNotifications.length === 0 ? (
+                <div className="py-8 text-center px-4">
+                  <div className="w-10 h-10 rounded-full bg-zinc-100 dark:bg-slate-800 text-zinc-400 dark:text-slate-500 mx-auto flex items-center justify-center mb-2">
+                    <Bell className="w-4 h-4" />
+                  </div>
+                  <p className="text-xs font-bold text-zinc-800 dark:text-zinc-200">
+                    {activeTab === 'unread' ? 'No unread notifications' : 'No notifications'}
+                  </p>
+                  <p className="text-[10px] text-zinc-500 dark:text-slate-400 mt-1">
+                    You are all caught up with your Shoply updates!
+                  </p>
+                </div>
+              ) : (
+                filteredNotifications.map((item) => (
+                  <div
+                    key={item.id}
+                    onClick={() => handleNotificationClick(item)}
+                    className={`p-3 sm:p-2.5 hover:bg-zinc-50 dark:hover:bg-slate-800/60 cursor-pointer transition-colors flex items-start gap-2.5 relative group ${
+                      !item.read
+                        ? 'bg-blue-50/40 dark:bg-blue-950/20'
+                        : 'bg-transparent'
+                    }`}
+                  >
+                    {/* Icon Badge */}
+                    {getNotificationIcon(item.type)}
+
+                    {/* Content */}
+                    <div className="flex-1 min-w-0 pr-1">
+                      <div className="flex items-center justify-between gap-1 mb-0.5">
+                        <h4
+                          className={`text-xs sm:text-[11px] truncate ${
+                            !item.read
+                              ? 'font-bold text-zinc-900 dark:text-white'
+                              : 'font-medium text-zinc-700 dark:text-zinc-300'
+                          }`}
+                        >
+                          {item.title}
+                        </h4>
+                        <span className="text-[10px] sm:text-[9px] text-zinc-400 dark:text-slate-500 shrink-0">
+                          {item.time}
+                        </span>
+                      </div>
+                      <p className="text-[11px] sm:text-[10px] text-zinc-600 dark:text-slate-400 leading-snug line-clamp-2">
+                        {item.message}
+                      </p>
+                    </div>
+
+                    {/* Unread Indicator & Delete */}
+                    <div className="shrink-0 flex items-center gap-1.5 self-center">
+                      {!item.read && (
+                        <span className="w-2 h-2 rounded-full bg-blue-600 dark:bg-blue-400" />
+                      )}
+                      <button
+                        onClick={(e) => removeNotification(e, item.id)}
+                        className="text-zinc-400 hover:text-rose-600 dark:hover:text-rose-400 sm:opacity-0 sm:group-hover:opacity-100 p-1 rounded transition-all"
+                        title="Delete"
+                        aria-label="Delete notification"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+
+            {/* Footer View Link */}
+            <div className="px-3.5 py-2 border-t border-zinc-100 dark:border-slate-800 flex items-center justify-between text-[11px] sm:text-[10px] shrink-0">
+              <span className="text-zinc-500 dark:text-slate-400">
+                Shoply Alerts
+              </span>
               <button
-                onClick={() => setActiveTab('all')}
-                className={`text-[10px] px-2 py-0.5 rounded font-semibold transition-colors ${
-                  activeTab === 'all'
-                    ? 'bg-zinc-900 dark:bg-slate-700 text-white'
-                    : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-slate-800'
-                }`}
+                onClick={() => {
+                  setIsOpen(false);
+                  navigate('/orders');
+                }}
+                className="text-blue-600 dark:text-blue-400 font-semibold hover:underline flex items-center gap-1"
               >
-                All ({notifications.length})
-              </button>
-              <button
-                onClick={() => setActiveTab('unread')}
-                className={`text-[10px] px-2 py-0.5 rounded font-semibold transition-colors ${
-                  activeTab === 'unread'
-                    ? 'bg-zinc-900 dark:bg-slate-700 text-white'
-                    : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-slate-800'
-                }`}
-              >
-                Unread ({unreadCount})
+                <span>View Orders</span>
+                <ExternalLink className="w-3 h-3" />
               </button>
             </div>
-          )}
-
-          {/* Notification List */}
-          <div className="max-h-60 overflow-y-auto divide-y divide-zinc-100 dark:divide-slate-800/70">
-            {filteredNotifications.length === 0 ? (
-              <div className="py-5 text-center px-3">
-                <div className="w-8 h-8 rounded-full bg-zinc-100 dark:bg-slate-800 text-zinc-400 dark:text-slate-500 mx-auto flex items-center justify-center mb-1">
-                  <Bell className="w-3.5 h-3.5" />
-                </div>
-                <p className="text-[11px] font-bold text-zinc-800 dark:text-zinc-200">
-                  {activeTab === 'unread' ? 'No unread notifications' : 'No notifications'}
-                </p>
-                <p className="text-[9px] text-zinc-500 dark:text-slate-400 mt-0.5">
-                  You are all caught up with your Shoply updates!
-                </p>
-              </div>
-            ) : (
-              filteredNotifications.map((item) => (
-                <div
-                  key={item.id}
-                  onClick={() => handleNotificationClick(item)}
-                  className={`p-2 sm:p-2.5 hover:bg-zinc-50 dark:hover:bg-slate-800/60 cursor-pointer transition-colors flex items-start gap-2 relative group ${
-                    !item.read
-                      ? 'bg-blue-50/40 dark:bg-blue-950/20'
-                      : 'bg-transparent'
-                  }`}
-                >
-                  {/* Icon Badge */}
-                  {getNotificationIcon(item.type)}
-
-                  {/* Content */}
-                  <div className="flex-1 min-w-0 pr-2">
-                    <div className="flex items-center justify-between gap-1 mb-0.5">
-                      <h4
-                        className={`text-[11px] truncate ${
-                          !item.read
-                            ? 'font-bold text-zinc-900 dark:text-white'
-                            : 'font-medium text-zinc-700 dark:text-zinc-300'
-                        }`}
-                      >
-                        {item.title}
-                      </h4>
-                      <span className="text-[9px] text-zinc-400 dark:text-slate-500 shrink-0">
-                        {item.time}
-                      </span>
-                    </div>
-                    <p className="text-[10px] text-zinc-600 dark:text-slate-400 leading-snug line-clamp-2">
-                      {item.message}
-                    </p>
-                  </div>
-
-                  {/* Unread Indicator or Delete */}
-                  <div className="shrink-0 flex items-center gap-1 self-center">
-                    {!item.read && (
-                      <span className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400" />
-                    )}
-                    <button
-                      onClick={(e) => removeNotification(e, item.id)}
-                      className="opacity-0 group-hover:opacity-100 p-0.5 text-zinc-400 hover:text-rose-600 dark:hover:text-rose-400 transition-opacity"
-                      title="Delete"
-                      aria-label="Delete notification"
-                    >
-                      <X className="w-3 h-3" />
-                    </button>
-                  </div>
-                </div>
-              ))
-            )}
           </div>
-
-          {/* Footer View Link */}
-          <div className="px-3 pt-1.5 mt-0.5 border-t border-zinc-100 dark:border-slate-800 flex items-center justify-between text-[10px]">
-            <span className="text-zinc-500 dark:text-slate-400">
-              Shoply Alerts
-            </span>
-            <button
-              onClick={() => {
-                setIsOpen(false);
-                navigate('/orders');
-              }}
-              className="text-blue-600 dark:text-blue-400 font-semibold hover:underline flex items-center gap-0.5"
-            >
-              <span>View Orders</span>
-              <ExternalLink className="w-2.5 h-2.5" />
-            </button>
-          </div>
-        </div>
+        </>
       )}
     </div>
   );
