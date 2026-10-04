@@ -39,7 +39,19 @@ export const Navbar = () => {
   const [departmentsOpen, setDepartmentsOpen] = useState(false);
   const [accountDropdownOpen, setAccountDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [departments, setDepartments] = useState([]);
+
+  const mobileSearchInputRef = useRef(null);
+
+  useEffect(() => {
+    if (mobileSearchOpen) {
+      const timer = setTimeout(() => {
+        mobileSearchInputRef.current?.focus();
+      }, 60);
+      return () => clearTimeout(timer);
+    }
+  }, [mobileSearchOpen]);
 
   useEffect(() => {
     api
@@ -98,6 +110,7 @@ export const Navbar = () => {
         setMobileMenuOpen(false);
         setDepartmentsOpen(false);
         setAccountDropdownOpen(false);
+        setMobileSearchOpen(false);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -110,6 +123,7 @@ export const Navbar = () => {
       setMobileMenuOpen(false);
       setAccountDropdownOpen(false);
       setDepartmentsOpen(false);
+      setMobileSearchOpen(false);
     }, 0);
     return () => clearTimeout(timer);
   }, [location.pathname]);
@@ -120,6 +134,7 @@ export const Navbar = () => {
       navigate(`/shop?keyword=${encodeURIComponent(searchQuery.trim())}`);
       setSearchQuery('');
       setMobileMenuOpen(false);
+      setMobileSearchOpen(false);
     }
   };
 
@@ -231,8 +246,26 @@ export const Navbar = () => {
             </button>
           </form>
 
-          {/* 4. Right Actions: Theme Toggle, Notifications, Account, Wishlist, Compare, Cart */}
+          {/* 4. Right Actions: Mobile Search Toggle, Theme Toggle, Notifications, Account, Wishlist, Compare, Cart */}
           <div className="flex items-center gap-1 sm:gap-1.5 md:gap-2 shrink-0">
+            {/* Mobile Search Toggle Button (Taps to open/close search bar) */}
+            <button
+              type="button"
+              onClick={() => {
+                setMobileSearchOpen(!mobileSearchOpen);
+                setAccountDropdownOpen(false);
+              }}
+              className={`md:hidden w-8 h-8 rounded-xl border flex items-center justify-center transition-all shadow-2xs shrink-0 cursor-pointer ${
+                mobileSearchOpen
+                  ? 'border-amber-500 text-amber-600 dark:text-amber-400 bg-amber-50/90 dark:bg-amber-950/50'
+                  : 'border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/60 hover:bg-slate-100 dark:hover:bg-slate-800/80 text-slate-700 dark:text-slate-200 hover:text-amber-600'
+              }`}
+              title={mobileSearchOpen ? 'Close Search' : 'Open Search'}
+              aria-label="Toggle search bar"
+            >
+              {mobileSearchOpen ? <X className="w-4 h-4 text-amber-600 dark:text-amber-400" /> : <Search className="w-4 h-4" />}
+            </button>
+
             {/* Theme Toggle Button (Tablet & Desktop, mobile in drawer) */}
             <button
               onClick={toggleTheme}
@@ -407,31 +440,43 @@ export const Navbar = () => {
           </div>
         </div>
 
-        {/* Mobile Search Bar (Directly below row 1 on < md screens) */}
-        <div className="md:hidden px-2.5 sm:px-3 pb-2.5 pt-0.5 border-t border-slate-100 dark:border-slate-800/60">
-          <form
-            onSubmit={handleSearchSubmit}
-            className="h-8 relative flex items-center rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/90 dark:bg-slate-900/90 overflow-hidden shadow-2xs focus-within:border-amber-500 focus-within:ring-1 focus-within:ring-amber-500/20 transition-all"
-          >
-            <div className="pl-2.5 pr-1 text-slate-400 dark:text-slate-500">
-              <Search className="w-3.5 h-3.5" />
-            </div>
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search luxury products, watches, tech..."
-              className="w-full h-full px-2 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 bg-transparent focus:outline-none"
-            />
-            <button
-              type="submit"
-              className="h-full px-3 bg-slate-900 dark:bg-amber-500 text-white dark:text-slate-950 font-bold flex items-center justify-center transition-colors shrink-0 cursor-pointer"
-              aria-label="Search button"
+        {/* Mobile Search Bar (Opens ONLY when user taps Search option) */}
+        {mobileSearchOpen && (
+          <div className="md:hidden px-2.5 sm:px-3 pb-2.5 pt-1 border-t border-slate-100 dark:border-slate-800/60 animate-in fade-in slide-in-from-top-1 duration-150">
+            <form
+              onSubmit={handleSearchSubmit}
+              className="h-8.5 relative flex items-center rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50/95 dark:bg-slate-900/95 overflow-hidden shadow-2xs focus-within:border-amber-500 focus-within:ring-1 focus-within:ring-amber-500/20 transition-all"
             >
-              <Search className="w-3.5 h-3.5" />
-            </button>
-          </form>
-        </div>
+              <div className="pl-2.5 pr-1 text-slate-400 dark:text-slate-500">
+                <Search className="w-3.5 h-3.5" />
+              </div>
+              <input
+                ref={mobileSearchInputRef}
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search luxury products, watches, tech..."
+                className="w-full h-full px-2 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 bg-transparent focus:outline-none"
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery('')}
+                  className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 mr-1"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
+              <button
+                type="submit"
+                className="h-full px-3.5 bg-slate-900 dark:bg-amber-500 text-white dark:text-slate-950 font-bold flex items-center justify-center transition-colors shrink-0 cursor-pointer"
+                aria-label="Search button"
+              >
+                <Search className="w-3.5 h-3.5" />
+              </button>
+            </form>
+          </div>
+        )}
       </div>
 
       {/* =========================================================================

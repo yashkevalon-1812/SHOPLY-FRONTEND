@@ -16,6 +16,7 @@ import {
   TrendingUp,
   Truck,
   RotateCcw,
+  Headphones,
 } from 'lucide-react';
 
 export const Home = () => {
@@ -80,46 +81,42 @@ export const Home = () => {
       {/* Sitewide Mega Sale Banner (Managed by Admin) */}
       <MegaSaleBanner />
 
-      {/* Inline styles for exact 1-screen viewport fit below the sticky navbar */}
+      {/* Responsive Background Image Object Positioning */}
       <style>{`
-        .hero-viewport-height {
-          height: calc(100vh - 96px);
-          min-height: calc(100vh - 96px);
-          height: calc(100dvh - 96px);
-          min-height: calc(100dvh - 96px);
-          width: 100%;
+        .hero-bg-img {
+          object-position: 70% center;
         }
-        @media (min-width: 768px) {
-          .hero-viewport-height {
-            height: calc(100vh - 98px);
-            min-height: calc(100vh - 98px);
-            height: calc(100dvh - 98px);
-            min-height: calc(100dvh - 98px);
+        @media (min-width: 640px) {
+          .hero-bg-img {
+            object-position: 75% center;
+          }
+        }
+        @media (min-width: 1024px) {
+          .hero-bg-img {
+            object-position: 82% center;
           }
         }
       `}</style>
 
       {/* =========================================================================
-          1. FULL-BLEED HERO SHOWCASE (Fits 100vh Screen Fold Cleanly with Navbar)
+          1. FULL-BLEED HERO SHOWCASE (Preserves all elements with 100% responsive layout)
          ========================================================================= */}
-      <section
-        className="hero-viewport-height relative overflow-hidden w-full flex flex-col justify-between bg-[#faf7f2] dark:bg-[#0c1017] border-b border-stone-200/80 dark:border-slate-800 transition-colors"
-      >
+      <section className="relative overflow-hidden w-full flex flex-col justify-between min-h-[calc(100dvh-100px)] md:h-[calc(100vh-98px)] md:min-h-[calc(100vh-98px)] bg-[#faf7f2] dark:bg-[#0c1017] border-b border-stone-200/80 dark:border-slate-800 transition-colors">
         {/* Full-bleed Studio Background Image */}
         <div className="absolute inset-0 z-0">
           <img
             src="/hero-everything-store.jpg"
             alt="Everything You Need, All in One Place - Shoply Showcase"
-            className="w-full h-full object-cover object-[70%_center] sm:object-[75%_center] lg:object-[82%_center] select-none pointer-events-none"
+            className="w-full h-full object-cover hero-bg-img select-none pointer-events-none"
           />
-          {/* Subtle gradient scrim on the left to guarantee pristine text contrast */}
+          {/* Subtle gradient scrim on the left to guarantee pristine text contrast while keeping image clear */}
           <div className="absolute inset-0 bg-gradient-to-r from-[#faf7f2] via-[#faf7f2]/90 sm:via-[#faf7f2]/75 via-40% to-transparent dark:from-[#0c1017] dark:via-[#0c1017]/95 sm:dark:via-[#0c1017]/85 pointer-events-none"></div>
         </div>
 
         {/* Top-Right Floating "Better Choices Brighter Days" Script Badge */}
-        <div className="absolute top-3 sm:top-5 lg:top-7 right-4 sm:right-8 lg:right-14 z-20 pointer-events-none select-none">
-          <div className="bg-white/85 dark:bg-slate-900/85 backdrop-blur-md px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-2xl border border-stone-200/80 dark:border-slate-700 shadow-md transform -rotate-3">
-            <p className="font-serif italic text-xs sm:text-sm font-semibold text-stone-900 dark:text-stone-100 leading-tight">
+        <div className="absolute top-2.5 sm:top-5 lg:top-7 right-3 sm:right-8 lg:right-14 z-20 pointer-events-none select-none">
+          <div className="bg-white/85 dark:bg-slate-900/85 backdrop-blur-md px-2.5 sm:px-3.5 py-1 sm:py-2 rounded-xl sm:rounded-2xl border border-stone-200/80 dark:border-slate-700 shadow-md transform -rotate-2 sm:-rotate-3">
+            <p className="font-serif italic text-[11px] sm:text-sm font-semibold text-stone-900 dark:text-stone-100 leading-tight">
               Better Choices <br />
               <span className="text-amber-600 dark:text-amber-400 font-bold">Brighter Days ✨</span>
             </p>
@@ -127,15 +124,15 @@ export const Home = () => {
         </div>
 
         {/* Middle Main Content */}
-        <div className="relative z-10 w-full px-4 sm:px-6 lg:px-12 flex-1 flex flex-col justify-center py-2 sm:py-4">
-          <div className="max-w-xl lg:max-w-2xl space-y-3 sm:space-y-4 text-left">
+        <div className="relative z-10 w-full px-4 sm:px-6 lg:px-12 flex-1 flex flex-col justify-center py-4 sm:py-6">
+          <div className="max-w-xl lg:max-w-2xl space-y-2.5 sm:space-y-4 text-left">
             {/* Category Kicker */}
-            <div className="text-[11px] sm:text-xs font-bold tracking-[0.25em] text-stone-500 dark:text-stone-400 uppercase">
+            <div className="text-[10px] sm:text-xs font-bold tracking-[0.25em] text-stone-500 dark:text-stone-400 uppercase">
               ALL CATEGORIES / ONE DESTINATION
             </div>
 
             {/* Main Headline */}
-            <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-[3.25rem] xl:text-[3.6rem] font-bold text-slate-950 dark:text-white tracking-tight leading-[1.1]">
+            <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-[3.25rem] xl:text-[3.6rem] font-bold text-slate-950 dark:text-white tracking-tight leading-[1.12]">
               Everything You Need, <br />
               <span className="font-serif italic font-normal text-slate-900 dark:text-amber-200">
                 All in
@@ -149,17 +146,17 @@ export const Home = () => {
             </p>
 
             {/* CTA Buttons */}
-            <div className="flex flex-wrap items-center gap-3 sm:gap-4 pt-1 sm:pt-2">
+            <div className="flex flex-wrap items-center gap-2.5 sm:gap-4 pt-1 sm:pt-2">
               <Link
                 to="/shop"
-                className="inline-flex items-center justify-center gap-2 bg-[#171717] hover:bg-black dark:bg-amber-500 dark:hover:bg-amber-400 text-white dark:text-slate-950 font-semibold text-xs sm:text-sm px-6 sm:px-7 py-2.5 sm:py-3 rounded-full shadow-md transition-all hover:scale-105 shrink-0"
+                className="inline-flex items-center justify-center gap-2 bg-[#171717] hover:bg-black dark:bg-amber-500 dark:hover:bg-amber-400 text-white dark:text-slate-950 font-semibold text-xs sm:text-sm px-5 sm:px-7 py-2.5 sm:py-3 rounded-full shadow-md transition-all hover:scale-105 shrink-0"
               >
                 <span>Shop Now</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
                 to="/shop"
-                className="inline-flex items-center justify-center border border-stone-400/80 dark:border-slate-700 hover:border-slate-900 dark:hover:border-white bg-white/40 dark:bg-slate-900/40 backdrop-blur-xs text-slate-900 dark:text-slate-200 font-semibold text-xs sm:text-sm px-6 sm:px-7 py-2.5 sm:py-3 rounded-full transition-all hover:bg-white dark:hover:bg-slate-800 shrink-0"
+                className="inline-flex items-center justify-center border border-stone-300 dark:border-slate-700 hover:border-slate-900 dark:hover:border-white bg-white/75 dark:bg-slate-900/60 backdrop-blur-md text-slate-900 dark:text-slate-200 font-semibold text-xs sm:text-sm px-5 sm:px-7 py-2.5 sm:py-3 rounded-full shadow-2xs transition-all hover:bg-white dark:hover:bg-slate-800 shrink-0"
               >
                 Explore Categories
               </Link>
@@ -167,60 +164,59 @@ export const Home = () => {
           </div>
         </div>
 
-        {/* Bottom Bar: Trust Badges (Left) & Carousel Controls (Right) */}
-        <div className="relative z-10 w-full px-4 sm:px-6 lg:px-12 pb-2 sm:pb-12 pt-1 flex flex-wrap items-center justify-between gap-3 sm:gap-4">
-          {/* Trust Badges */}
-          <div className="flex flex-wrap items-center gap-3 sm:gap-5">
+        {/* Bottom Bar: Trust Badges (All original items preserved inside Hero, fully responsive) */}
+        <div className="relative z-10 w-full px-4 sm:px-6 lg:px-12 pb-3.5 sm:pb-8 lg:pb-12 pt-2">
+          {/* Trust Badges: 2x2 grid on mobile, flex row on sm+ to prevent cutoffs */}
+          <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-x-3 gap-y-2.5 sm:gap-5">
             {/* Free Shipping */}
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-full bg-stone-200/80 dark:bg-slate-800 flex items-center justify-center shrink-0">
-                <Truck className="w-4 h-4 text-slate-900 dark:text-amber-400" />
+            <div className="flex items-center gap-2 sm:gap-2.5">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-stone-200/80 dark:bg-slate-800 flex items-center justify-center shrink-0">
+                <Truck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-900 dark:text-amber-400" />
               </div>
-              <div>
-                <p className="text-xs font-bold text-slate-900 dark:text-white leading-tight">Free Shipping</p>
-                <p className="text-[10px] text-stone-500 dark:text-slate-400">On orders over ₹1,999</p>
+              <div className="min-w-0">
+                <p className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white leading-tight truncate">Free Shipping</p>
+                <p className="text-[9px] sm:text-[10px] text-stone-500 dark:text-slate-400 truncate">On orders over ₹1,999</p>
               </div>
             </div>
 
             <div className="h-6 w-px bg-stone-300/80 dark:bg-slate-800 hidden sm:block"></div>
 
             {/* Secure Payments */}
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-full bg-stone-200/80 dark:bg-slate-800 flex items-center justify-center shrink-0">
-                <ShieldCheck className="w-4 h-4 text-slate-900 dark:text-amber-400" />
+            <div className="flex items-center gap-2 sm:gap-2.5">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-stone-200/80 dark:bg-slate-800 flex items-center justify-center shrink-0">
+                <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-900 dark:text-amber-400" />
               </div>
-              <div>
-                <p className="text-xs font-bold text-slate-900 dark:text-white leading-tight">Secure Payments</p>
-                <p className="text-[10px] text-stone-500 dark:text-slate-400">100% safe & encrypted</p>
+              <div className="min-w-0">
+                <p className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white leading-tight truncate">Secure Payments</p>
+                <p className="text-[9px] sm:text-[10px] text-stone-500 dark:text-slate-400 truncate">100% safe & encrypted</p>
               </div>
             </div>
 
             <div className="h-6 w-px bg-stone-300/80 dark:bg-slate-800 hidden sm:block"></div>
 
             {/* Easy Returns */}
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-full bg-stone-200/80 dark:bg-slate-800 flex items-center justify-center shrink-0">
-                <RotateCcw className="w-4 h-4 text-slate-900 dark:text-amber-400" />
+            <div className="flex items-center gap-2 sm:gap-2.5">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-stone-200/80 dark:bg-slate-800 flex items-center justify-center shrink-0">
+                <RotateCcw className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-900 dark:text-amber-400" />
               </div>
-              <div>
-                <p className="text-xs font-bold text-slate-900 dark:text-white leading-tight">Easy Returns</p>
-                <p className="text-[10px] text-stone-500 dark:text-slate-400">Hassle-free within 7 days</p>
+              <div className="min-w-0">
+                <p className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white leading-tight truncate">Easy Returns</p>
+                <p className="text-[9px] sm:text-[10px] text-stone-500 dark:text-slate-400 truncate">Hassle-free within 7 days</p>
               </div>
             </div>
 
-              <div className="h-6 w-px bg-stone-300/80 dark:bg-slate-800 hidden sm:block"></div>
+            <div className="h-6 w-px bg-stone-300/80 dark:bg-slate-800 hidden sm:block"></div>
 
             {/* Call Support */}
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-full bg-stone-200/80 dark:bg-slate-800 flex items-center justify-center shrink-0">
-                <RotateCcw className="w-4 h-4 text-slate-900 dark:text-amber-400" />
+            <div className="flex items-center gap-2 sm:gap-2.5">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-stone-200/80 dark:bg-slate-800 flex items-center justify-center shrink-0">
+                <Headphones className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-900 dark:text-amber-400" />
               </div>
-              <div>
-                <p className="text-xs font-bold text-slate-900 dark:text-white leading-tight">Call Support</p>
-                <p className="text-[10px] text-stone-500 dark:text-slate-400">24/7 customer service</p>
+              <div className="min-w-0">
+                <p className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white leading-tight truncate">Call Support</p>
+                <p className="text-[9px] sm:text-[10px] text-stone-500 dark:text-slate-400 truncate">24/7 customer service</p>
               </div>
             </div>
-
           </div>
         </div>
       </section>
