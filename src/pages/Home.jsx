@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../api/axios';
 import { ProductCard } from '../components/product/ProductCard';
-import { MegaSaleBanner } from '../components/common/MegaSaleBanner';
 import { handleImageError } from '../utils/imageHelper';
 import {
   ArrowRight,
@@ -78,9 +77,6 @@ export const Home = () => {
 
   return (
     <div className="bg-slate-50 text-slate-900 dark:bg-[#0b1120] dark:text-slate-100 selection:bg-amber-500 selection:text-slate-950 font-sans transition-colors duration-200">
-      {/* Sitewide Mega Sale Banner (Managed by Admin) */}
-      <MegaSaleBanner />
-
       {/* Responsive Background Image Object Positioning */}
       <style>{`
         .hero-bg-img {
