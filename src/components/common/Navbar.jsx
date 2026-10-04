@@ -653,17 +653,6 @@ export const Navbar = () => {
                     All Products
                   </Link>
                   <Link
-                    to="/offers"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className={`p-2.5 rounded-xl border text-xs font-bold flex items-center justify-center text-center transition-all ${
-                      location.pathname === '/offers'
-                        ? 'bg-amber-500 text-slate-950 border-amber-500 shadow-xs'
-                        : 'bg-slate-50 dark:bg-slate-800/60 border-slate-200/60 dark:border-slate-800 text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
-                    }`}
-                  >
-                    Offers & Deals
-                  </Link>
-                  <Link
                     to="/about"
                     onClick={() => setMobileMenuOpen(false)}
                     className={`p-2.5 rounded-xl border text-xs font-bold flex items-center justify-center text-center transition-all ${
@@ -677,13 +666,13 @@ export const Navbar = () => {
                   <Link
                     to="/contact"
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`col-span-2 p-2.5 rounded-xl border text-xs font-bold flex items-center justify-center text-center transition-all ${
+                    className={`p-2.5 rounded-xl border text-xs font-bold flex items-center justify-center text-center transition-all ${
                       location.pathname === '/contact'
                         ? 'bg-amber-500 text-slate-950 border-amber-500 shadow-xs'
                         : 'bg-slate-50 dark:bg-slate-800/60 border-slate-200/60 dark:border-slate-800 text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
                     }`}
                   >
-                    Contact Concierge
+                    Contact Us
                   </Link>
                 </div>
               </div>
