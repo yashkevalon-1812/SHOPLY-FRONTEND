@@ -11,6 +11,7 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 import { formatINR } from '../utils/format';
+import { handleImageError } from '../utils/imageHelper';
 
 export const MyOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -189,7 +190,9 @@ export const MyOrders = () => {
                         <img
                           src={item.image}
                           alt={item.title}
+                          referrerPolicy="no-referrer"
                           className="w-12 h-12 rounded-xl object-cover bg-zinc-50 border border-zinc-200 shrink-0"
+                          onError={(e) => handleImageError(e, item.image)}
                         />
                         <div className="flex-1 min-w-0">
                           <h4 className="font-bold text-zinc-900 truncate">{item.title}</h4>

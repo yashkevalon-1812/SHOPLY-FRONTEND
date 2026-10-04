@@ -4,6 +4,7 @@ import { useToast } from '../../context/ToastContext';
 import { useCompare } from '../../context/CompareContext';
 import { Star, ShoppingBag, Zap, Flame, ArrowLeftRight } from 'lucide-react';
 import { formatINR } from '../../utils/format';
+import { handleImageError } from '../../utils/imageHelper';
 
 export const ProductCard = ({ product }) => {
   const { addToCart } = useCart();
@@ -47,8 +48,10 @@ export const ProductCard = ({ product }) => {
         <img
           src={mainImage}
           alt={product.title}
+          referrerPolicy="no-referrer"
           className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out"
           loading="lazy"
+          onError={(e) => handleImageError(e, mainImage)}
         />
 
         {/* Badges Overlay */}

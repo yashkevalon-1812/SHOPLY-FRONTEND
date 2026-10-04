@@ -29,6 +29,7 @@ import {
   Copy,
 } from 'lucide-react';
 import { formatINR } from '../utils/format';
+import { handleImageError } from '../utils/imageHelper';
 
 export const ProductDetails = () => {
   const { id } = useParams();
@@ -245,7 +246,9 @@ export const ProductDetails = () => {
               <img
                 src={selectedImage || product.images[0]}
                 alt={product.title}
+                referrerPolicy="no-referrer"
                 className="w-full h-full object-cover object-center"
+                onError={(e) => handleImageError(e, selectedImage || product.images?.[0])}
               />
               {hasDiscount && (
                 <div className="absolute top-4 left-4 bg-rose-600 text-white text-xs font-black px-3 py-1 rounded-full shadow-md">
@@ -267,7 +270,13 @@ export const ProductDetails = () => {
                         : 'border-zinc-200 opacity-70 hover:opacity-100'
                     }`}
                   >
-                    <img src={img} alt={`Thumb ${idx}`} className="w-full h-full object-cover" />
+                    <img
+                      src={img}
+                      alt={`Thumb ${idx}`}
+                      referrerPolicy="no-referrer"
+                      className="w-full h-full object-cover"
+                      onError={(e) => handleImageError(e, img)}
+                    />
                   </button>
                 ))}
               </div>

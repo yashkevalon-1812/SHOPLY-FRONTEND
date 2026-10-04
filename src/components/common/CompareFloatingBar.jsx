@@ -1,5 +1,6 @@
 import { useCompare } from '../../context/CompareContext';
 import { formatINR } from '../../utils/format';
+import { handleImageError } from '../../utils/imageHelper';
 import { ArrowLeftRight, X, Trash2 } from 'lucide-react';
 
 export const CompareFloatingBar = () => {
@@ -45,7 +46,13 @@ export const CompareFloatingBar = () => {
                   className="relative group w-10 h-10 sm:w-11 sm:h-11 rounded-lg bg-zinc-800 border border-zinc-700 overflow-hidden shrink-0"
                   title={`${item.title} - ${formatINR(price)}`}
                 >
-                  <img src={imgUrl} alt={item.title} className="w-full h-full object-cover" />
+                  <img
+                    src={imgUrl}
+                    alt={item.title}
+                    referrerPolicy="no-referrer"
+                    className="w-full h-full object-cover"
+                    onError={(e) => handleImageError(e, imgUrl)}
+                  />
                   <button
                     onClick={() => removeFromCompare(item._id)}
                     className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity text-white hover:text-rose-400"

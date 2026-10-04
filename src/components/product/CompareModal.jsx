@@ -3,6 +3,7 @@ import { useCompare } from '../../context/CompareContext';
 import { useCart } from '../../context/CartContext';
 import { useToast } from '../../context/ToastContext';
 import { formatINR } from '../../utils/format';
+import { handleImageError } from '../../utils/imageHelper';
 import { Link } from 'react-router-dom';
 import {
   X,
@@ -150,7 +151,9 @@ export const CompareModal = () => {
                                 : 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300'
                             }
                             alt={item.title}
+                            referrerPolicy="no-referrer"
                             className="w-full h-full object-cover"
+                            onError={(e) => handleImageError(e, Array.isArray(item.images) ? item.images[0] : item.images)}
                           />
                         </div>
 

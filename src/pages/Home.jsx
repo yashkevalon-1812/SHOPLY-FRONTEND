@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import api from '../api/axios';
 import { ProductCard } from '../components/product/ProductCard';
 import { MegaSaleBanner } from '../components/common/MegaSaleBanner';
+import { handleImageError } from '../utils/imageHelper';
 import {
   ArrowRight,
   Sparkles,
@@ -313,7 +314,9 @@ export const Home = () => {
                 <img
                   src={cat.image || 'https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=500&q=80'}
                   alt={cat.name}
+                  referrerPolicy="no-referrer"
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  onError={(e) => handleImageError(e, cat.image)}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/85 via-zinc-950/25 to-transparent"></div>
                 <div className="absolute bottom-3 left-3 right-3">

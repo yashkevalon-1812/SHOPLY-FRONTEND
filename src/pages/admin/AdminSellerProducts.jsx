@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import api from '../../api/axios';
 import { useToast } from '../../context/ToastContext';
 import { formatINR } from '../../utils/format';
+import { handleImageError } from '../../utils/imageHelper';
 import {
   Store,
   Package,
@@ -713,7 +714,9 @@ export const AdminSellerProducts = () => {
                                       <img
                                         src={p.images?.[0] || 'https://placehold.co/100x100?text=No+Image'}
                                         alt={p.title}
+                                        referrerPolicy="no-referrer"
                                         className="w-12 h-12 rounded-xl object-cover bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-800 shrink-0"
+                                        onError={(e) => handleImageError(e, p.images?.[0])}
                                       />
                                       <div className="min-w-0">
                                         <p className="font-bold text-slate-900 dark:text-white text-xs line-clamp-1">

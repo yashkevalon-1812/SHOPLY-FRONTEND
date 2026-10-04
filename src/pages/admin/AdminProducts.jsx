@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { formatINR } from '../../utils/format';
+import { handleImageError } from '../../utils/imageHelper';
 
 export const AdminProducts = () => {
   const [products, setProducts] = useState([]);
@@ -273,7 +274,9 @@ export const AdminProducts = () => {
                         <img
                           src={p.images?.[0] || 'https://placehold.co/100x100?text=No+Image'}
                           alt={p.title}
+                          referrerPolicy="no-referrer"
                           className="w-11 h-11 rounded-xl object-cover bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-800 shrink-0"
+                          onError={(e) => handleImageError(e, p.images?.[0])}
                         />
                         <div className="min-w-0">
                           <p className="font-bold text-slate-900 dark:text-white text-xs line-clamp-1">

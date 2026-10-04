@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import { MapPin, Calendar } from 'lucide-react';
 import { formatINR } from '../../utils/format';
+import { handleImageError } from '../../utils/imageHelper';
 
 export const SellerOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -108,7 +109,9 @@ export const SellerOrders = () => {
                       <img
                         src={item.image}
                         alt={item.title}
+                        referrerPolicy="no-referrer"
                         className="w-12 h-12 rounded-xl object-cover bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-800 shrink-0"
+                        onError={(e) => handleImageError(e, item.image)}
                       />
                       <div className="flex-1 min-w-0">
                         <p className="font-bold text-slate-900 dark:text-white truncate">{item.title}</p>

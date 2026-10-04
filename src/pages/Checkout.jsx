@@ -14,6 +14,7 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import { formatINR } from '../utils/format';
+import { handleImageError } from '../utils/imageHelper';
 
 export const Checkout = () => {
   const {
@@ -331,7 +332,9 @@ export const Checkout = () => {
                     <img
                       src={item.image}
                       alt={item.title}
+                      referrerPolicy="no-referrer"
                       className="w-12 h-12 rounded-lg object-cover bg-zinc-100 border border-zinc-200"
+                      onError={(e) => handleImageError(e, item.image)}
                     />
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-bold text-zinc-900 truncate">{item.title}</p>

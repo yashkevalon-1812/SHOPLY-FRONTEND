@@ -20,6 +20,7 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { formatINR } from '../utils/format';
+import { handleImageError } from '../utils/imageHelper';
 
 export const Cart = () => {
   const {
@@ -173,7 +174,9 @@ export const Cart = () => {
                   <img
                     src={item.image}
                     alt={item.title}
+                    referrerPolicy="no-referrer"
                     className="w-20 h-20 rounded-xl object-cover border border-zinc-200 dark:border-slate-700 shrink-0 bg-white"
+                    onError={(e) => handleImageError(e, item.image)}
                   />
                   <div className="min-w-0">
                     <span className="text-[10px] font-black uppercase tracking-wider text-amber-700 dark:text-amber-400">

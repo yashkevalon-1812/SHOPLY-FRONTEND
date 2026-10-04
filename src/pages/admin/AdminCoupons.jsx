@@ -3,6 +3,7 @@ import api from '../../api/axios';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import { formatINR } from '../../utils/format';
+import { handleImageError } from '../../utils/imageHelper';
 import { AdminMegaSale } from './AdminMegaSale';
 import {
   Tag,
@@ -638,7 +639,9 @@ export const AdminCoupons = ({ isSeller = false }) => {
                                 <img
                                   src={imgUrl}
                                   alt={prod.title}
+                                  referrerPolicy="no-referrer"
                                   className="w-10 h-10 rounded-xl object-cover border border-slate-200 dark:border-slate-800 shrink-0 bg-white dark:bg-slate-900"
+                                  onError={(e) => handleImageError(e, imgUrl)}
                                 />
                                 <div className="min-w-0 max-w-[200px] sm:max-w-xs">
                                   <p className="font-bold text-slate-900 dark:text-white truncate">
@@ -760,7 +763,16 @@ export const AdminCoupons = ({ isSeller = false }) => {
                               : 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=150&q=80'
                           }
                           alt={selectedProduct.title}
+                          referrerPolicy="no-referrer"
                           className="w-9 h-9 rounded-lg object-cover border border-slate-200 dark:border-slate-700 shrink-0"
+                          onError={(e) =>
+                            handleImageError(
+                              e,
+                              Array.isArray(selectedProduct.images)
+                                ? selectedProduct.images[0]
+                                : selectedProduct.images
+                            )
+                          }
                         />
                         <div className="min-w-0">
                           <p className="text-xs font-bold text-slate-900 dark:text-white truncate">

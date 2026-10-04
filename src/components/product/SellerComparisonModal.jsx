@@ -1,5 +1,6 @@
 import { X, Check, Star, Truck, ShieldCheck, ArrowRight, Store, Sparkles, Award } from 'lucide-react';
 import { formatINR } from '../../utils/format';
+import { handleImageError } from '../../utils/imageHelper';
 
 export const SellerComparisonModal = ({
   isOpen,
@@ -24,7 +25,9 @@ export const SellerComparisonModal = ({
               <img
                 src={product.images?.[0] || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=200'}
                 alt={product.title}
+                referrerPolicy="no-referrer"
                 className="w-full h-full object-cover"
+                onError={(e) => handleImageError(e, product.images?.[0])}
               />
             </div>
             <div>

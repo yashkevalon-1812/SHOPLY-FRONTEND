@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import api from '../../api/axios';
 import { useToast } from '../../context/ToastContext';
 import { formatINR } from '../../utils/format';
+import { handleImageError } from '../../utils/imageHelper';
 import {
   Zap,
   Clock,
@@ -398,7 +399,9 @@ export const AdminMegaSale = () => {
                       <img
                         src={img}
                         alt={sale.title}
+                        referrerPolicy="no-referrer"
                         className="w-12 h-12 rounded-xl object-cover border border-slate-200 dark:border-slate-700 shrink-0 bg-white"
+                        onError={(e) => handleImageError(e, img)}
                       />
                       <div className="min-w-0">
                         <div className="flex items-center gap-2">
@@ -549,7 +552,9 @@ export const AdminMegaSale = () => {
                           <img
                             src={img}
                             alt={prod.title}
+                            referrerPolicy="no-referrer"
                             className="w-8 h-8 rounded-lg object-cover border border-slate-200 dark:border-slate-700 shrink-0"
+                            onError={(e) => handleImageError(e, img)}
                           />
                           <span className="font-bold text-slate-900 dark:text-white truncate max-w-xs">
                             {prod.title}

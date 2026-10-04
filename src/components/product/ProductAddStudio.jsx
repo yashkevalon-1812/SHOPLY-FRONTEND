@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useToast } from '../../context/ToastContext';
 import { formatINR } from '../../utils/format';
+import { handleImageError, SVG_FALLBACK } from '../../utils/imageHelper';
 import {
   Package,
   Layers,
@@ -836,10 +837,9 @@ export const ProductAddStudio = ({
                     <img
                       src={formData.heroImageInput}
                       alt="Hero preview"
+                      referrerPolicy="no-referrer"
                       className="w-full h-full object-cover"
-                      onError={(e) => {
-                        e.target.src = 'https://placehold.co/200x200?text=Invalid+URL';
-                      }}
+                      onError={(e) => handleImageError(e, formData.heroImageInput)}
                     />
                   ) : (
                     <div className="text-center p-2 text-slate-400">
@@ -897,10 +897,9 @@ export const ProductAddStudio = ({
                         <img
                           src={imgUrl}
                           alt={`Slot ${idx + 1}`}
+                          referrerPolicy="no-referrer"
                           className="w-full h-full object-cover"
-                          onError={(e) => {
-                            e.target.src = 'https://placehold.co/100x100?text=Error';
-                          }}
+                          onError={(e) => handleImageError(e, imgUrl)}
                         />
                       ) : (
                         <span className="text-[9px] text-slate-400 font-bold">Slot {idx + 1}</span>
@@ -1126,7 +1125,9 @@ export const ProductAddStudio = ({
                   <img
                     src={allImages[0]}
                     alt="Main Preview"
+                    referrerPolicy="no-referrer"
                     className="w-full h-full object-cover"
+                    onError={(e) => handleImageError(e, allImages[0])}
                   />
                 </div>
 
@@ -1137,7 +1138,13 @@ export const ProductAddStudio = ({
                         key={i}
                         className="w-14 h-14 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 overflow-hidden shrink-0 shadow-2xs"
                       >
-                        <img src={img} alt={`Thumb ${i}`} className="w-full h-full object-cover" />
+                        <img
+                          src={img}
+                          alt={`Thumb ${i}`}
+                          referrerPolicy="no-referrer"
+                          className="w-full h-full object-cover"
+                          onError={(e) => handleImageError(e, img)}
+                        />
                       </div>
                     ))}
                   </div>

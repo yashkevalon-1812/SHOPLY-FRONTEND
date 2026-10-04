@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import api from '../../api/axios';
 import { useToast } from '../../context/ToastContext';
+import { handleImageError } from '../../utils/imageHelper';
 import {
   Plus,
   Edit,
@@ -375,7 +376,9 @@ export const SellerProducts = () => {
                           <img
                             src={p.images?.[0] || 'https://placehold.co/100x100?text=No+Image'}
                             alt={p.title}
+                            referrerPolicy="no-referrer"
                             className="w-12 h-12 rounded-xl object-cover bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-800 shrink-0"
+                            onError={(e) => handleImageError(e, p.images?.[0])}
                           />
                           <div className="min-w-0">
                             <p className="font-bold text-slate-900 dark:text-white text-xs line-clamp-1">{p.title}</p>
@@ -724,9 +727,11 @@ export const SellerProducts = () => {
             {/* Target Product Summary */}
             <div className="p-4 bg-slate-50 dark:bg-[#0c1421] border-b border-slate-200 dark:border-slate-800 flex items-center gap-3">
               <img
-                src={discountTargetProduct.images?.[0]}
+                src={discountTargetProduct.images?.[0] || 'https://placehold.co/100x100?text=No+Image'}
                 alt={discountTargetProduct.title}
+                referrerPolicy="no-referrer"
                 className="w-12 h-12 rounded-xl object-cover border border-slate-200 dark:border-slate-700 shrink-0"
+                onError={(e) => handleImageError(e, discountTargetProduct.images?.[0])}
               />
               <div className="min-w-0 flex-1">
                 <p className="text-xs font-bold text-slate-900 dark:text-white truncate">
