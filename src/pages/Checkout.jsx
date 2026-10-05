@@ -51,9 +51,9 @@ export const Checkout = () => {
 
   if (cartItems.length === 0) {
     return (
-      <div className="bg-white text-zinc-900 min-h-[70vh] flex flex-col items-center justify-center px-4">
+      <div className="bg-slate-50 dark:bg-[#0b1120] text-zinc-900 dark:text-slate-100 min-h-[70vh] flex flex-col items-center justify-center px-4 transition-colors">
         <h2 className="text-xl font-bold mb-2">No items to checkout</h2>
-        <Link to="/shop" className="text-amber-600 hover:underline text-xs font-semibold">
+        <Link to="/shop" className="text-amber-600 dark:text-amber-400 hover:underline text-xs font-semibold">
           Return to Catalog
         </Link>
       </div>
@@ -140,13 +140,13 @@ export const Checkout = () => {
           <div className="lg:col-span-7 space-y-6 sm:space-y-8">
             {/* Shipping Address */}
             <div className="bg-white dark:bg-slate-900 border border-zinc-200 dark:border-slate-800 rounded-2xl p-4 sm:p-6 space-y-4 shadow-xs">
-              <h2 className="text-base font-bold text-zinc-900 flex items-center gap-2">
+              <h2 className="text-base font-bold text-zinc-900 dark:text-white flex items-center gap-2">
                 <span>1. Insured Delivery Address</span>
               </h2>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                 <div>
-                  <label className="text-zinc-700 font-bold block mb-1">Full Name</label>
+                  <label className="text-zinc-700 dark:text-slate-300 font-bold block mb-1">Full Name</label>
                   <input
                     type="text"
                     required
@@ -155,12 +155,12 @@ export const Checkout = () => {
                       setShippingAddress({ ...shippingAddress, fullName: e.target.value })
                     }
                     placeholder="Recipient name"
-                    className="w-full bg-white border border-zinc-200 rounded-xl p-3 text-zinc-900 placeholder-zinc-400 focus:outline-none focus:border-zinc-400"
+                    className="w-full bg-slate-50 dark:bg-slate-800 border border-zinc-200 dark:border-slate-700 rounded-xl p-3 text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-slate-500 focus:outline-none focus:border-amber-500"
                   />
                 </div>
 
                 <div>
-                  <label className="text-zinc-700 font-bold block mb-1">Mobile Phone (Delivery SMS)</label>
+                  <label className="text-zinc-700 dark:text-slate-300 font-bold block mb-1">Mobile Phone (Delivery SMS)</label>
                   <input
                     type="tel"
                     required
@@ -169,12 +169,12 @@ export const Checkout = () => {
                       setShippingAddress({ ...shippingAddress, phone: e.target.value })
                     }
                     placeholder="+1 (555) 000-0000"
-                    className="w-full bg-white border border-zinc-200 rounded-xl p-3 text-zinc-900 placeholder-zinc-400 focus:outline-none focus:border-zinc-400"
+                    className="w-full bg-slate-50 dark:bg-slate-800 border border-zinc-200 dark:border-slate-700 rounded-xl p-3 text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-slate-500 focus:outline-none focus:border-amber-500"
                   />
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label className="text-zinc-700 font-bold block mb-1">Street Address</label>
+                  <label className="text-zinc-700 dark:text-slate-300 font-bold block mb-1">Street Address</label>
                   <input
                     type="text"
                     required
@@ -183,12 +183,12 @@ export const Checkout = () => {
                       setShippingAddress({ ...shippingAddress, street: e.target.value })
                     }
                     placeholder="Apt, Suite, Street name"
-                    className="w-full bg-white border border-zinc-200 rounded-xl p-3 text-zinc-900 placeholder-zinc-400 focus:outline-none focus:border-zinc-400"
+                    className="w-full bg-slate-50 dark:bg-slate-800 border border-zinc-200 dark:border-slate-700 rounded-xl p-3 text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-slate-500 focus:outline-none focus:border-amber-500"
                   />
                 </div>
 
                 <div>
-                  <label className="text-zinc-700 font-bold block mb-1">City</label>
+                  <label className="text-zinc-700 dark:text-slate-300 font-bold block mb-1">City</label>
                   <input
                     type="text"
                     required
@@ -197,12 +197,12 @@ export const Checkout = () => {
                       setShippingAddress({ ...shippingAddress, city: e.target.value })
                     }
                     placeholder="City"
-                    className="w-full bg-white border border-zinc-200 rounded-xl p-3 text-zinc-900 placeholder-zinc-400 focus:outline-none focus:border-zinc-400"
+                    className="w-full bg-slate-50 dark:bg-slate-800 border border-zinc-200 dark:border-slate-700 rounded-xl p-3 text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-slate-500 focus:outline-none focus:border-amber-500"
                   />
                 </div>
 
                 <div>
-                  <label className="text-zinc-700 font-bold block mb-1">State / Province</label>
+                  <label className="text-zinc-700 dark:text-slate-300 font-bold block mb-1">State / Province</label>
                   <input
                     type="text"
                     required
@@ -211,12 +211,12 @@ export const Checkout = () => {
                       setShippingAddress({ ...shippingAddress, state: e.target.value })
                     }
                     placeholder="State"
-                    className="w-full bg-white border border-zinc-200 rounded-xl p-3 text-zinc-900 placeholder-zinc-400 focus:outline-none focus:border-zinc-400"
+                    className="w-full bg-slate-50 dark:bg-slate-800 border border-zinc-200 dark:border-slate-700 rounded-xl p-3 text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-slate-500 focus:outline-none focus:border-amber-500"
                   />
                 </div>
 
                 <div>
-                  <label className="text-zinc-700 font-bold block mb-1">Postal Code</label>
+                  <label className="text-zinc-700 dark:text-slate-300 font-bold block mb-1">Postal Code</label>
                   <input
                     type="text"
                     required
@@ -225,12 +225,12 @@ export const Checkout = () => {
                       setShippingAddress({ ...shippingAddress, postalCode: e.target.value })
                     }
                     placeholder="ZIP / Postal Code"
-                    className="w-full bg-white border border-zinc-200 rounded-xl p-3 text-zinc-900 placeholder-zinc-400 focus:outline-none focus:border-zinc-400"
+                    className="w-full bg-slate-50 dark:bg-slate-800 border border-zinc-200 dark:border-slate-700 rounded-xl p-3 text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-slate-500 focus:outline-none focus:border-amber-500"
                   />
                 </div>
 
                 <div>
-                  <label className="text-zinc-700 font-bold block mb-1">Country</label>
+                  <label className="text-zinc-700 dark:text-slate-300 font-bold block mb-1">Country</label>
                   <input
                     type="text"
                     required
@@ -239,15 +239,15 @@ export const Checkout = () => {
                       setShippingAddress({ ...shippingAddress, country: e.target.value })
                     }
                     placeholder="Country"
-                    className="w-full bg-white border border-zinc-200 rounded-xl p-3 text-zinc-900 placeholder-zinc-400 focus:outline-none focus:border-zinc-400"
+                    className="w-full bg-slate-50 dark:bg-slate-800 border border-zinc-200 dark:border-slate-700 rounded-xl p-3 text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-slate-500 focus:outline-none focus:border-amber-500"
                   />
                 </div>
               </div>
             </div>
 
             {/* Payment Methods */}
-            <div className="bg-white border border-zinc-200 rounded-2xl p-6 space-y-4 shadow-xs">
-              <h2 className="text-base font-bold text-zinc-900 flex items-center gap-2">
+            <div className="bg-white dark:bg-slate-900 border border-zinc-200 dark:border-slate-800 rounded-2xl p-6 space-y-4 shadow-xs">
+              <h2 className="text-base font-bold text-zinc-900 dark:text-white flex items-center gap-2">
                 <span>2. Payment Clearance</span>
               </h2>
 
@@ -261,16 +261,16 @@ export const Checkout = () => {
                     key={m.id}
                     type="button"
                     onClick={() => setPaymentMethod(m.id)}
-                    className={`p-4 rounded-xl border text-left transition-all flex flex-col justify-between ${
+                    className={`p-4 rounded-xl border text-left transition-all flex flex-col justify-between cursor-pointer ${
                       paymentMethod === m.id
-                        ? 'bg-zinc-950 text-white border-zinc-950 shadow-sm'
-                        : 'bg-zinc-50 border-zinc-200 text-zinc-700 hover:border-zinc-300'
+                        ? 'bg-zinc-950 text-white dark:bg-amber-500 dark:text-slate-950 border-zinc-950 dark:border-amber-500 shadow-sm'
+                        : 'bg-zinc-50 dark:bg-slate-800 border-zinc-200 dark:border-slate-700 text-zinc-700 dark:text-slate-200 hover:border-zinc-300 dark:hover:border-slate-600'
                     }`}
                   >
                     <m.icon className="w-5 h-5 mb-2" />
                     <div>
                       <p className="text-xs font-bold">{m.title}</p>
-                      <p className={`text-[10px] ${paymentMethod === m.id ? 'text-zinc-300' : 'text-zinc-500'}`}>
+                      <p className={`text-[10px] ${paymentMethod === m.id ? 'text-zinc-300 dark:text-slate-800' : 'text-zinc-500 dark:text-slate-400'}`}>
                         {m.desc}
                       </p>
                     </div>
@@ -280,37 +280,37 @@ export const Checkout = () => {
 
               {/* Simulated Card Fields */}
               {paymentMethod === 'Credit/Debit Card' && (
-                <div className="mt-4 p-4 rounded-xl bg-zinc-50 border border-zinc-200 space-y-3 text-xs">
+                <div className="mt-4 p-4 rounded-xl bg-zinc-50 dark:bg-slate-800/60 border border-zinc-200 dark:border-slate-700 space-y-3 text-xs">
                   <div>
-                    <label className="text-zinc-600 font-semibold block mb-1">Card Number (Simulated)</label>
+                    <label className="text-zinc-600 dark:text-slate-300 font-semibold block mb-1">Card Number (Simulated)</label>
                     <input
                       type="text"
                       value={cardNumber}
                       onChange={(e) => setCardNumber(e.target.value)}
-                      className="w-full bg-white border border-zinc-200 rounded-lg p-2.5 text-zinc-900 font-mono"
+                      className="w-full bg-white dark:bg-slate-800 border border-zinc-200 dark:border-slate-700 rounded-lg p-2.5 text-zinc-900 dark:text-white font-mono"
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="text-zinc-600 font-semibold block mb-1">Expiry Date</label>
+                      <label className="text-zinc-600 dark:text-slate-300 font-semibold block mb-1">Expiry Date</label>
                       <input
                         type="text"
                         value={cardExp}
                         onChange={(e) => setCardExp(e.target.value)}
-                        className="w-full bg-white border border-zinc-200 rounded-lg p-2.5 text-zinc-900 font-mono"
+                        className="w-full bg-white dark:bg-slate-800 border border-zinc-200 dark:border-slate-700 rounded-lg p-2.5 text-zinc-900 dark:text-white font-mono"
                       />
                     </div>
                     <div>
-                      <label className="text-zinc-600 font-semibold block mb-1">CVV / CVC</label>
+                      <label className="text-zinc-600 dark:text-slate-300 font-semibold block mb-1">CVV / CVC</label>
                       <input
                         type="password"
                         value={cardCvv}
                         onChange={(e) => setCardCvv(e.target.value)}
-                        className="w-full bg-white border border-zinc-200 rounded-lg p-2.5 text-zinc-900 font-mono"
+                        className="w-full bg-white dark:bg-slate-800 border border-zinc-200 dark:border-slate-700 rounded-lg p-2.5 text-zinc-900 dark:text-white font-mono"
                       />
                     </div>
                   </div>
-                  <p className="text-[10px] text-emerald-700 font-semibold flex items-center gap-1 mt-1">
+                  <p className="text-[10px] text-emerald-700 dark:text-emerald-400 font-semibold flex items-center gap-1 mt-1">
                     <Lock className="w-3 h-3" /> Encrypted with 256-bit instant 3D-Secure payment gateway
                   </p>
                 </div>
@@ -320,8 +320,8 @@ export const Checkout = () => {
 
           {/* Right Summary Col */}
           <div className="lg:col-span-5 space-y-6">
-            <div className="bg-zinc-50 border border-zinc-200 rounded-2xl p-6 space-y-5 sticky top-24 shadow-xs">
-              <h2 className="text-base font-bold text-zinc-900 border-b border-zinc-200 pb-3">
+            <div className="bg-white dark:bg-slate-900 border border-zinc-200 dark:border-slate-800 rounded-2xl p-6 space-y-5 sticky top-24 shadow-xs">
+              <h2 className="text-base font-bold text-zinc-900 dark:text-white border-b border-zinc-200 dark:border-slate-800 pb-3">
                 Review & Confirm Order
               </h2>
 

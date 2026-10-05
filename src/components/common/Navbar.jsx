@@ -260,10 +260,10 @@ export const Navbar = () => {
               {mobileSearchOpen ? <X className="w-4 h-4 text-amber-600 dark:text-amber-400" /> : <Search className="w-4 h-4" />}
             </button>
 
-            {/* Theme Toggle Button (Tablet & Desktop, mobile in drawer) */}
+            {/* Theme Toggle Button (Visible on all devices, also in mobile drawer) */}
             <button
               onClick={toggleTheme}
-              className="hidden sm:flex w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/80 border border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/60 items-center justify-center transition-colors shadow-2xs shrink-0 cursor-pointer"
+              className="flex w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/80 border border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/60 items-center justify-center transition-colors shadow-2xs shrink-0 cursor-pointer"
               title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
               aria-label="Toggle Theme"
             >

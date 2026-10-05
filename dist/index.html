@@ -9,20 +9,26 @@
     <script>
       (function() {
         try {
-          var saved = localStorage.getItem('velora_theme') || localStorage.getItem('shoply_theme');
+          var saved = localStorage.getItem('shoply_theme') || localStorage.getItem('velora_theme');
           var isDark = saved ? (saved === 'dark') : window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var theme = isDark ? 'dark' : 'light';
+          var root = document.documentElement;
           if (isDark) {
-            document.documentElement.classList.add('dark');
-            document.documentElement.style.colorScheme = 'dark';
+            root.classList.add('dark');
+            root.setAttribute('data-theme', 'dark');
+            root.style.colorScheme = 'dark';
           } else {
-            document.documentElement.classList.remove('dark');
-            document.documentElement.style.colorScheme = 'light';
+            root.classList.remove('dark');
+            root.removeAttribute('data-theme');
+            root.style.colorScheme = 'light';
           }
+          localStorage.setItem('shoply_theme', theme);
+          localStorage.setItem('velora_theme', theme);
         } catch (e) {}
       })();
     </script>
-    <script type="module" crossorigin src="/assets/index-DmpLVwNT.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-CTV8_gph.css">
+    <script type="module" crossorigin src="/assets/index-FCUePNHZ.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-DD4V4tJ2.css">
   </head>
   <body class="bg-slate-50 text-slate-900 dark:bg-[#0b1120] dark:text-slate-100 transition-colors duration-200">
     <div id="root"></div>

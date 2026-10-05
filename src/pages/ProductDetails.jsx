@@ -187,7 +187,7 @@ export const ProductDetails = () => {
 
   if (loading) {
     return (
-      <div className="min-h-[80vh] flex items-center justify-center bg-white">
+      <div className="min-h-[80vh] flex items-center justify-center bg-slate-50 dark:bg-[#0b1120] text-slate-900 dark:text-slate-100 transition-colors">
         <div className="w-10 h-10 border-4 border-amber-500 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
@@ -195,10 +195,10 @@ export const ProductDetails = () => {
 
   if (!product) {
     return (
-      <div className="min-h-[70vh] flex flex-col items-center justify-center bg-white text-center px-4">
-        <h2 className="text-2xl font-bold text-zinc-900 mb-2">Item Not Found</h2>
-        <p className="text-sm text-zinc-500 mb-6">The requested product could not be located in our vault.</p>
-        <Link to="/shop" className="bg-zinc-950 text-white text-xs font-bold px-6 py-3 rounded-xl">
+      <div className="min-h-[70vh] flex flex-col items-center justify-center bg-slate-50 dark:bg-[#0b1120] text-center px-4 transition-colors">
+        <h2 className="text-2xl font-bold text-zinc-900 dark:text-white mb-2">Item Not Found</h2>
+        <p className="text-sm text-zinc-500 dark:text-slate-400 mb-6">The requested product could not be located in our vault.</p>
+        <Link to="/shop" className="bg-zinc-950 dark:bg-amber-500 text-white dark:text-slate-950 text-xs font-bold px-6 py-3 rounded-xl shadow-md">
           Back to Catalog
         </Link>
       </div>
@@ -220,26 +220,26 @@ export const ProductDetails = () => {
   const isWishlisted = isInWishlist(product?._id);
 
   return (
-    <div className="bg-white text-zinc-900 min-h-screen py-10">
+    <div className="bg-slate-50 dark:bg-[#0b1120] text-zinc-900 dark:text-slate-100 min-h-screen py-10 transition-colors duration-200">
       <div className="px-4 sm:px-6 lg:px-8">
         {/* Breadcrumbs */}
-        <nav className="flex items-center gap-2 text-xs text-zinc-500 mb-8">
-          <Link to="/" className="hover:text-zinc-950 transition-colors">
+        <nav className="flex items-center gap-2 text-xs text-zinc-500 dark:text-slate-400 mb-8">
+          <Link to="/" className="hover:text-zinc-950 dark:hover:text-white transition-colors">
             Home
           </Link>
           <ChevronRight className="w-3.5 h-3.5 text-zinc-400" />
-          <Link to="/shop" className="hover:text-zinc-950 transition-colors">
+          <Link to="/shop" className="hover:text-zinc-950 dark:hover:text-white transition-colors">
             Shop
           </Link>
           <ChevronRight className="w-3.5 h-3.5 text-zinc-400" />
           <Link
             to={`/shop?category=${encodeURIComponent(product.category)}`}
-            className="hover:text-zinc-950 transition-colors"
+            className="hover:text-zinc-950 dark:hover:text-white transition-colors"
           >
             {product.category}
           </Link>
           <ChevronRight className="w-3.5 h-3.5 text-zinc-400" />
-          <span className="text-zinc-800 font-semibold truncate max-w-xs">{product.title}</span>
+          <span className="text-zinc-800 dark:text-slate-200 font-semibold truncate max-w-xs">{product.title}</span>
         </nav>
 
         {/* Top Product Hero: Gallery + Buying Panel */}
