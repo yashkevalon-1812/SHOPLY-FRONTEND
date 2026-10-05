@@ -11,7 +11,6 @@ import {
   Sparkles,
   Heart,
   X,
-  ExternalLink,
   Radio,
   AlertTriangle,
 } from 'lucide-react';
@@ -352,23 +351,6 @@ export const NotificationDropdown = () => {
                   </div>
                 ))
               )}
-            </div>
-
-            {/* Footer View Link */}
-            <div className="px-3.5 py-2 border-t border-zinc-100 dark:border-slate-800 flex items-center justify-between text-[11px] sm:text-[10px] shrink-0">
-              <span className="text-zinc-500 dark:text-slate-400">
-                Shoply Alerts
-              </span>
-              <button
-                onClick={() => {
-                  setIsOpen(false);
-                  navigate('/orders');
-                }}
-                className="text-blue-600 dark:text-blue-400 font-semibold hover:underline flex items-center gap-1"
-              >
-                <span>View Orders</span>
-                <ExternalLink className="w-3 h-3" />
-              </button>
             </div>
           </div>
         </>
