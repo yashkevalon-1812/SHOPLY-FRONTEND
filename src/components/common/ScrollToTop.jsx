@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { ArrowUp } from 'lucide-react';
+import { useCompare } from '../../context/CompareContext';
 
 export const ScrollToTop = () => {
   const { pathname } = useLocation();
+  const { compareItems } = useCompare();
   const [isVisible, setIsVisible] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
 
@@ -51,9 +53,15 @@ export const ScrollToTop = () => {
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (scrollProgress / 100) * circumference;
 
+  // Elevate button on mobile if CompareFloatingBar is active to prevent overlapping
+  const hasCompareActive = compareItems && compareItems.length > 0;
+  const positionClass = hasCompareActive
+    ? 'bottom-20 sm:bottom-8 right-4 sm:right-8'
+    : 'bottom-6 sm:bottom-8 right-4 sm:right-8';
+
   return (
     <div
-      className={`fixed bottom-6 right-6 z-40 sm:bottom-8 sm:right-8 transition-all duration-300 ${
+      className={`fixed ${positionClass} z-40 transition-all duration-300 ${
         isVisible
           ? 'opacity-100 translate-y-0 scale-100 pointer-events-auto'
           : 'opacity-0 translate-y-4 scale-75 pointer-events-none'
@@ -64,7 +72,7 @@ export const ScrollToTop = () => {
         onClick={scrollToTop}
         aria-label="Scroll back to top"
         title="Scroll to top"
-        className="group relative flex items-center justify-center w-12 h-12 rounded-full bg-white/95 dark:bg-[#131d2e]/95 text-slate-800 dark:text-slate-100 border border-stone-200/90 dark:border-slate-700/80 shadow-xl backdrop-blur-md hover:bg-amber-500 hover:text-slate-950 dark:hover:bg-amber-500 dark:hover:text-slate-950 hover:border-amber-500 transition-all duration-200 hover:scale-110 active:scale-95 cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-amber-500/50"
+        className="group relative flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/95 dark:bg-[#131d2e]/95 text-slate-800 dark:text-slate-100 border border-stone-200/90 dark:border-slate-700/80 shadow-xl backdrop-blur-md hover:bg-amber-500 hover:text-slate-950 dark:hover:bg-amber-500 dark:hover:text-slate-950 hover:border-amber-500 transition-all duration-200 hover:scale-110 active:scale-95 cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-amber-500/50"
       >
         {/* Circular SVG Scroll Progress Ring */}
         <svg
