@@ -12,6 +12,7 @@ import { Footer } from './components/common/Footer';
 import { ProtectedRoute } from './components/common/ProtectedRoute';
 import { CompareFloatingBar } from './components/common/CompareFloatingBar';
 import { CompareModal } from './components/product/CompareModal';
+import { ScrollToTop } from './components/common/ScrollToTop';
 
 // Storefront Pages
 import { Home } from './pages/Home';
@@ -66,6 +67,7 @@ const StorefrontLayout = () => {
       <Footer />
       <CompareFloatingBar />
       <CompareModal />
+      <ScrollToTop />
     </div>
   );
 };
