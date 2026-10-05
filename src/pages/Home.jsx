@@ -95,9 +95,9 @@ export const Home = () => {
       `}</style>
 
       {/* =========================================================================
-          1. FULL-BLEED HERO SHOWCASE (Preserves all elements with 100% responsive layout)
+          1. FULL-BLEED HERO SHOWCASE (Responsive, spacious, studio on desktop)
          ========================================================================= */}
-      <section className="relative overflow-hidden w-full flex flex-col justify-between min-h-[calc(100dvh-100px)] md:h-[calc(100vh-98px)] md:min-h-[calc(100vh-98px)] bg-[#faf7f2] dark:bg-[#0c1017] border-b border-stone-200/80 dark:border-slate-800 transition-colors">
+      <section className="relative overflow-hidden w-full flex flex-col justify-between min-h-[510px] sm:min-h-[550px] md:min-h-[calc(100vh-98px)] md:h-[calc(100vh-98px)] py-8 sm:py-9 md:py-0 bg-[#faf7f2] dark:bg-[#0c1017] border-b border-stone-200/80 dark:border-slate-800 transition-colors">
         {/* Full-bleed Studio Background Image */}
         <div className="absolute inset-0 z-0">
           <img
@@ -106,13 +106,13 @@ export const Home = () => {
             className="w-full h-full object-cover hero-bg-img select-none pointer-events-none"
           />
           {/* Subtle gradient scrim on the left to guarantee pristine text contrast while keeping image clear */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#faf7f2] via-[#faf7f2]/90 sm:via-[#faf7f2]/75 via-40% to-transparent dark:from-[#0c1017] dark:via-[#0c1017]/95 sm:dark:via-[#0c1017]/85 pointer-events-none"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-[#faf7f2]/96 via-[#faf7f2]/92 to-[#faf7f2]/94 sm:bg-gradient-to-r sm:from-[#faf7f2] sm:via-[#faf7f2]/90 sm:via-40% sm:to-transparent dark:from-[#0c1017]/96 dark:via-[#0c1017]/92 dark:to-[#0c1017]/90 sm:dark:from-[#0c1017] sm:dark:via-[#0c1017]/95 sm:dark:to-transparent pointer-events-none"></div>
         </div>
 
         {/* Top-Right Floating "Better Choices Brighter Days" Script Badge */}
-        <div className="absolute top-2.5 sm:top-5 lg:top-7 right-3 sm:right-8 lg:right-14 z-20 pointer-events-none select-none">
-          <div className="bg-white/85 dark:bg-slate-900/85 backdrop-blur-md px-2.5 sm:px-3.5 py-1 sm:py-2 rounded-xl sm:rounded-2xl border border-stone-200/80 dark:border-slate-700 shadow-md transform -rotate-2 sm:-rotate-3">
-            <p className="font-serif italic text-[11px] sm:text-sm font-semibold text-stone-900 dark:text-stone-100 leading-tight">
+        <div className="absolute top-3.5 sm:top-5 lg:top-7 right-3.5 sm:right-8 lg:right-14 z-20 pointer-events-none select-none">
+          <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl border border-stone-200/80 dark:border-slate-700 shadow-xs transform -rotate-2 sm:-rotate-3">
+            <p className="font-serif italic text-[10px] sm:text-sm font-semibold text-stone-900 dark:text-stone-100 leading-tight">
               Better Choices <br />
               <span className="text-amber-600 dark:text-amber-400 font-bold">Brighter Days ✨</span>
             </p>
@@ -120,15 +120,15 @@ export const Home = () => {
         </div>
 
         {/* Middle Main Content */}
-        <div className="relative z-10 w-full px-4 sm:px-6 lg:px-12 flex-1 flex flex-col justify-center py-4 sm:py-6">
-          <div className="max-w-xl lg:max-w-2xl space-y-2.5 sm:space-y-4 text-left">
+        <div className="relative z-10 w-full px-4 sm:px-6 lg:px-12 flex-1 flex flex-col justify-center pt-3.5 sm:pt-6 md:pt-0 pb-4 sm:pb-6">
+          <div className="max-w-xl lg:max-w-2xl space-y-3.5 sm:space-y-4.5 text-left">
             {/* Category Kicker */}
-            <div className="text-[10px] sm:text-xs font-bold tracking-[0.25em] text-stone-500 dark:text-stone-400 uppercase">
+            <div className="text-[10px] sm:text-xs font-bold tracking-[0.25em] text-amber-700 dark:text-amber-400 sm:text-stone-500 sm:dark:text-stone-400 uppercase">
               ALL CATEGORIES / ONE DESTINATION
             </div>
 
             {/* Main Headline */}
-            <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-[3.25rem] xl:text-[3.6rem] font-bold text-slate-950 dark:text-white tracking-tight leading-[1.12]">
+            <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-[3.25rem] xl:text-[3.6rem] font-black sm:font-bold text-slate-950 dark:text-white tracking-tight leading-[1.18] sm:leading-[1.12]">
               Everything You Need, <br />
               <span className="font-serif italic font-normal text-slate-900 dark:text-amber-200">
                 All in
@@ -137,15 +137,15 @@ export const Home = () => {
             </h1>
 
             {/* Subtitle */}
-            <p className="text-xs sm:text-sm md:text-base text-stone-700 dark:text-slate-300 max-w-lg font-normal leading-relaxed line-clamp-3 sm:line-clamp-none">
+            <p className="text-sm sm:text-base text-stone-800 dark:text-slate-100 max-w-lg font-medium sm:font-normal leading-relaxed">
               From fashion and electronics to home essentials and more — discover top quality products, unbeatable deals and a better way to shop, all at Shoply.
             </p>
 
             {/* CTA Buttons */}
-            <div className="flex flex-wrap items-center gap-2.5 sm:gap-4 pt-1 sm:pt-2">
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4 pt-2 sm:pt-2.5">
               <Link
                 to="/shop"
-                className="inline-flex items-center justify-center gap-2 bg-[#171717] hover:bg-black dark:bg-amber-500 dark:hover:bg-amber-400 text-white dark:text-slate-950 font-semibold text-xs sm:text-sm px-5 sm:px-7 py-2.5 sm:py-3 rounded-full shadow-md transition-all hover:scale-105 shrink-0"
+                className="inline-flex items-center justify-center gap-2 bg-[#171717] hover:bg-black dark:bg-amber-500 dark:hover:bg-amber-400 text-white dark:text-slate-950 font-semibold text-xs sm:text-sm px-5.5 sm:px-7 py-2.5 sm:py-3 rounded-full shadow-md transition-all hover:scale-105 shrink-0"
               >
                 <span>Shop Now</span>
                 <ArrowRight className="w-4 h-4" />
@@ -160,57 +160,59 @@ export const Home = () => {
           </div>
         </div>
 
-        {/* Bottom Bar: Trust Badges (All original items preserved inside Hero, fully responsive) */}
-        <div className="relative z-10 w-full px-4 sm:px-6 lg:px-12 pb-3.5 sm:pb-8 lg:pb-12 pt-2">
-          {/* Trust Badges: 2x2 grid on mobile, flex row on sm+ to prevent cutoffs */}
-          <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-x-3 gap-y-2.5 sm:gap-5">
-            {/* Free Shipping */}
-            <div className="flex items-center gap-2 sm:gap-2.5">
-              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-stone-200/80 dark:bg-slate-800 flex items-center justify-center shrink-0">
-                <Truck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-900 dark:text-amber-400" />
+        {/* Bottom Bar: Trust Badges (Spacious frosted card on mobile, flex row on desktop) */}
+        <div className="relative z-10 w-full px-4 sm:px-6 lg:px-12 pt-5 sm:pt-6 md:pt-2 pb-2 sm:pb-8 lg:pb-12">
+          {/* Trust Badges: 2x2 grid on mobile inside a frosted card, flex row on sm+ */}
+          <div className="p-3.5 sm:p-4.5 md:p-0 rounded-2xl bg-white/85 dark:bg-slate-900/85 md:bg-transparent md:dark:bg-transparent backdrop-blur-md md:backdrop-blur-none border border-stone-200/80 dark:border-slate-800/80 md:border-none shadow-xs md:shadow-none">
+            <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-x-4 gap-y-3 sm:gap-5">
+              {/* Free Shipping */}
+              <div className="flex items-center gap-2 sm:gap-2.5">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-stone-200/80 dark:bg-slate-800 flex items-center justify-center shrink-0">
+                  <Truck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-900 dark:text-amber-400" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white leading-tight truncate">Free Shipping</p>
+                  <p className="text-[9px] sm:text-[10px] text-stone-600 dark:text-slate-400 truncate">On orders over ₹1,999</p>
+                </div>
               </div>
-              <div className="min-w-0">
-                <p className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white leading-tight truncate">Free Shipping</p>
-                <p className="text-[9px] sm:text-[10px] text-stone-500 dark:text-slate-400 truncate">On orders over ₹1,999</p>
-              </div>
-            </div>
 
-            <div className="h-6 w-px bg-stone-300/80 dark:bg-slate-800 hidden sm:block"></div>
+              <div className="h-6 w-px bg-stone-300/80 dark:bg-slate-800 hidden sm:block"></div>
 
-            {/* Secure Payments */}
-            <div className="flex items-center gap-2 sm:gap-2.5">
-              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-stone-200/80 dark:bg-slate-800 flex items-center justify-center shrink-0">
-                <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-900 dark:text-amber-400" />
+              {/* Secure Payments */}
+              <div className="flex items-center gap-2 sm:gap-2.5">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-stone-200/80 dark:bg-slate-800 flex items-center justify-center shrink-0">
+                  <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-900 dark:text-amber-400" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white leading-tight truncate">Secure Payments</p>
+                  <p className="text-[9px] sm:text-[10px] text-stone-600 dark:text-slate-400 truncate">100% safe & encrypted</p>
+                </div>
               </div>
-              <div className="min-w-0">
-                <p className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white leading-tight truncate">Secure Payments</p>
-                <p className="text-[9px] sm:text-[10px] text-stone-500 dark:text-slate-400 truncate">100% safe & encrypted</p>
-              </div>
-            </div>
 
-            <div className="h-6 w-px bg-stone-300/80 dark:bg-slate-800 hidden sm:block"></div>
+              <div className="h-6 w-px bg-stone-300/80 dark:bg-slate-800 hidden sm:block"></div>
 
-            {/* Easy Returns */}
-            <div className="flex items-center gap-2 sm:gap-2.5">
-              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-stone-200/80 dark:bg-slate-800 flex items-center justify-center shrink-0">
-                <RotateCcw className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-900 dark:text-amber-400" />
+              {/* Easy Returns */}
+              <div className="flex items-center gap-2 sm:gap-2.5">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-stone-200/80 dark:bg-slate-800 flex items-center justify-center shrink-0">
+                  <RotateCcw className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-900 dark:text-amber-400" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white leading-tight truncate">Easy Returns</p>
+                  <p className="text-[9px] sm:text-[10px] text-stone-600 dark:text-slate-400 truncate">Hassle-free within 7 days</p>
+                </div>
               </div>
-              <div className="min-w-0">
-                <p className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white leading-tight truncate">Easy Returns</p>
-                <p className="text-[9px] sm:text-[10px] text-stone-500 dark:text-slate-400 truncate">Hassle-free within 7 days</p>
-              </div>
-            </div>
 
-            <div className="h-6 w-px bg-stone-300/80 dark:bg-slate-800 hidden sm:block"></div>
+              <div className="h-6 w-px bg-stone-300/80 dark:bg-slate-800 hidden sm:block"></div>
 
-            {/* Call Support */}
-            <div className="flex items-center gap-2 sm:gap-2.5">
-              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-stone-200/80 dark:bg-slate-800 flex items-center justify-center shrink-0">
-                <Headphones className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-900 dark:text-amber-400" />
-              </div>
-              <div className="min-w-0">
-                <p className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white leading-tight truncate">Call Support</p>
-                <p className="text-[9px] sm:text-[10px] text-stone-500 dark:text-slate-400 truncate">24/7 customer service</p>
+              {/* Call Support */}
+              <div className="flex items-center gap-2 sm:gap-2.5">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-stone-200/80 dark:bg-slate-800 flex items-center justify-center shrink-0">
+                  <Headphones className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-900 dark:text-amber-400" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white leading-tight truncate">Call Support</p>
+                  <p className="text-[9px] sm:text-[10px] text-stone-600 dark:text-slate-400 truncate">24/7 customer service</p>
+                </div>
               </div>
             </div>
           </div>
