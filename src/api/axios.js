@@ -3,6 +3,17 @@ import axios from 'axios';
 // Live Render Backend API Endpoint
 const LIVE_RENDER_API = 'https://shoply-backend-d9gk.onrender.com/api';
 
+const isLocalOrLan = (hostname) => {
+  if (!hostname) return true;
+  return (
+    hostname.includes('localhost') ||
+    hostname.includes('127.0.0.1') ||
+    hostname.startsWith('192.168.') ||
+    hostname.startsWith('10.') ||
+    /^172\.(1[6-9]|2\d|3[0-1])\./.test(hostname)
+  );
+};
+
 const resolveBaseURL = () => {
   const envUrl = import.meta.env.VITE_API_BASE_URL;
 
@@ -11,17 +22,20 @@ const resolveBaseURL = () => {
     return envUrl.trim().replace(/\/+$/, '');
   }
 
-  // 2. If running in a live browser on Render or any public domain (outside localhost)
+  // 2. If running on local machine or local Wi-Fi / LAN (e.g. testing on mobile phone via 192.168.x.x)
+  if (typeof window !== 'undefined' && window.location.hostname && isLocalOrLan(window.location.hostname)) {
+    return (envUrl || '/api').trim().replace(/\/+$/, '');
+  }
+
+  // 3. If running in a live production deployment (outside localhost and LAN)
   if (
     typeof window !== 'undefined' &&
     window.location.hostname &&
-    !window.location.hostname.includes('localhost') &&
-    !window.location.hostname.includes('127.0.0.1')
+    !isLocalOrLan(window.location.hostname)
   ) {
     return LIVE_RENDER_API;
   }
 
-  // 3. In local development, use envUrl or fallback to '/api' for Vite proxy
   return (envUrl || '/api').trim().replace(/\/+$/, '');
 };
 

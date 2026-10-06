@@ -24,19 +24,75 @@ const formatTimeAgo = (dateInput) => {
   return `${Math.floor(diff / 86400)}d ago`;
 };
 
+// Client-side persistent dismissal store to guarantee deleted notifications never re-appear
+const getDismissedIds = (userId) => {
+  try {
+    const raw = localStorage.getItem('shoply_dismissed_' + (userId || 'guest'));
+    return new Set(raw ? JSON.parse(raw) : []);
+  } catch {
+    return new Set();
+  }
+};
+
+const addDismissedId = (userId, id) => {
+  if (!id) return;
+  try {
+    const key = 'shoply_dismissed_' + (userId || 'guest');
+    const raw = localStorage.getItem(key);
+    const list = raw ? JSON.parse(raw) : [];
+    const strId = String(id);
+    if (!list.includes(strId)) {
+      list.push(strId);
+      localStorage.setItem(key, JSON.stringify(list));
+    }
+  } catch {}
+};
+
+const getClearedTimestamp = (userId) => {
+  try {
+    const val = localStorage.getItem('shoply_cleared_at_' + (userId || 'guest'));
+    return val ? parseInt(val, 10) : 0;
+  } catch {
+    return 0;
+  }
+};
+
+const setClearedTimestamp = (userId) => {
+  try {
+    localStorage.setItem('shoply_cleared_at_' + (userId || 'guest'), String(Date.now()));
+  } catch {}
+};
+
+const filterNotifications = (items, userId) => {
+  if (!Array.isArray(items)) return [];
+  const dismissed = getDismissedIds(userId);
+  const clearedAt = getClearedTimestamp(userId);
+  return items.filter((n) => {
+    const nid = String(n.id || n._id || '');
+    if (!nid || dismissed.has(nid)) return false;
+    if (clearedAt && n.createdAt) {
+      const time = new Date(n.createdAt).getTime();
+      if (!isNaN(time) && time <= clearedAt) return false;
+    }
+    return true;
+  });
+};
+
 export const NotificationDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('all'); // 'all' | 'unread'
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
+  const storageKey = user?._id ? `shoply_notifications_${user._id}` : 'shoply_notifications_guest';
 
-  // Load notifications from localStorage or empty array
+  // Load notifications from user-scoped localStorage
   const [notifications, setNotifications] = useState(() => {
     try {
-      const saved = localStorage.getItem('shoply_notifications') || localStorage.getItem('velora_notifications');
+      const activeKey = user?._id ? `shoply_notifications_${user._id}` : 'shoply_notifications_guest';
+      const saved = localStorage.getItem(activeKey);
       if (saved) {
-        return JSON.parse(saved);
+        return filterNotifications(JSON.parse(saved), user?._id);
       }
     } catch {
       // Fallback
@@ -48,47 +104,69 @@ export const NotificationDropdown = () => {
     if (!isAuthenticated) return;
     try {
       const { data } = await api.get('/notifications');
-      if (Array.isArray(data?.notifications) && data.notifications.length > 0) {
-        const mapped = data.notifications.map((n) => ({
+      if (Array.isArray(data?.notifications)) {
+        const rawMapped = data.notifications.map((n) => ({
           id: n._id,
           title: n.title,
           message: n.message,
           time: formatTimeAgo(n.createdAt),
+          createdAt: n.createdAt,
           type: n.type || 'announcement',
           priority: n.priority || 'normal',
           read: Boolean(n.isRead),
           link: n.link || '',
         }));
-        setNotifications(mapped);
+        const valid = filterNotifications(rawMapped, user?._id);
+        setNotifications(valid);
+        try {
+          localStorage.setItem(storageKey, JSON.stringify(valid));
+        } catch {}
       }
     } catch (err) {
       console.warn('Could not fetch user notifications from API:', err);
     }
   };
 
+  // Reload and fetch when user or auth status changes
   useEffect(() => {
-    fetchLiveNotifications();
+    try {
+      const activeKey = user?._id ? `shoply_notifications_${user._id}` : 'shoply_notifications_guest';
+      const saved = localStorage.getItem(activeKey);
+      if (saved) {
+        setNotifications(filterNotifications(JSON.parse(saved), user?._id));
+      } else {
+        setNotifications([]);
+      }
+    } catch {
+      setNotifications([]);
+    }
+    if (isAuthenticated) {
+      fetchLiveNotifications();
+    }
+  }, [user?._id, isAuthenticated]);
+
+  useEffect(() => {
     if (!isAuthenticated) return;
     const pollInterval = setInterval(() => {
       fetchLiveNotifications();
     }, 15000);
     return () => clearInterval(pollInterval);
-  }, [isAuthenticated]);
+  }, [isAuthenticated, user?._id]);
 
   useEffect(() => {
     if (isOpen && isAuthenticated) {
       fetchLiveNotifications();
     }
-  }, [isOpen]);
+  }, [isOpen, isAuthenticated]);
 
-  // Sync to localStorage
+  // Sync to user-scoped localStorage
   useEffect(() => {
     try {
-      localStorage.setItem('shoply_notifications', JSON.stringify(notifications));
+      localStorage.setItem(storageKey, JSON.stringify(notifications));
     } catch {
       // Ignore quota errors
     }
-  }, [notifications]);
+  }, [notifications, storageKey]);
 
   // Click outside to close
   useEffect(() => {
@@ -110,8 +188,22 @@ export const NotificationDropdown = () => {
     setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
   };
 
-  const clearAllNotifications = () => {
+  const clearAllNotifications = async () => {
+    setClearedTimestamp(user?._id);
+    notifications.forEach((n) => addDismissedId(user?._id, n.id));
     setNotifications([]);
+    try {
+      localStorage.setItem(storageKey, JSON.stringify([]));
+      localStorage.removeItem('shoply_notifications');
+      localStorage.removeItem('velora_notifications');
+    } catch {}
+    if (isAuthenticated) {
+      try {
+        await api.delete('/notifications/clear-all');
+      } catch (err) {
+        console.warn('Could not clear notifications on backend:', err);
+      }
+    }
   };
 
   const handleNotificationClick = async (item) => {
@@ -121,15 +213,38 @@ export const NotificationDropdown = () => {
     setNotifications((prev) =>
       prev.map((n) => (n.id === item.id ? { ...n, read: true } : n))
     );
-    if (item.link) {
+
+    let targetLink = item.link;
+    // For sellers, order notifications must strictly open the seller order management dashboard
+    if (user?.role === 'seller' && (item.type === 'order' || item.link?.includes('/orders'))) {
+      targetLink = '/seller/orders';
+    } else if (user?.role === 'admin' && item.type === 'order' && item.link === '/orders') {
+      targetLink = '/admin/orders';
+    }
+
+    if (targetLink) {
       setIsOpen(false);
-      navigate(item.link);
+      navigate(targetLink);
     }
   };
 
-  const removeNotification = (e, id) => {
+  const removeNotification = async (e, id) => {
     e.stopPropagation();
-    setNotifications((prev) => prev.filter((n) => n.id !== id));
+    addDismissedId(user?._id, id);
+    setNotifications((prev) => {
+      const updated = prev.filter((n) => String(n.id) !== String(id));
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
+    if (isAuthenticated && id) {
+      try {
+        await api.delete(`/notifications/${id}`);
+      } catch (err) {
+        console.warn('Could not delete notification on backend:', err);
+      }
+    }
   };
 
   const filteredNotifications =
