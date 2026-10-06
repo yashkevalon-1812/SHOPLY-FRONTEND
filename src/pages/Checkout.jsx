@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
@@ -12,9 +12,13 @@ import {
   Lock,
   ArrowRight,
   AlertCircle,
+  Zap,
+  CheckCircle2,
 } from 'lucide-react';
 import { formatINR } from '../utils/format';
 import { handleImageError } from '../utils/imageHelper';
+import { loadRazorpayScript } from '../utils/razorpay';
+import { RazorpaySandboxModal } from '../components/payment/RazorpaySandboxModal';
 
 export const Checkout = () => {
   const {
@@ -42,12 +46,15 @@ export const Checkout = () => {
     country: user?.address?.country || 'India',
   });
 
-  const [paymentMethod, setPaymentMethod] = useState('Credit/Debit Card');
+  const [paymentMethod, setPaymentMethod] = useState('Razorpay');
   const [submitting, setSubmitting] = useState(false);
+  const [sandboxPaymentData, setSandboxPaymentData] = useState(null);
+  const [showSandboxModal, setShowSandboxModal] = useState(false);
 
-  const [cardNumber, setCardNumber] = useState('4242 •••• •••• 4242');
-  const [cardExp, setCardExp] = useState('12/28');
-  const [cardCvv, setCardCvv] = useState('888');
+  // Pre-load Razorpay checkout script on mount
+  useEffect(() => {
+    loadRazorpayScript();
+  }, []);
 
   if (cartItems.length === 0) {
     return (
@@ -59,6 +66,32 @@ export const Checkout = () => {
       </div>
     );
   }
+
+  // Handle successful payment verification from either real Razorpay or Sandbox modal
+  const handleVerifyPayment = async (orderId, rzpResponse) => {
+    try {
+      setSubmitting(true);
+      const verifyPayload = {
+        orderId,
+        razorpay_order_id: rzpResponse.razorpay_order_id,
+        razorpay_payment_id: rzpResponse.razorpay_payment_id,
+        razorpay_signature: rzpResponse.razorpay_signature,
+      };
+
+      const { data } = await api.post('/payment/razorpay/verify', verifyPayload);
+      clearCart();
+      addToast('Payment verified successfully via Razorpay!', 'success');
+      navigate(`/order-success/${orderId}`);
+    } catch (verifyErr) {
+      console.error('Payment verification failed:', verifyErr);
+      addToast(
+        verifyErr.response?.data?.message || 'Payment verification failed. Please contact support.',
+        'error'
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   const handlePlaceOrder = async (e) => {
     e.preventDefault();
@@ -94,14 +127,87 @@ export const Checkout = () => {
         couponCode,
       };
 
-      const { data } = await api.post('/orders', orderPayload);
-      clearCart();
-      addToast('Order placed successfully!', 'success');
-      navigate(`/order-success/${data._id}`);
+      // 1. Create order in database
+      const { data: createdOrder } = await api.post('/orders', orderPayload);
+
+      // 2. If Cash on Delivery, complete immediately
+      if (paymentMethod === 'Cash on Delivery') {
+        clearCart();
+        addToast('Order placed successfully (Cash on Delivery)!', 'success');
+        navigate(`/order-success/${createdOrder._id}`);
+        return;
+      }
+
+      // 3. Razorpay Payment Gateway Flow
+      try {
+        const { data: rzpData } = await api.post('/payment/razorpay/create-order', {
+          orderId: createdOrder._id,
+        });
+
+        const isScriptLoaded = await loadRazorpayScript();
+
+        // If real Razorpay credentials are active and SDK script is loaded
+        if (isScriptLoaded && rzpData.isRealMode && window.Razorpay) {
+          const options = {
+            key: rzpData.keyId,
+            amount: rzpData.amount,
+            currency: rzpData.currency || 'INR',
+            name: 'Shoply',
+            description: `Order Ref #${createdOrder._id.slice(-8).toUpperCase()}`,
+            image: 'https://cdn-icons-png.flaticon.com/512/9385/9385289.png',
+            order_id: rzpData.razorpayOrderId,
+            prefill: {
+              name: rzpData.customer?.name || shippingAddress.fullName,
+              email: rzpData.customer?.email || user?.email,
+              contact: rzpData.customer?.phone || shippingAddress.phone,
+            },
+            notes: {
+              orderId: createdOrder._id,
+            },
+            theme: {
+              color: '#0f172a',
+            },
+            handler: async (response) => {
+              await handleVerifyPayment(createdOrder._id, response);
+            },
+            modal: {
+              ondismiss: () => {
+                setSubmitting(false);
+                addToast(
+                  'Payment window closed. You can complete payment anytime from My Orders.',
+                  'info'
+                );
+              },
+            },
+          };
+
+          const razorpayInstance = new window.Razorpay(options);
+          razorpayInstance.on('payment.failed', (response) => {
+            setSubmitting(false);
+            addToast(response.error?.description || 'Payment authorization failed.', 'error');
+          });
+          razorpayInstance.open();
+        } else {
+          // Open the interactive Razorpay Sandbox simulator modal
+          setSandboxPaymentData({
+            ...rzpData,
+            orderId: createdOrder._id,
+            totalPrice,
+          });
+          setShowSandboxModal(true);
+          setSubmitting(false);
+        }
+      } catch (rzpErr) {
+        console.error('Razorpay initialization error:', rzpErr);
+        addToast(
+          rzpErr.response?.data?.message || 'Failed to initiate Razorpay gateway',
+          'error'
+        );
+        setSubmitting(false);
+      }
     } catch (err) {
       console.error(err);
       addToast(err.response?.data?.message || 'Failed to place order', 'error');
-    } finally {
       setSubmitting(false);
     }
   };
@@ -245,160 +351,240 @@ export const Checkout = () => {
               </div>
             </div>
 
-            {/* Payment Methods */}
-            <div className="bg-white dark:bg-slate-900 border border-zinc-200 dark:border-slate-800 rounded-2xl p-6 space-y-4 shadow-xs">
-              <h2 className="text-base font-bold text-zinc-900 dark:text-white flex items-center gap-2">
-                <span>2. Payment Clearance</span>
-              </h2>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                {[
-                  { id: 'Credit/Debit Card', icon: CreditCard, title: 'Card', desc: 'Instant Processing' },
-                  { id: 'UPI', icon: QrCode, title: 'UPI / Net Banking', desc: 'Direct Transfer' },
-                  { id: 'Cash on Delivery', icon: Banknote, title: 'Cash on Delivery', desc: 'Pay at Doorstep' },
-                ].map((m) => (
-                  <button
-                    key={m.id}
-                    type="button"
-                    onClick={() => setPaymentMethod(m.id)}
-                    className={`p-4 rounded-xl border text-left transition-all flex flex-col justify-between cursor-pointer ${
-                      paymentMethod === m.id
-                        ? 'bg-zinc-950 text-white dark:bg-amber-500 dark:text-slate-950 border-zinc-950 dark:border-amber-500 shadow-sm'
-                        : 'bg-zinc-50 dark:bg-slate-800 border-zinc-200 dark:border-slate-700 text-zinc-700 dark:text-slate-200 hover:border-zinc-300 dark:hover:border-slate-600'
-                    }`}
-                  >
-                    <m.icon className="w-5 h-5 mb-2" />
-                    <div>
-                      <p className="text-xs font-bold">{m.title}</p>
-                      <p className={`text-[10px] ${paymentMethod === m.id ? 'text-zinc-300 dark:text-slate-800' : 'text-zinc-500 dark:text-slate-400'}`}>
-                        {m.desc}
-                      </p>
-                    </div>
-                  </button>
-                ))}
-              </div>
-
-              {/* Simulated Card Fields */}
-              {paymentMethod === 'Credit/Debit Card' && (
-                <div className="mt-4 p-4 rounded-xl bg-zinc-50 dark:bg-slate-800/60 border border-zinc-200 dark:border-slate-700 space-y-3 text-xs">
-                  <div>
-                    <label className="text-zinc-600 dark:text-slate-300 font-semibold block mb-1">Card Number (Simulated)</label>
-                    <input
-                      type="text"
-                      value={cardNumber}
-                      onChange={(e) => setCardNumber(e.target.value)}
-                      className="w-full bg-white dark:bg-slate-800 border border-zinc-200 dark:border-slate-700 rounded-lg p-2.5 text-zinc-900 dark:text-white font-mono"
-                    />
+              {/* Payment Methods */}
+              <div className="bg-white dark:bg-slate-900 border border-zinc-200 dark:border-slate-800 rounded-2xl p-6 space-y-4 shadow-xs">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-base font-bold text-zinc-900 dark:text-white flex items-center gap-2">
+                    <span>2. Payment Clearance</span>
+                  </h2>
+                  <div className="flex items-center gap-1.5 text-[11px] font-bold text-blue-600 dark:text-blue-400">
+                    <ShieldCheck className="w-4 h-4" />
+                    <span>Razorpay Enabled</span>
                   </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="text-zinc-600 dark:text-slate-300 font-semibold block mb-1">Expiry Date</label>
-                      <input
-                        type="text"
-                        value={cardExp}
-                        onChange={(e) => setCardExp(e.target.value)}
-                        className="w-full bg-white dark:bg-slate-800 border border-zinc-200 dark:border-slate-700 rounded-lg p-2.5 text-zinc-900 dark:text-white font-mono"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-zinc-600 dark:text-slate-300 font-semibold block mb-1">CVV / CVC</label>
-                      <input
-                        type="password"
-                        value={cardCvv}
-                        onChange={(e) => setCardCvv(e.target.value)}
-                        className="w-full bg-white dark:bg-slate-800 border border-zinc-200 dark:border-slate-700 rounded-lg p-2.5 text-zinc-900 dark:text-white font-mono"
-                      />
-                    </div>
-                  </div>
-                  <p className="text-[10px] text-emerald-700 dark:text-emerald-400 font-semibold flex items-center gap-1 mt-1">
-                    <Lock className="w-3 h-3" /> Encrypted with 256-bit instant 3D-Secure payment gateway
-                  </p>
                 </div>
-              )}
-            </div>
-          </div>
 
-          {/* Right Summary Col */}
-          <div className="lg:col-span-5 space-y-6">
-            <div className="bg-white dark:bg-slate-900 border border-zinc-200 dark:border-slate-800 rounded-2xl p-6 space-y-5 sticky top-24 shadow-xs">
-              <h2 className="text-base font-bold text-zinc-900 dark:text-white border-b border-zinc-200 dark:border-slate-800 pb-3">
-                Review & Confirm Order
-              </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {[
+                    {
+                      id: 'Razorpay',
+                      icon: Zap,
+                      title: 'Razorpay Online',
+                      desc: 'UPI, Cards, NetBanking, Wallets',
+                      badge: 'Recommended',
+                    },
+                    {
+                      id: 'Cash on Delivery',
+                      icon: Banknote,
+                      title: 'Cash on Delivery',
+                      desc: 'Pay at Doorstep in Cash',
+                    },
+                  ].map((m) => (
+                    <button
+                      key={m.id}
+                      type="button"
+                      onClick={() => setPaymentMethod(m.id)}
+                      className={`p-4 rounded-xl border text-left transition-all flex flex-col justify-between cursor-pointer relative ${
+                        paymentMethod === m.id
+                          ? 'bg-zinc-950 text-white dark:bg-amber-500 dark:text-slate-950 border-zinc-950 dark:border-amber-500 shadow-md ring-2 ring-blue-500/30'
+                          : 'bg-zinc-50 dark:bg-slate-800 border-zinc-200 dark:border-slate-700 text-zinc-700 dark:text-slate-200 hover:border-zinc-300 dark:hover:border-slate-600'
+                      }`}
+                    >
+                      {m.badge && (
+                        <span className="absolute top-2.5 right-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-[9px] font-black uppercase px-2 py-0.5 rounded-full shadow-xs">
+                          {m.badge}
+                        </span>
+                      )}
+                      <m.icon className="w-5 h-5 mb-2 text-amber-500 dark:text-inherit" />
+                      <div>
+                        <p className="text-xs font-bold">{m.title}</p>
+                        <p
+                          className={`text-[10px] ${
+                            paymentMethod === m.id
+                              ? 'text-zinc-300 dark:text-slate-800'
+                              : 'text-zinc-500 dark:text-slate-400'
+                          }`}
+                        >
+                          {m.desc}
+                        </p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
 
-              {/* Item Previews */}
-              <div className="space-y-3 max-h-60 overflow-y-auto pr-1">
-                {cartItems.map((item) => (
-                  <div key={item.product} className="flex items-center gap-3">
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      referrerPolicy="no-referrer"
-                      className="w-12 h-12 rounded-lg object-cover bg-zinc-100 border border-zinc-200"
-                      onError={(e) => handleImageError(e, item.image)}
-                    />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs font-bold text-zinc-900 truncate">{item.title}</p>
-                      <p className="text-[11px] text-zinc-500">Qty: {item.qty}</p>
+                {/* Razorpay Banner Details */}
+                {paymentMethod === 'Razorpay' && (
+                  <div className="mt-4 p-5 rounded-2xl bg-gradient-to-br from-blue-50/70 via-indigo-50/50 to-white dark:from-slate-800/90 dark:via-slate-800/60 dark:to-slate-900 border border-blue-200/80 dark:border-blue-900/60 space-y-3.5 text-xs shadow-xs">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center text-white font-black text-sm shadow-xs">
+                          R
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-zinc-900 dark:text-white leading-tight">
+                            Razorpay Payment Gateway
+                          </h4>
+                          <p className="text-[10px] text-zinc-500 dark:text-slate-400">
+                            Trusted 256-bit Bank Grade Encrypted Processing
+                          </p>
+                        </div>
+                      </div>
+                      <span className="text-[10px] bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300 font-bold px-2 py-0.5 rounded-md border border-blue-200 dark:border-blue-800">
+                        PCI-DSS Level 1
+                      </span>
                     </div>
-                    <span className="text-xs font-black text-zinc-900">
-                      {formatINR(item.price * item.qty)}
+
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 text-[11px]">
+                      <div className="bg-white dark:bg-slate-800 p-2.5 rounded-xl border border-zinc-200 dark:border-slate-700 text-center">
+                        <span className="block font-bold text-zinc-800 dark:text-slate-200">UPI Instant</span>
+                        <span className="text-[9px] text-zinc-400">GPay, PhonePe, Paytm</span>
+                      </div>
+                      <div className="bg-white dark:bg-slate-800 p-2.5 rounded-xl border border-zinc-200 dark:border-slate-700 text-center">
+                        <span className="block font-bold text-zinc-800 dark:text-slate-200">All Cards</span>
+                        <span className="text-[9px] text-zinc-400">Visa, Master, RuPay</span>
+                      </div>
+                      <div className="bg-white dark:bg-slate-800 p-2.5 rounded-xl border border-zinc-200 dark:border-slate-700 text-center">
+                        <span className="block font-bold text-zinc-800 dark:text-slate-200">NetBanking</span>
+                        <span className="text-[9px] text-zinc-400">50+ Top Banks</span>
+                      </div>
+                      <div className="bg-white dark:bg-slate-800 p-2.5 rounded-xl border border-zinc-200 dark:border-slate-700 text-center">
+                        <span className="block font-bold text-zinc-800 dark:text-slate-200">Wallets</span>
+                        <span className="text-[9px] text-zinc-400">PayLater & Wallets</span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 pt-1 text-[10.5px] text-zinc-600 dark:text-slate-300">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                      <span>Instant clearance with authenticated cryptographic signature verification.</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Right Summary Col */}
+            <div className="lg:col-span-5 space-y-6">
+              <div className="bg-white dark:bg-slate-900 border border-zinc-200 dark:border-slate-800 rounded-2xl p-6 space-y-5 sticky top-24 shadow-xs">
+                <h2 className="text-base font-bold text-zinc-900 dark:text-white border-b border-zinc-200 dark:border-slate-800 pb-3">
+                  Review & Confirm Order
+                </h2>
+
+                {/* Item Previews */}
+                <div className="space-y-3 max-h-60 overflow-y-auto pr-1">
+                  {cartItems.map((item) => (
+                    <div key={item.product} className="flex items-center gap-3">
+                      <img
+                        src={item.image}
+                        alt={item.title}
+                        referrerPolicy="no-referrer"
+                        className="w-12 h-12 rounded-lg object-cover bg-zinc-100 border border-zinc-200"
+                        onError={(e) => handleImageError(e, item.image)}
+                      />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs font-bold text-zinc-900 dark:text-white truncate">
+                          {item.title}
+                        </p>
+                        <p className="text-[11px] text-zinc-500 dark:text-slate-400">
+                          Qty: {item.qty}
+                        </p>
+                      </div>
+                      <span className="text-xs font-black text-zinc-900 dark:text-white">
+                        {formatINR(item.price * item.qty)}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Totals */}
+                <div className="border-t border-zinc-200 dark:border-slate-800 pt-4 space-y-2 text-xs text-zinc-600 dark:text-slate-400">
+                  <div className="flex justify-between">
+                    <span>Subtotal</span>
+                    <span className="font-semibold text-zinc-900 dark:text-white">
+                      {formatINR(itemsPrice)}
                     </span>
                   </div>
-                ))}
-              </div>
-
-              {/* Totals */}
-              <div className="border-t border-zinc-200 pt-4 space-y-2 text-xs text-zinc-600">
-                <div className="flex justify-between">
-                  <span>Subtotal</span>
-                  <span className="font-semibold text-zinc-900">{formatINR(itemsPrice)}</span>
-                </div>
-                {discountAmount > 0 && (
-                  <div className="flex justify-between text-emerald-700 font-semibold">
-                    <span>Discount</span>
-                    <span>-{formatINR(discountAmount)}</span>
+                  {discountAmount > 0 && (
+                    <div className="flex justify-between text-emerald-700 dark:text-emerald-400 font-semibold">
+                      <span>Discount</span>
+                      <span>-{formatINR(discountAmount)}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between">
+                    <span>Insured Shipping</span>
+                    <span className="font-semibold text-zinc-900 dark:text-white">
+                      {shippingPrice === 0 ? 'Free' : formatINR(shippingPrice)}
+                    </span>
                   </div>
-                )}
-                <div className="flex justify-between">
-                  <span>Insured Shipping</span>
-                  <span className="font-semibold text-zinc-900">
-                    {shippingPrice === 0 ? 'Free' : formatINR(shippingPrice)}
-                  </span>
+                  <div className="flex justify-between">
+                    <span>Estimated Tax (GST 18%)</span>
+                    <span className="font-semibold text-zinc-900 dark:text-white">
+                      {formatINR(taxPrice)}
+                    </span>
+                  </div>
+                  <div className="border-t border-zinc-200 dark:border-slate-800 pt-3 flex justify-between text-base font-black text-zinc-950 dark:text-white">
+                    <span>Total Amount</span>
+                    <span className="text-xl text-zinc-950 dark:text-white">
+                      {formatINR(totalPrice)}
+                    </span>
+                  </div>
                 </div>
-                <div className="flex justify-between">
-                  <span>Estimated Tax (GST 18%)</span>
-                  <span className="font-semibold text-zinc-900">{formatINR(taxPrice)}</span>
-                </div>
-                <div className="border-t border-zinc-200 pt-3 flex justify-between text-base font-black text-zinc-950">
-                  <span>Total Amount</span>
-                  <span className="text-xl text-zinc-950">{formatINR(totalPrice)}</span>
-                </div>
-              </div>
 
-              {/* Submit CTA */}
-              <button
-                type="submit"
-                disabled={submitting}
-                className="w-full bg-zinc-950 hover:bg-zinc-800 disabled:opacity-50 text-white font-black text-sm py-4 rounded-xl flex items-center justify-center gap-2 shadow-xl shadow-zinc-950/10 transition-all hover:scale-[1.01]"
-              >
-                {submitting ? (
-                  <span>Authorizing Payment...</span>
-                ) : (
-                  <>
-                    <span>Place Order & Authorize</span>
-                    <ArrowRight className="w-4 h-4 text-amber-400" />
-                  </>
-                )}
-              </button>
+                {/* Submit CTA */}
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className={`w-full font-black text-sm py-4 rounded-xl flex items-center justify-center gap-2 shadow-xl disabled:opacity-50 transition-all hover:scale-[1.01] cursor-pointer ${
+                    paymentMethod === 'Razorpay'
+                      ? 'bg-blue-600 hover:bg-blue-700 dark:bg-amber-500 dark:hover:bg-amber-400 text-white dark:text-slate-950 shadow-blue-600/20 dark:shadow-amber-500/20'
+                      : 'bg-zinc-950 hover:bg-zinc-800 text-white shadow-zinc-950/10'
+                  }`}
+                >
+                  {submitting ? (
+                    <span className="flex items-center gap-2">
+                      <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></span>
+                      <span>Authorizing Payment...</span>
+                    </span>
+                  ) : paymentMethod === 'Razorpay' ? (
+                    <>
+                      <span>Pay {formatINR(totalPrice)} with Razorpay</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </>
+                  ) : (
+                    <>
+                      <span>Confirm Order (Cash on Delivery)</span>
+                      <ArrowRight className="w-4 h-4 text-amber-400" />
+                    </>
+                  )}
+                </button>
 
-              <div className="flex items-center justify-center gap-2 text-[11px] text-zinc-500">
-                <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                <span>Zero Risk · Fully Protected Transaction</span>
+                <div className="flex items-center justify-center gap-2 text-[11px] text-zinc-500 dark:text-slate-400">
+                  <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                  <span>Zero Risk · 256-bit Encrypted Transaction</span>
+                </div>
               </div>
             </div>
-          </div>
-        </form>
+          </form>
+        </div>
+
+        {/* Razorpay Sandbox Modal */}
+        <RazorpaySandboxModal
+          isOpen={showSandboxModal}
+          onClose={() => {
+            setShowSandboxModal(false);
+            setSubmitting(false);
+          }}
+          paymentData={sandboxPaymentData}
+          onPaymentSuccess={(rzpResponse) => {
+            setShowSandboxModal(false);
+            if (sandboxPaymentData?.orderId) {
+              handleVerifyPayment(sandboxPaymentData.orderId, rzpResponse);
+            }
+          }}
+          onPaymentCancel={() => {
+            setShowSandboxModal(false);
+            setSubmitting(false);
+            addToast('Payment cancelled. You can complete payment anytime from My Orders.', 'info');
+          }}
+        />
       </div>
-    </div>
-  );
-};
+    );
+  };

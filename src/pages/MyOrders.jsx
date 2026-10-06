@@ -12,16 +12,22 @@ import {
   CheckCircle2,
   Ban,
   FileText,
+  Zap,
 } from 'lucide-react';
 import { formatINR } from '../utils/format';
 import { handleImageError } from '../utils/imageHelper';
 import { InvoiceModal } from '../components/order/InvoiceModal';
+import { loadRazorpayScript } from '../utils/razorpay';
+import { RazorpaySandboxModal } from '../components/payment/RazorpaySandboxModal';
 
 export const MyOrders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [cancellingId, setCancellingId] = useState(null);
   const [selectedInvoiceOrder, setSelectedInvoiceOrder] = useState(null);
+  const [payingOrderId, setPayingOrderId] = useState(null);
+  const [sandboxPaymentData, setSandboxPaymentData] = useState(null);
+  const [showSandboxModal, setShowSandboxModal] = useState(false);
   const { addToast } = useToast();
 
   const handleCancelOrder = async (orderId) => {
@@ -39,6 +45,99 @@ export const MyOrders = () => {
       addToast(err.response?.data?.message || 'Failed to cancel order', 'error');
     } finally {
       setCancellingId(null);
+    }
+  };
+
+  const handleVerifyOrderPayment = async (orderId, rzpResponse) => {
+    try {
+      const verifyPayload = {
+        orderId,
+        razorpay_order_id: rzpResponse.razorpay_order_id,
+        razorpay_payment_id: rzpResponse.razorpay_payment_id,
+        razorpay_signature: rzpResponse.razorpay_signature,
+      };
+
+      const { data } = await api.post('/payment/razorpay/verify', verifyPayload);
+      addToast('Payment verified successfully via Razorpay!', 'success');
+      setOrders((prev) =>
+        prev.map((o) =>
+          o._id === orderId
+            ? {
+                ...o,
+                isPaid: true,
+                paymentMethod: 'Razorpay',
+                paymentResult: data.order?.paymentResult,
+              }
+            : o
+        )
+      );
+    } catch (verifyErr) {
+      console.error('Payment verification failed:', verifyErr);
+      addToast(
+        verifyErr.response?.data?.message || 'Payment verification failed',
+        'error'
+      );
+    } finally {
+      setPayingOrderId(null);
+    }
+  };
+
+  const handlePayWithRazorpay = async (order) => {
+    setPayingOrderId(order._id);
+    try {
+      const { data: rzpData } = await api.post('/payment/razorpay/create-order', {
+        orderId: order._id,
+      });
+
+      const isScriptLoaded = await loadRazorpayScript();
+
+      if (isScriptLoaded && rzpData.isRealMode && window.Razorpay) {
+        const options = {
+          key: rzpData.keyId,
+          amount: rzpData.amount,
+          currency: rzpData.currency || 'INR',
+          name: 'Shoply',
+          description: `Acquisition Payment #${order._id.slice(-8).toUpperCase()}`,
+          order_id: rzpData.razorpayOrderId,
+          prefill: {
+            name: rzpData.customer?.name || order.shippingAddress?.fullName || '',
+            email: rzpData.customer?.email || '',
+            contact: rzpData.customer?.phone || order.shippingAddress?.phone || '',
+          },
+          theme: { color: '#0f172a' },
+          handler: async (response) => {
+            await handleVerifyOrderPayment(order._id, response);
+          },
+          modal: {
+            ondismiss: () => {
+              setPayingOrderId(null);
+              addToast('Payment dismissed.', 'info');
+            },
+          },
+        };
+
+        const rzp = new window.Razorpay(options);
+        rzp.on('payment.failed', (response) => {
+          setPayingOrderId(null);
+          addToast(response.error?.description || 'Payment failed.', 'error');
+        });
+        rzp.open();
+      } else {
+        // Open interactive sandbox modal
+        setSandboxPaymentData({
+          ...rzpData,
+          orderId: order._id,
+          totalPrice: order.totalPrice,
+        });
+        setShowSandboxModal(true);
+      }
+    } catch (err) {
+      console.error('Razorpay init error:', err);
+      addToast(
+        err.response?.data?.message || 'Failed to start Razorpay payment',
+        'error'
+      );
+      setPayingOrderId(null);
     }
   };
 
@@ -156,6 +255,21 @@ export const MyOrders = () => {
                         {formatINR(order.totalPrice)}
                       </span>
                       <div className="mt-2 flex items-center gap-3">
+                        {!order.isPaid && order.status !== 'Cancelled' && (
+                          <button
+                            onClick={() => handlePayWithRazorpay(order)}
+                            disabled={payingOrderId === order._id}
+                            className="text-[11px] font-bold text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 inline-flex items-center gap-1 hover:underline transition-colors disabled:opacity-50 cursor-pointer"
+                            title="Complete payment securely via Razorpay"
+                          >
+                            <Zap className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                            <span>
+                              {payingOrderId === order._id
+                                ? 'Connecting...'
+                                : 'Pay with Razorpay'}
+                            </span>
+                          </button>
+                        )}
                         <button
                           onClick={() => setSelectedInvoiceOrder(order)}
                           className="text-[11px] font-bold text-amber-600 hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-300 inline-flex items-center gap-1 hover:underline transition-colors cursor-pointer"
@@ -278,6 +392,27 @@ export const MyOrders = () => {
         isOpen={Boolean(selectedInvoiceOrder)}
         onClose={() => setSelectedInvoiceOrder(null)}
         order={selectedInvoiceOrder}
+      />
+
+      {/* Razorpay Sandbox Simulator Modal */}
+      <RazorpaySandboxModal
+        isOpen={showSandboxModal}
+        onClose={() => {
+          setShowSandboxModal(false);
+          setPayingOrderId(null);
+        }}
+        paymentData={sandboxPaymentData}
+        onPaymentSuccess={(rzpResponse) => {
+          setShowSandboxModal(false);
+          if (sandboxPaymentData?.orderId) {
+            handleVerifyOrderPayment(sandboxPaymentData.orderId, rzpResponse);
+          }
+        }}
+        onPaymentCancel={() => {
+          setShowSandboxModal(false);
+          setPayingOrderId(null);
+          addToast('Payment cancelled.', 'info');
+        }}
       />
     </div>
   );

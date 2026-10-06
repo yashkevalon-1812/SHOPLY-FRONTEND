@@ -897,7 +897,18 @@ export const InvoiceModal = ({ isOpen, onClose, order }) => {
             <div className="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 text-[11px] text-slate-600">
               <div>
                 <strong className="text-slate-900">Payment Mode:</strong>{' '}
-                {order.paymentMethod || 'Cash on Delivery'}
+                <span>
+                  {order.paymentMethod || 'Cash on Delivery'}
+                  {order.isPaid ? (
+                    <span className="ml-1 text-emerald-700 font-bold">
+                      (PAID{order.paymentResult?.id ? ` · Ref: ${order.paymentResult.id}` : ''})
+                    </span>
+                  ) : (
+                    <span className="ml-1 text-amber-700 font-medium">
+                      (Pending)
+                    </span>
+                  )}
+                </span>
               </div>
               <div>
                 <strong className="text-slate-900">Dispatch Partner:</strong>{' '}
