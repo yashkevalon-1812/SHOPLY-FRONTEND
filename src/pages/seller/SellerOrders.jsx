@@ -2,13 +2,15 @@ import { useState, useEffect } from 'react';
 import api from '../../api/axios';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
-import { MapPin, Calendar } from 'lucide-react';
+import { MapPin, Calendar, FileText } from 'lucide-react';
 import { formatINR } from '../../utils/format';
 import { handleImageError } from '../../utils/imageHelper';
+import { InvoiceModal } from '../../components/order/InvoiceModal';
 
 export const SellerOrders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedInvoiceOrder, setSelectedInvoiceOrder] = useState(null);
   const { user } = useAuth();
   const { addToast } = useToast();
 
@@ -89,6 +91,14 @@ export const SellerOrders = () => {
                   </div>
 
                   <div className="flex items-center gap-3">
+                    <button
+                      onClick={() => setSelectedInvoiceOrder(order)}
+                      className="text-[11px] font-bold text-amber-600 hover:text-amber-700 dark:text-amber-400 inline-flex items-center gap-1 hover:underline transition-colors cursor-pointer mr-1"
+                      title="View tax invoice bill"
+                    >
+                      <FileText className="w-3.5 h-3.5" />
+                      <span>View Bill</span>
+                    </button>
                     <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">Fulfillment Status:</span>
                     <select
                       value={order.status}
@@ -142,6 +152,13 @@ export const SellerOrders = () => {
           })
         )}
       </div>
+
+      {/* Invoice Bill Modal */}
+      <InvoiceModal
+        isOpen={Boolean(selectedInvoiceOrder)}
+        onClose={() => setSelectedInvoiceOrder(null)}
+        order={selectedInvoiceOrder}
+      />
     </div>
   );
 };

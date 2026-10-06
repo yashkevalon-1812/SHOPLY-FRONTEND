@@ -2,10 +2,13 @@ import { useState, useEffect } from 'react';
 import api from '../../api/axios';
 import { useToast } from '../../context/ToastContext';
 import { formatINR } from '../../utils/format';
+import { FileText } from 'lucide-react';
+import { InvoiceModal } from '../../components/order/InvoiceModal';
 
 export const AdminOrders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedInvoiceOrder, setSelectedInvoiceOrder] = useState(null);
   const { addToast } = useToast();
 
   const fetchOrders = async () => {
@@ -97,16 +100,25 @@ export const AdminOrders = () => {
                       </span>
                     </td>
                     <td className="py-4 px-5">
-                      <select
-                        value={order.status}
-                        onChange={(e) => handleStatusChange(order._id, e.target.value)}
-                        className="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs font-bold text-slate-800 dark:text-slate-200 py-1.5 px-3 rounded-xl focus:outline-none focus:border-slate-500 cursor-pointer shadow-2xs"
-                      >
-                        <option value="Processing">Processing</option>
-                        <option value="Shipped">Shipped</option>
-                        <option value="Delivered">Delivered</option>
-                        <option value="Cancelled">Cancelled</option>
-                      </select>
+                      <div className="flex items-center gap-2">
+                        <select
+                          value={order.status}
+                          onChange={(e) => handleStatusChange(order._id, e.target.value)}
+                          className="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs font-bold text-slate-800 dark:text-slate-200 py-1.5 px-3 rounded-xl focus:outline-none focus:border-slate-500 cursor-pointer shadow-2xs"
+                        >
+                          <option value="Processing">Processing</option>
+                          <option value="Shipped">Shipped</option>
+                          <option value="Delivered">Delivered</option>
+                          <option value="Cancelled">Cancelled</option>
+                        </select>
+                        <button
+                          onClick={() => setSelectedInvoiceOrder(order)}
+                          className="p-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg transition-colors cursor-pointer"
+                          title="View and print tax bill"
+                        >
+                          <FileText className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -115,6 +127,13 @@ export const AdminOrders = () => {
           </div>
         )}
       </div>
+
+      {/* Invoice Modal */}
+      <InvoiceModal
+        isOpen={Boolean(selectedInvoiceOrder)}
+        onClose={() => setSelectedInvoiceOrder(null)}
+        order={selectedInvoiceOrder}
+      />
     </div>
   );
 };

@@ -11,14 +11,17 @@ import {
   Truck,
   CheckCircle2,
   Ban,
+  FileText,
 } from 'lucide-react';
 import { formatINR } from '../utils/format';
 import { handleImageError } from '../utils/imageHelper';
+import { InvoiceModal } from '../components/order/InvoiceModal';
 
 export const MyOrders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [cancellingId, setCancellingId] = useState(null);
+  const [selectedInvoiceOrder, setSelectedInvoiceOrder] = useState(null);
   const { addToast } = useToast();
 
   const handleCancelOrder = async (orderId) => {
@@ -152,16 +155,26 @@ export const MyOrders = () => {
                       <span className="text-base font-black text-zinc-950 dark:text-white">
                         {formatINR(order.totalPrice)}
                       </span>
-                      {order.status === 'Processing' && (
+                      <div className="mt-2 flex items-center gap-3">
                         <button
-                          onClick={() => handleCancelOrder(order._id)}
-                          disabled={cancellingId === order._id}
-                          className="mt-2 text-[11px] font-semibold text-rose-600 hover:text-rose-700 dark:text-rose-400 dark:hover:text-rose-300 inline-flex items-center gap-1 hover:underline transition-colors disabled:opacity-50"
+                          onClick={() => setSelectedInvoiceOrder(order)}
+                          className="text-[11px] font-bold text-amber-600 hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-300 inline-flex items-center gap-1 hover:underline transition-colors cursor-pointer"
+                          title="View and print tax bill"
                         >
-                          <Ban className="w-3 h-3" />
-                          <span>{cancellingId === order._id ? 'Cancelling...' : 'Cancel Order'}</span>
+                          <FileText className="w-3.5 h-3.5" />
+                          <span>View Bill</span>
                         </button>
-                      )}
+                        {order.status === 'Processing' && (
+                          <button
+                            onClick={() => handleCancelOrder(order._id)}
+                            disabled={cancellingId === order._id}
+                            className="text-[11px] font-semibold text-rose-600 hover:text-rose-700 dark:text-rose-400 dark:hover:text-rose-300 inline-flex items-center gap-1 hover:underline transition-colors disabled:opacity-50 cursor-pointer"
+                          >
+                            <Ban className="w-3 h-3" />
+                            <span>{cancellingId === order._id ? 'Cancelling...' : 'Cancel Order'}</span>
+                          </button>
+                        )}
+                      </div>
                     </div>
                   </div>
 
@@ -259,6 +272,13 @@ export const MyOrders = () => {
           </div>
         )}
       </div>
+
+      {/* Invoice Modal */}
+      <InvoiceModal
+        isOpen={Boolean(selectedInvoiceOrder)}
+        onClose={() => setSelectedInvoiceOrder(null)}
+        order={selectedInvoiceOrder}
+      />
     </div>
   );
 };
