@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../api/axios';
+import { useToast } from '../context/ToastContext';
 import {
   Package,
   Calendar,
@@ -9,6 +10,7 @@ import {
   Clock,
   Truck,
   CheckCircle2,
+  Ban,
 } from 'lucide-react';
 import { formatINR } from '../utils/format';
 import { handleImageError } from '../utils/imageHelper';
@@ -16,6 +18,26 @@ import { handleImageError } from '../utils/imageHelper';
 export const MyOrders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [cancellingId, setCancellingId] = useState(null);
+  const { addToast } = useToast();
+
+  const handleCancelOrder = async (orderId) => {
+    if (!window.confirm('Are you sure you want to cancel this order? The order will be cancelled and items restocked.')) {
+      return;
+    }
+    setCancellingId(orderId);
+    try {
+      const { data } = await api.put(`/orders/${orderId}/cancel`);
+      addToast(data.message || 'Order cancelled successfully!', 'success');
+      setOrders((prev) =>
+        prev.map((o) => (o._id === orderId ? { ...o, status: 'Cancelled' } : o))
+      );
+    } catch (err) {
+      addToast(err.response?.data?.message || 'Failed to cancel order', 'error');
+    } finally {
+      setCancellingId(null);
+    }
+  };
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -125,11 +147,21 @@ export const MyOrders = () => {
                       </p>
                     </div>
 
-                    <div className="text-left sm:text-right">
+                    <div className="text-left sm:text-right flex flex-col items-start sm:items-end">
                       <span className="text-[11px] text-zinc-400 block">Total Investment</span>
                       <span className="text-base font-black text-zinc-950 dark:text-white">
                         {formatINR(order.totalPrice)}
                       </span>
+                      {order.status === 'Processing' && (
+                        <button
+                          onClick={() => handleCancelOrder(order._id)}
+                          disabled={cancellingId === order._id}
+                          className="mt-2 text-[11px] font-semibold text-rose-600 hover:text-rose-700 dark:text-rose-400 dark:hover:text-rose-300 inline-flex items-center gap-1 hover:underline transition-colors disabled:opacity-50"
+                        >
+                          <Ban className="w-3 h-3" />
+                          <span>{cancellingId === order._id ? 'Cancelling...' : 'Cancel Order'}</span>
+                        </button>
+                      )}
                     </div>
                   </div>
 
