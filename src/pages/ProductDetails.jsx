@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import api from '../api/axios';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
@@ -23,6 +23,7 @@ import {
   Flame,
   MessageSquare,
   Check,
+  CheckCircle2,
   ArrowLeftRight,
   Sparkles,
   Award,
@@ -36,6 +37,7 @@ import { handleImageError } from '../utils/imageHelper';
 export const ProductDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const { addToCart } = useCart();
   const { isAuthenticated } = useAuth();
   const { addToast } = useToast();
@@ -610,16 +612,16 @@ export const ProductDetails = () => {
         </div>
 
         {/* Tabbed Info: Description, Specifications, Shipping & Customer Reviews */}
-        <div className="border-t border-zinc-200 pt-10 mb-16">
-          <div className="flex items-center gap-8 border-b border-zinc-200 pb-4 mb-8 overflow-x-auto">
+        <div className="border-t border-zinc-200 dark:border-slate-800 pt-10 mb-16">
+          <div className="flex items-center gap-8 border-b border-zinc-200 dark:border-slate-800 pb-4 mb-8 overflow-x-auto">
             {['description', 'specifications', 'shipping', 'reviews'].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`text-sm font-bold uppercase tracking-wider pb-4 -mb-4 transition-all whitespace-nowrap ${
+                className={`text-sm font-bold uppercase tracking-wider pb-4 -mb-4 transition-all whitespace-nowrap cursor-pointer ${
                   activeTab === tab
-                    ? 'text-zinc-950 border-b-2 border-zinc-950 font-black'
-                    : 'text-zinc-500 hover:text-zinc-800'
+                    ? 'text-zinc-950 dark:text-white border-b-2 border-zinc-950 dark:border-amber-400 font-black'
+                    : 'text-zinc-500 dark:text-slate-400 hover:text-zinc-800 dark:hover:text-slate-200'
                 }`}
               >
                 {tab === 'reviews' ? `Reviews (${product.reviews?.length || 0})` : tab}
@@ -629,7 +631,7 @@ export const ProductDetails = () => {
 
           {/* Tab 1: Description */}
           {activeTab === 'description' && (
-            <div className="max-w-3xl space-y-4 text-sm sm:text-base text-zinc-700 leading-relaxed">
+            <div className="max-w-3xl space-y-4 text-sm sm:text-base text-zinc-700 dark:text-slate-300 leading-relaxed">
               <p>{product.description}</p>
               <p>
                 Every edition is hand-inspected under high-magnification optical sensors to ensure surface perfection, mechanical tolerance, and adherence to certified luxury specifications.
@@ -659,11 +661,11 @@ export const ProductDetails = () => {
 
           {/* Tab 3: Shipping */}
           {activeTab === 'shipping' && (
-            <div className="max-w-3xl space-y-4 text-sm text-zinc-700 leading-relaxed">
+            <div className="max-w-3xl space-y-4 text-sm text-zinc-700 dark:text-slate-300 leading-relaxed">
               <p>
                 Orders placed before 2:00 PM EST ship same day via insured express courier. Each parcel is wrapped in custom velvet-lined presentation packaging and enclosed in a discreet, tamper-proof exterior carton.
               </p>
-              <ul className="list-disc list-inside space-y-1 text-zinc-600 text-xs">
+              <ul className="list-disc list-inside space-y-1 text-zinc-600 dark:text-slate-400 text-xs">
                 <li>Complimentary signature on delivery</li>
                 <li>Real-time GPS dispatch alerts sent via SMS and email</li>
                 <li>Zero customs duty surcharge for North American and European collectors</li>
@@ -680,42 +682,56 @@ export const ProductDetails = () => {
                   product.reviews.map((rev, idx) => (
                     <div
                       key={idx}
-                      className="p-5 rounded-2xl bg-zinc-50 border border-zinc-200 space-y-2"
+                      className="p-5 rounded-2xl bg-zinc-50 dark:bg-slate-900 border border-zinc-200 dark:border-slate-800 space-y-2.5 transition-colors"
                     >
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold text-zinc-900">{rev.name}</span>
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <div className="flex items-center gap-2.5 flex-wrap">
+                          <span className="text-xs font-bold text-zinc-900 dark:text-white">{rev.name}</span>
+                          {rev.isVerifiedPurchase && (
+                            <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/50 px-2 py-0.5 rounded-full">
+                              <CheckCircle2 className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+                              Verified Purchase
+                            </span>
+                          )}
+                        </div>
                         <div className="flex items-center text-amber-500">
                           {[...Array(rev.rating)].map((_, r) => (
                             <Star key={r} className="w-3 h-3 fill-amber-400" />
                           ))}
                         </div>
                       </div>
-                      <p className="text-xs text-zinc-700 leading-relaxed">{rev.comment}</p>
-                      <span className="text-[10px] text-zinc-400 block pt-1">
-                        Verified Collector Experience
+                      <p className="text-xs text-zinc-700 dark:text-slate-300 leading-relaxed">{rev.comment}</p>
+                      <span className="text-[10px] text-zinc-400 dark:text-slate-500 block pt-1">
+                        {rev.createdAt
+                          ? new Date(rev.createdAt).toLocaleDateString(undefined, {
+                              year: 'numeric',
+                              month: 'short',
+                              day: 'numeric',
+                            })
+                          : 'Verified Collector Experience'}
                       </span>
                     </div>
                   ))
                 ) : (
-                  <p className="text-xs text-zinc-500 py-6">
+                  <p className="text-xs text-zinc-500 dark:text-slate-400 py-6">
                     No reviews yet. Be the first to share your collector appraisal!
                   </p>
                 )}
               </div>
 
               {/* Submit Review */}
-              <div className="lg:col-span-5 bg-zinc-50 border border-zinc-200 p-6 rounded-2xl">
-                <h3 className="text-sm font-bold text-zinc-900 mb-1 flex items-center gap-2">
-                  <MessageSquare className="w-4 h-4 text-amber-600" /> Write a Review
+              <div className="lg:col-span-5 bg-zinc-50 dark:bg-slate-900 border border-zinc-200 dark:border-slate-800 p-6 rounded-2xl shadow-xs">
+                <h3 className="text-sm font-bold text-zinc-900 dark:text-white mb-1 flex items-center gap-2">
+                  <MessageSquare className="w-4 h-4 text-amber-600 dark:text-amber-400" /> Write a Review
                 </h3>
-                <p className="text-xs text-zinc-500 mb-4">
+                <p className="text-xs text-zinc-500 dark:text-slate-400 mb-4">
                   Share your appraisal with the global Shoply community.
                 </p>
 
                 {isAuthenticated ? (
                   <form onSubmit={handleReviewSubmit} className="space-y-4">
                     <div>
-                      <label className="text-xs font-bold text-zinc-700 block mb-1.5">
+                      <label className="text-xs font-bold text-zinc-700 dark:text-slate-300 block mb-1.5">
                         Rating
                       </label>
                       <div className="flex items-center gap-2">
@@ -724,25 +740,25 @@ export const ProductDetails = () => {
                             type="button"
                             key={num}
                             onClick={() => setReviewRating(num)}
-                            className="p-1 hover:scale-110 transition-transform"
+                            className="p-1 hover:scale-110 transition-transform cursor-pointer"
                           >
                             <Star
                               className={`w-5 h-5 ${
                                 num <= reviewRating
                                   ? 'fill-amber-400 text-amber-500'
-                                  : 'text-zinc-300'
+                                  : 'text-zinc-300 dark:text-slate-700'
                               }`}
                             />
                           </button>
                         ))}
-                        <span className="text-xs font-bold text-zinc-800 ml-2">
+                        <span className="text-xs font-bold text-zinc-800 dark:text-slate-200 ml-2">
                           {reviewRating} of 5 Stars
                         </span>
                       </div>
                     </div>
 
                     <div>
-                      <label className="text-xs font-bold text-zinc-700 block mb-1.5">
+                      <label className="text-xs font-bold text-zinc-700 dark:text-slate-300 block mb-1.5">
                         Review Comment
                       </label>
                       <textarea
@@ -751,26 +767,26 @@ export const ProductDetails = () => {
                         value={reviewComment}
                         onChange={(e) => setReviewComment(e.target.value)}
                         placeholder="Detail the materials, tactile response, and finish..."
-                        className="w-full bg-white border border-zinc-200 rounded-xl p-3 text-xs text-zinc-900 placeholder-zinc-400 focus:outline-none focus:border-zinc-400"
+                        className="w-full bg-white dark:bg-slate-800 border border-zinc-200 dark:border-slate-700 rounded-xl p-3 text-xs text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-slate-500 focus:outline-none focus:border-amber-500 dark:focus:border-amber-400 transition-colors"
                       ></textarea>
                     </div>
 
                     <button
                       type="submit"
                       disabled={submittingReview}
-                      className="w-full bg-zinc-950 hover:bg-zinc-800 text-white font-bold text-xs py-2.5 rounded-xl transition-all shadow-sm"
+                      className="w-full bg-zinc-950 hover:bg-zinc-800 dark:bg-amber-500 dark:hover:bg-amber-400 dark:text-slate-950 disabled:opacity-50 text-white font-bold text-xs py-2.5 rounded-xl transition-all shadow-sm cursor-pointer"
                     >
                       {submittingReview ? 'Submitting...' : 'Post Verified Review'}
                     </button>
                   </form>
                 ) : (
                   <div className="text-center py-6">
-                    <p className="text-xs text-zinc-500 mb-4">
+                    <p className="text-xs text-zinc-500 dark:text-slate-400 mb-4">
                       Please sign in to your Shoply account to leave a verified review.
                     </p>
                     <Link
-                      to="/login"
-                      className="inline-block bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-bold px-4 py-2 rounded-xl transition-colors shadow-xs"
+                      to={`/login?redirect=${encodeURIComponent(location.pathname)}`}
+                      className="inline-block bg-zinc-900 hover:bg-zinc-800 dark:bg-amber-500 dark:hover:bg-amber-400 dark:text-slate-950 text-white text-xs font-bold px-4 py-2 rounded-xl transition-colors shadow-xs"
                     >
                       Sign In to Review
                     </Link>
@@ -783,8 +799,8 @@ export const ProductDetails = () => {
 
         {/* Related Products */}
         {related.length > 0 && (
-          <div className="border-t border-zinc-200 pt-16">
-            <h2 className="text-xl sm:text-2xl font-black text-zinc-950 mb-6">
+          <div className="border-t border-zinc-200 dark:border-slate-800 pt-16">
+            <h2 className="text-xl sm:text-2xl font-black text-zinc-950 dark:text-white mb-6">
               Complementary Vault Items
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-3.5 sm:gap-4 lg:gap-5">

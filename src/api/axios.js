@@ -87,6 +87,42 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
+    // Graceful handling of 401 Unauthorized (expired or invalid token)
+    if (error.response?.status === 401) {
+      const reqUrl = error.config?.url || '';
+      const isAuthAttempt =
+        reqUrl.includes('/auth/login') ||
+        reqUrl.includes('/auth/register') ||
+        reqUrl.includes('/auth/forgot-password') ||
+        reqUrl.includes('/auth/reset-password');
+
+      if (!isAuthAttempt) {
+        try {
+          localStorage.removeItem('shoply_token');
+          localStorage.removeItem('shoply_user');
+          sessionStorage.removeItem('shoply_token');
+          sessionStorage.removeItem('shoply_user');
+          localStorage.removeItem('velora_token');
+          sessionStorage.removeItem('velora_token');
+          localStorage.removeItem('velora_user');
+          sessionStorage.removeItem('velora_user');
+        } catch (_) {}
+
+        if (typeof window !== 'undefined' && window.location) {
+          const pathname = window.location.pathname || '/';
+          if (!pathname.includes('/login') && !pathname.includes('/register')) {
+            if (pathname.startsWith('/seller')) {
+              window.location.href = '/seller/login?expired=true';
+            } else {
+              window.location.href = `/login?redirect=${encodeURIComponent(
+                pathname + window.location.search
+              )}&expired=true`;
+            }
+          }
+        }
+      }
+    }
+
     return Promise.reject(error);
   }
 );

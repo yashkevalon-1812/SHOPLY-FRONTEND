@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
-import { Lock, Mail, ArrowRight } from 'lucide-react';
+import { Lock, Mail, ArrowRight, AlertCircle } from 'lucide-react';
 
 export const Login = () => {
   const [email, setEmail] = useState('');
@@ -15,6 +15,7 @@ export const Login = () => {
   const location = useLocation();
 
   const redirectUrl = new URLSearchParams(location.search).get('redirect') || '/';
+  const isExpired = new URLSearchParams(location.search).get('expired') === 'true';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -61,6 +62,19 @@ export const Login = () => {
             Access your order tracking, seller studio, or administrator controls.
           </p>
         </div>
+
+        {/* Session Expired Banner */}
+        {isExpired && (
+          <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/60 rounded-2xl p-4 flex items-start gap-3 shadow-xs">
+            <AlertCircle className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+            <div className="text-xs text-amber-900 dark:text-amber-200">
+              <p className="font-bold">Session Expired</p>
+              <p className="mt-0.5 text-amber-800/90 dark:text-amber-300/80">
+                Your session has timed out for security. Please sign in again to continue.
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* Login Form */}
         <form onSubmit={handleSubmit} className="bg-white dark:bg-slate-900 border border-zinc-200 dark:border-slate-800 rounded-3xl p-7 space-y-4 shadow-xl text-xs">

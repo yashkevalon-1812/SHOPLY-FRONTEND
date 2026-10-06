@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import {
@@ -38,6 +38,9 @@ export const SellerLogin = () => {
   const { login, logout } = useAuth();
   const { addToast } = useToast();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const isExpired = new URLSearchParams(location.search).get('expired') === 'true';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -106,6 +109,16 @@ export const SellerLogin = () => {
           <p className="mt-1 text-xs text-zinc-500">
             Manage your listings, orders and payouts on Shoply.
           </p>
+
+          {isExpired && !formError && (
+            <div
+              role="alert"
+              className="mt-4 flex items-start gap-2 rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs font-semibold text-amber-800"
+            >
+              <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
+              <span>Your seller session has expired. Please sign in again to access your merchant dashboard.</span>
+            </div>
+          )}
 
           {formError && (
             <div
