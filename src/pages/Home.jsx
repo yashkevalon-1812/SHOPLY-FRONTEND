@@ -6,7 +6,7 @@ import { handleImageError } from '../utils/imageHelper';
 import {
   ArrowRight,
   Sparkles,
-  Flam  e,
+  Flame,
   ShieldCheck,
   Award,
   Zap,
