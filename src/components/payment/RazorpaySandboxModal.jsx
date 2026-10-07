@@ -9,10 +9,7 @@ import {
   X,
   AlertTriangle,
   Lock,
-  Copy,
-  Check,
   ExternalLink,
-  Sparkles,
 } from 'lucide-react';
 import { formatINR } from '../../utils/format';
 
@@ -25,9 +22,6 @@ export const RazorpaySandboxModal = ({
 }) => {
   const [activeTab, setActiveTab] = useState('upi'); // 'upi' | 'card' | 'netbanking'
   const [processing, setProcessing] = useState(false);
-  const [upiId, setUpiId] = useState('8849669921@fam');
-  const [copiedUpi, setCopiedUpi] = useState(false);
-  const [copiedAmount, setCopiedAmount] = useState(false);
   const [selectedBank, setSelectedBank] = useState('HDFC Bank');
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState('');
   const [qrError, setQrError] = useState(false);
@@ -89,22 +83,6 @@ export const RazorpaySandboxModal = ({
   const handleCancel = () => {
     onClose();
     if (onPaymentCancel) onPaymentCancel();
-  };
-
-  const handleCopyUpi = () => {
-    if (navigator?.clipboard) {
-      navigator.clipboard.writeText('8849669921@fam');
-      setCopiedUpi(true);
-      setTimeout(() => setCopiedUpi(false), 2000);
-    }
-  };
-
-  const handleCopyAmount = () => {
-    if (navigator?.clipboard) {
-      navigator.clipboard.writeText(orderAmount.toString());
-      setCopiedAmount(true);
-      setTimeout(() => setCopiedAmount(false), 2000);
-    }
   };
 
   return (
@@ -179,20 +157,20 @@ export const RazorpaySandboxModal = ({
           {activeTab === 'upi' && (
             <div className="space-y-3">
               {/* Dynamic UPI QR Box */}
-              <div className="bg-slate-900 rounded-2xl p-4 text-center border border-slate-700 shadow-inner flex flex-col items-center">
+              <div className="bg-slate-900 rounded-2xl p-5 text-center border border-slate-700 shadow-inner flex flex-col items-center">
                 {/* QR Container */}
-                <div className="bg-white p-2.5 rounded-2xl shadow-md inline-block max-w-[210px] mb-2 text-center">
+                <div className="bg-white p-3 rounded-2xl shadow-md inline-block max-w-[210px] mb-2 text-center">
                   {qrCodeDataUrl ? (
                     <img
                       src={qrCodeDataUrl}
                       alt={`Dynamic UPI QR Code for ₹${orderAmount} - yash vaghasiya`}
-                      className="w-full h-auto rounded-xl object-contain max-h-[190px] mx-auto"
+                      className="w-full h-auto rounded-xl object-contain max-h-[195px] mx-auto"
                     />
                   ) : qrError ? (
                     <img
                       src="/upi-qr.png"
                       alt="UPI QR Code - yash vaghasiya"
-                      className="w-full h-auto rounded-xl object-contain max-h-[190px] mx-auto"
+                      className="w-full h-auto rounded-xl object-contain max-h-[195px] mx-auto"
                     />
                   ) : (
                     <div className="w-[190px] h-[190px] flex items-center justify-center bg-slate-50 rounded-xl">
@@ -203,92 +181,26 @@ export const RazorpaySandboxModal = ({
                   )}
 
                   {/* Pre-filled Amount Badge right below QR */}
-                  <div className="mt-2 bg-emerald-600 text-white font-black text-[10.5px] uppercase py-1 px-2.5 rounded-full tracking-wider flex items-center justify-center gap-1 shadow-xs">
+                  <div className="mt-2.5 bg-emerald-600 text-white font-black text-[11px] uppercase py-1 px-3 rounded-full tracking-wider flex items-center justify-center gap-1 shadow-xs">
                     <span>Direct ₹{orderAmount} Pre-filled</span>
                   </div>
                 </div>
 
-                <p className="text-white font-black text-sm tracking-wide">
+                <p className="text-white font-black text-sm tracking-wide mt-1">
                   yash vaghasiya
                 </p>
-
-                {/* Recipient UPI ID Pill */}
-                <div className="mt-1.5 inline-flex items-center gap-2 bg-slate-800 border border-slate-700 px-3 py-1 rounded-full text-xs text-amber-300 font-mono">
-                  <span>8849669921@fam</span>
-                  <button
-                    type="button"
-                    onClick={handleCopyUpi}
-                    className="text-slate-300 hover:text-white p-0.5 rounded cursor-pointer transition-colors"
-                    title="Copy UPI ID"
-                  >
-                    {copiedUpi ? (
-                      <Check className="w-3.5 h-3.5 text-emerald-400" />
-                    ) : (
-                      <Copy className="w-3.5 h-3.5" />
-                    )}
-                  </button>
-                </div>
-                {copiedUpi && (
-                  <span className="text-[10px] text-emerald-400 font-semibold mt-1">
-                    ✓ UPI ID Copied to Clipboard!
-                  </span>
-                )}
-
-                {/* Amount Copy Box */}
-                <div className="mt-2 inline-flex items-center gap-2 bg-slate-800/80 border border-slate-700/80 px-3 py-1 rounded-full text-xs text-slate-200">
-                  <span className="text-zinc-400 text-[11px]">Bill Amount:</span>
-                  <span className="font-bold text-white">{formatINR(orderAmount)}</span>
-                  <button
-                    type="button"
-                    onClick={handleCopyAmount}
-                    className="text-slate-300 hover:text-white p-0.5 rounded cursor-pointer transition-colors"
-                    title="Copy Amount"
-                  >
-                    {copiedAmount ? (
-                      <Check className="w-3.5 h-3.5 text-emerald-400" />
-                    ) : (
-                      <Copy className="w-3.5 h-3.5" />
-                    )}
-                  </button>
-                </div>
-                {copiedAmount && (
-                  <span className="text-[10px] text-emerald-400 font-semibold">
-                    ✓ Amount ₹{orderAmount} Copied!
-                  </span>
-                )}
-
-                {/* Notice that amount is prefilled */}
-                <div className="mt-2.5 bg-emerald-950/70 border border-emerald-700/60 rounded-xl p-2.5 text-left w-full space-y-1">
-                  <div className="flex items-center gap-1.5 text-emerald-400 font-bold text-[11px]">
-                    <Sparkles className="w-3.5 h-3.5 shrink-0" />
-                    <span>Exact Amount ₹{orderAmount} Enforced in QR</span>
-                  </div>
-                  <p className="text-[10px] text-slate-300 leading-tight">
-                    Scan with any UPI app (GPay, PhonePe, Paytm, FamApp). The amount of <strong>₹{orderAmount}</strong> is automatically pre-filled so you don't have to enter it manually.
-                  </p>
-                </div>
+                <p className="text-[11px] text-slate-400 mt-0.5">
+                  Scan to pay with any UPI app (GPay, PhonePe, Paytm, FamApp)
+                </p>
 
                 {/* Direct Mobile UPI Link */}
                 <a
                   href={upiUri}
-                  className="mt-2.5 inline-flex sm:hidden items-center justify-center gap-2 w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-2 rounded-xl transition-colors shadow-xs"
+                  className="mt-3 inline-flex sm:hidden items-center justify-center gap-2 w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-2.5 rounded-xl transition-colors shadow-xs"
                 >
                   <ExternalLink className="w-3.5 h-3.5" />
                   <span>Tap to Open UPI App (Pre-filled ₹{orderAmount})</span>
                 </a>
-              </div>
-
-              <div>
-                <label className="text-xs font-bold block text-zinc-700 dark:text-slate-300 mb-1">
-                  Payer UPI ID / Simulation Ref (Optional)
-                </label>
-                <input
-                  type="text"
-                  value={upiId}
-                  onChange={(e) => setUpiId(e.target.value)}
-                  placeholder="e.g. 8849669921@fam or transaction reference"
-                  className="w-full bg-zinc-50 dark:bg-slate-800 border border-zinc-200 dark:border-slate-700 rounded-xl p-2.5 text-xs font-mono focus:outline-none focus:border-blue-500 text-zinc-900 dark:text-white"
-                />
               </div>
             </div>
           )}
