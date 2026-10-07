@@ -7,7 +7,6 @@ import {
   Building2,
   CheckCircle,
   X,
-  AlertTriangle,
   Lock,
   ExternalLink,
 } from 'lucide-react';
@@ -116,19 +115,6 @@ export const RazorpaySandboxModal = ({
           </div>
         </div>
 
-        {/* Notice Banner */}
-        <div className="bg-blue-50 dark:bg-blue-950/40 border-b border-blue-200 dark:border-blue-900/60 p-3 flex items-start gap-2 text-xs text-blue-800 dark:text-blue-300">
-          <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5 text-blue-600 dark:text-blue-400" />
-          <p className="leading-tight text-[11px]">
-            <strong>{paymentData.warningNotice ? 'Gateway Notice: ' : 'Razorpay Sandbox: '}</strong>
-            {paymentData.warningNotice || (
-              <>
-                Test Gateway active. To activate the official popup, paste your unmasked Razorpay Key Secret in <code className="bg-blue-100 dark:bg-blue-900 px-1 rounded font-mono">.env</code>.
-              </>
-            )}
-          </p>
-        </div>
-
         {/* Payment Tabs */}
         <div className="p-5 space-y-4">
           <div className="grid grid-cols-3 gap-2 border-b border-zinc-200 dark:border-slate-800 pb-3">
@@ -180,15 +166,9 @@ export const RazorpaySandboxModal = ({
                     </div>
                   )}
 
-                  {/* Pre-filled Amount Badge right below QR */}
-                  <div className="mt-2.5 bg-emerald-600 text-white font-black text-[11px] uppercase py-1 px-3 rounded-full tracking-wider flex items-center justify-center gap-1 shadow-xs">
-                    <span>Direct ₹{orderAmount} Pre-filled</span>
-                  </div>
                 </div>
 
-                <p className="text-white font-black text-sm tracking-wide mt-1">
-                  yash vaghasiya
-                </p>
+
                 <p className="text-[11px] text-slate-400 mt-0.5">
                   Scan to pay with any UPI app (GPay, PhonePe, Paytm, FamApp)
                 </p>
