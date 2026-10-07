@@ -22,7 +22,7 @@ export const RazorpaySandboxModal = ({
   onPaymentCancel,
 }) => {
   const { addToast } = useToast();
-  const [activeTab, setActiveTab] = useState('upi'); // 'upi' | 'card' | 'netbanking'
+  const [activeTab, setActiveTab] = useState('upi-apps'); // 'upi-apps' | 'qr' | 'card' | 'netbanking'
   const [processing, setProcessing] = useState(false);
   const [selectedBank, setSelectedBank] = useState('HDFC Bank');
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState('');
@@ -205,9 +205,10 @@ export const RazorpaySandboxModal = ({
 
         {/* Payment Tabs */}
         <div className="p-5 space-y-4">
-          <div className="grid grid-cols-3 gap-2 border-b border-zinc-200 dark:border-slate-800 pb-3">
+          <div className="grid grid-cols-4 gap-1.5 border-b border-zinc-200 dark:border-slate-800 pb-3">
             {[
-              { id: 'upi', label: 'UPI / QR', icon: QrCode },
+              { id: 'upi-apps', label: 'UPI Apps', icon: Smartphone },
+              { id: 'qr', label: 'QR Code', icon: QrCode },
               { id: 'card', label: 'Cards', icon: CreditCard },
               { id: 'netbanking', label: 'NetBanking', icon: Building2 },
             ].map((tab) => (
@@ -222,19 +223,143 @@ export const RazorpaySandboxModal = ({
                 }`}
               >
                 <tab.icon className="w-4 h-4" />
-                <span>{tab.label}</span>
+                <span className="truncate">{tab.label}</span>
               </button>
             ))}
           </div>
 
-          {/* UPI View */}
-          {activeTab === 'upi' && (
+          {/* 1. UPI Apps View (GPay, PhonePe, Paytm) */}
+          {activeTab === 'upi-apps' && (
             <div className="space-y-3">
-              {/* Dynamic UPI QR Box */}
+              <div className="text-center pb-1">
+                <span className="text-[11px] font-bold text-zinc-500 dark:text-slate-400">
+                  Select your UPI application to pay {formatINR(paymentData.totalPrice)}:
+                </span>
+              </div>
+
+              <div className="space-y-2.5">
+                {/* Google Pay */}
+                <button
+                  type="button"
+                  onClick={() => handleRedirectToApp('gpay')}
+                  className="w-full bg-zinc-50 dark:bg-slate-800 hover:bg-zinc-100 dark:hover:bg-slate-750 border border-zinc-200 dark:border-slate-700 p-3 rounded-2xl flex items-center justify-between shadow-xs transition-all hover:border-blue-500 cursor-pointer group active:scale-[0.99]"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-xl bg-white border border-zinc-200 dark:border-slate-700 flex items-center justify-center p-2 shadow-xs shrink-0">
+                      <img
+                        src="/gpay-logo.svg"
+                        alt="Google Pay"
+                        className="w-8 h-8 object-contain"
+                      />
+                    </div>
+                    <div className="text-left">
+                      <div className="font-bold text-sm text-zinc-900 dark:text-white">Google Pay</div>
+                      <div className="text-[11px] text-zinc-500 dark:text-slate-400">Fast &amp; Secure UPI</div>
+                    </div>
+                  </div>
+                  <span className="text-xs font-bold text-blue-600 dark:text-blue-400 group-hover:translate-x-1 transition-transform">
+                    Pay &rarr;
+                  </span>
+                </button>
+
+                {/* PhonePe */}
+                <button
+                  type="button"
+                  onClick={() => handleRedirectToApp('phonepe')}
+                  className="w-full bg-zinc-50 dark:bg-slate-800 hover:bg-zinc-100 dark:hover:bg-slate-750 border border-zinc-200 dark:border-slate-700 p-3 rounded-2xl flex items-center justify-between shadow-xs transition-all hover:border-purple-500 cursor-pointer group active:scale-[0.99]"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-xl bg-[#5F259F] flex items-center justify-center shadow-xs shrink-0 overflow-hidden">
+                      <img
+                        src="/phonepe-logo.svg"
+                        alt="PhonePe"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="text-left">
+                      <div className="font-bold text-sm text-zinc-900 dark:text-white">PhonePe</div>
+                      <div className="text-[11px] text-zinc-500 dark:text-slate-400">Instant UPI payment</div>
+                    </div>
+                  </div>
+                  <span className="text-xs font-bold text-purple-600 dark:text-purple-400 group-hover:translate-x-1 transition-transform">
+                    Pay &rarr;
+                  </span>
+                </button>
+
+                {/* Paytm */}
+                <button
+                  type="button"
+                  onClick={() => handleRedirectToApp('paytm')}
+                  className="w-full bg-zinc-50 dark:bg-slate-800 hover:bg-zinc-100 dark:hover:bg-slate-750 border border-zinc-200 dark:border-slate-700 p-3 rounded-2xl flex items-center justify-between shadow-xs transition-all hover:border-sky-500 cursor-pointer group active:scale-[0.99]"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-xl bg-white border border-zinc-200 dark:border-slate-700 flex items-center justify-center p-2 shadow-xs shrink-0">
+                      <img
+                        src="/paytm-logo.svg"
+                        alt="Paytm"
+                        className="w-full h-auto object-contain max-h-5"
+                      />
+                    </div>
+                    <div className="text-left">
+                      <div className="font-bold text-sm text-zinc-900 dark:text-white">Paytm UPI</div>
+                      <div className="text-[11px] text-zinc-500 dark:text-slate-400">Pay via Paytm App</div>
+                    </div>
+                  </div>
+                  <span className="text-xs font-bold text-sky-600 dark:text-sky-400 group-hover:translate-x-1 transition-transform">
+                    Pay &rarr;
+                  </span>
+                </button>
+
+                {/* Any Other UPI App */}
+                <button
+                  type="button"
+                  onClick={() => handleRedirectToApp('any')}
+                  className="w-full bg-zinc-50 dark:bg-slate-800/60 hover:bg-zinc-100 dark:hover:bg-slate-800 border border-dashed border-zinc-300 dark:border-slate-700 p-2.5 rounded-xl flex items-center justify-between transition-colors cursor-pointer"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-9 h-9 rounded-xl bg-white dark:bg-slate-800 border border-zinc-200 dark:border-slate-700 flex items-center justify-center p-1.5 shadow-xs shrink-0">
+                      <img
+                        src="/upi-logo.svg"
+                        alt="UPI"
+                        className="w-full h-auto object-contain max-h-5"
+                      />
+                    </div>
+                    <span className="text-xs font-bold text-zinc-700 dark:text-slate-300">
+                      Other UPI Apps (BHIM, Cred, FamApp)
+                    </span>
+                  </div>
+                  <ExternalLink className="w-3.5 h-3.5 text-zinc-400" />
+                </button>
+              </div>
+
+              {/* Desktop Notice if on desktop */}
+              {desktopNotice && (
+                <div className="bg-slate-800/90 border border-emerald-500/50 rounded-xl p-3 text-[11px] text-slate-200 flex items-start gap-2.5 text-left shadow-md animate-fadeIn">
+                  <Smartphone className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                  <div className="flex-1 leading-relaxed">
+                    <span className="font-bold text-white">{desktopNotice.app}: </span>
+                    <span>{desktopNotice.message}</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setDesktopNotice(null)}
+                    className="text-slate-400 hover:text-white p-0.5 rounded cursor-pointer"
+                    title="Dismiss"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* 2. QR Code View */}
+          {activeTab === 'qr' && (
+            <div className="space-y-3">
               <div className="bg-slate-900 rounded-2xl p-5 text-center border border-slate-700 shadow-inner flex flex-col items-center">
                 {/* QR Container */}
                 <div
-                  className={`bg-white p-3 rounded-2xl shadow-md inline-block max-w-[210px] mb-2 text-center transition-all duration-300 ${
+                  className={`bg-white p-3 rounded-2xl shadow-md inline-block max-w-[210px] text-center transition-all duration-300 ${
                     isQrPulsing
                       ? 'ring-4 ring-emerald-400 scale-105 shadow-emerald-500/40 shadow-lg'
                       : 'ring-0'
@@ -243,13 +368,13 @@ export const RazorpaySandboxModal = ({
                   {qrCodeDataUrl ? (
                     <img
                       src={qrCodeDataUrl}
-                      alt={`Dynamic UPI QR Code for ₹${orderAmount} - yash vaghasiya`}
+                      alt={`Dynamic UPI QR Code for ₹${orderAmount}`}
                       className="w-full h-auto rounded-xl object-contain max-h-[195px] mx-auto"
                     />
                   ) : qrError ? (
                     <img
                       src="/upi-qr.png"
-                      alt="UPI QR Code - yash vaghasiya"
+                      alt="UPI QR Code"
                       className="w-full h-auto rounded-xl object-contain max-h-[195px] mx-auto"
                     />
                   ) : (
@@ -257,91 +382,6 @@ export const RazorpaySandboxModal = ({
                       <span className="text-xs text-slate-500 font-medium animate-pulse">
                         Generating ₹{orderAmount} QR...
                       </span>
-                    </div>
-                  )}
-
-                </div>
-
-
-                <p className="text-[11px] text-slate-400 mt-1">
-                  Scan QR with any app or tap below to pay ₹{orderAmount} directly:
-                </p>
-
-                {/* Direct App Pay Buttons (GPay, PhonePe, Paytm) */}
-                <div className="w-full mt-3 pt-3 border-t border-slate-800 space-y-2">
-                  <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400 block text-center">
-                    Tap to Open App Directly:
-                  </span>
-                  <div className="grid grid-cols-3 gap-2">
-                    {/* Google Pay */}
-                    <button
-                      type="button"
-                      onClick={() => handleRedirectToApp('gpay')}
-                      className="bg-white hover:bg-slate-100 text-slate-900 border border-slate-200 py-2.5 px-2 rounded-xl flex flex-col items-center justify-center gap-1 shadow-xs transition-transform active:scale-95 cursor-pointer font-bold text-[11px]"
-                      title={`Pay ₹${orderAmount} with Google Pay`}
-                    >
-                      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none">
-                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
-                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/>
-                      </svg>
-                      <span>GPay</span>
-                    </button>
-
-                    {/* PhonePe */}
-                    <button
-                      type="button"
-                      onClick={() => handleRedirectToApp('phonepe')}
-                      className="bg-[#5f259f] hover:bg-[#521f8a] text-white py-2.5 px-2 rounded-xl flex flex-col items-center justify-center gap-1 shadow-xs transition-transform active:scale-95 cursor-pointer font-bold text-[11px]"
-                      title={`Pay ₹${orderAmount} with PhonePe`}
-                    >
-                      <div className="w-5 h-5 rounded-full bg-white flex items-center justify-center text-[#5f259f] font-black text-xs leading-none">
-                        पे
-                      </div>
-                      <span>PhonePe</span>
-                    </button>
-
-                    {/* Paytm */}
-                    <button
-                      type="button"
-                      onClick={() => handleRedirectToApp('paytm')}
-                      className="bg-[#002e6e] hover:bg-[#002558] text-white py-2.5 px-2 rounded-xl flex flex-col items-center justify-center gap-1 shadow-xs transition-transform active:scale-95 cursor-pointer font-bold text-[11px]"
-                      title={`Pay ₹${orderAmount} with Paytm`}
-                    >
-                      <span className="font-black text-xs text-[#00baf2] tracking-tighter leading-none">
-                        pay<span className="text-white">tm</span>
-                      </span>
-                      <span>Paytm</span>
-                    </button>
-                  </div>
-
-                  {/* Fallback to any generic UPI app */}
-                  <button
-                    type="button"
-                    onClick={() => handleRedirectToApp('any')}
-                    className="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 text-[11px] font-bold py-2.5 rounded-xl flex items-center justify-center gap-1.5 transition-colors cursor-pointer border border-slate-700 mt-1 active:scale-98"
-                  >
-                    <ExternalLink className="w-3.5 h-3.5 text-emerald-400" />
-                    <span>Pay with Any UPI App (₹{orderAmount})</span>
-                  </button>
-
-                  {/* Desktop Guidance / Mobile Notice */}
-                  {desktopNotice && (
-                    <div className="w-full bg-slate-800/90 border border-emerald-500/50 rounded-xl p-3 text-[11px] text-slate-200 flex items-start gap-2.5 text-left mt-2 shadow-md animate-fadeIn">
-                      <Smartphone className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                      <div className="flex-1 leading-relaxed">
-                        <span className="font-bold text-white">{desktopNotice.app}: </span>
-                        <span>{desktopNotice.message}</span>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => setDesktopNotice(null)}
-                        className="text-slate-400 hover:text-white p-0.5 rounded cursor-pointer"
-                        title="Dismiss"
-                      >
-                        <X className="w-3.5 h-3.5" />
-                      </button>
                     </div>
                   )}
                 </div>

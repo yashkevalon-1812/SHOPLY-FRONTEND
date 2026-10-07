@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="12 8 94 24" fill="none">
+  <!-- UPI dual parallelogram chevrons -->
+  <path d="M14 30L27 10h8.5L22.5 30H14z" fill="#097939"/>
+  <path d="M26 30L39 10h8.5L34.5 30H26z" fill="#ED752E"/>
+  <!-- 'UPI' text converted to clean paths for universal rendering -->
+  <!-- U -->
+  <path d="M53 11h5.8v10.2c0 2.6 1.4 4.1 3.7 4.1 2.3 0 3.7-1.5 3.7-4.1V11H72v10.4c0 6.2-4.1 9.4-9.5 9.4-5.4 0-9.5-3.2-9.5-9.4V11z" fill="#24292E"/>
+  <!-- P -->
+  <path d="M76 11h9.2c4.8 0 7.8 2.5 7.8 6.7 0 4.3-3 6.8-7.8 6.8h-3.4v6.3H76V11zm5.8 8.5h3c1.7 0 2.8-.8 2.8-2 0-1.2-1.1-2-2.8-2h-3v4z" fill="#24292E"/>
+  <!-- I -->
+  <path d="M97 11h5.8v19.8H97V11z" fill="#24292E"/>
+</svg>
