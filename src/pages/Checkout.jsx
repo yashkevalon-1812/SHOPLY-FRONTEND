@@ -48,6 +48,12 @@ export const Checkout = () => {
   const [submitting, setSubmitting] = useState(false);
   const [sandboxPaymentData, setSandboxPaymentData] = useState(null);
   const [showSandboxModal, setShowSandboxModal] = useState(false);
+  const [pendingOrderId, setPendingOrderId] = useState(null);
+
+  // Reset pendingOrderId if user modifies their cart
+  useEffect(() => {
+    setPendingOrderId(null);
+  }, [cartItems]);
 
   // Pre-load Razorpay checkout script on mount
   useEffect(() => {
@@ -78,6 +84,7 @@ export const Checkout = () => {
 
       const { data } = await api.post('/payment/razorpay/verify', verifyPayload);
       clearCart();
+      setPendingOrderId(null);
       addToast('Payment verified successfully via Razorpay!', 'success');
       navigate(`/order-success/${orderId}`);
     } catch (verifyErr) {
@@ -134,20 +141,26 @@ export const Checkout = () => {
       }
 
       // 3. Razorpay Payment Gateway Flow
-      const { data: createdOrder } = await api.post('/orders', {
-        orderItems: cartItems,
-        shippingAddress,
-        paymentMethod: 'Razorpay',
-        itemsPrice,
-        shippingPrice,
-        taxPrice,
-        discountAmount,
-        totalPrice,
-        couponCode,
-      });
+      let currentOrderId = pendingOrderId;
+      if (!currentOrderId) {
+        const { data: createdOrder } = await api.post('/orders', {
+          orderItems: cartItems,
+          shippingAddress,
+          paymentMethod: 'Razorpay',
+          itemsPrice,
+          shippingPrice,
+          taxPrice,
+          discountAmount,
+          totalPrice,
+          couponCode,
+        });
+        currentOrderId = createdOrder._id;
+        setPendingOrderId(createdOrder._id);
+      }
+
       try {
         const { data: rzpData } = await api.post('/payment/razorpay/create-order', {
-          orderId: createdOrder._id,
+          orderId: currentOrderId,
         });
 
         const isScriptLoaded = await loadRazorpayScript();
@@ -159,7 +172,7 @@ export const Checkout = () => {
             amount: rzpData.amount,
             currency: rzpData.currency || 'INR',
             name: 'Shoply',
-            description: `Order Ref #${createdOrder._id.slice(-8).toUpperCase()}`,
+            description: `Order Ref #${currentOrderId.slice(-8).toUpperCase()}`,
             image: 'https://cdn-icons-png.flaticon.com/512/9385/9385289.png',
             order_id: rzpData.razorpayOrderId,
             prefill: {
@@ -168,13 +181,13 @@ export const Checkout = () => {
               contact: rzpData.customer?.phone || shippingAddress.phone,
             },
             notes: {
-              orderId: createdOrder._id,
+              orderId: currentOrderId,
             },
             theme: {
               color: '#0f172a',
             },
             handler: async (response) => {
-              await handleVerifyPayment(createdOrder._id, response);
+              await handleVerifyPayment(currentOrderId, response);
             },
             modal: {
               ondismiss: () => {
@@ -197,7 +210,7 @@ export const Checkout = () => {
           // Open the interactive Razorpay Sandbox simulator modal
           setSandboxPaymentData({
             ...rzpData,
-            orderId: createdOrder._id,
+            orderId: currentOrderId,
             totalPrice,
           });
           setShowSandboxModal(true);
@@ -537,10 +550,18 @@ export const Checkout = () => {
               handleVerifyPayment(sandboxPaymentData.orderId, rzpResponse);
             }
           }}
-          onPaymentCancel={() => {
+          onPaymentCancel={async () => {
             setShowSandboxModal(false);
             setSubmitting(false);
-            addToast('Payment cancelled. You can complete payment anytime from My Orders.', 'info');
+            if (pendingOrderId) {
+              try {
+                await api.put(`/orders/${pendingOrderId}/cancel`);
+                setPendingOrderId(null);
+              } catch (cancelErr) {
+                console.warn('Failed to auto-cancel order on dismiss:', cancelErr);
+              }
+            }
+            addToast('Payment cancelled. Stock restored.', 'info');
           }}
         />
       </div>

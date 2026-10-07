@@ -9,7 +9,9 @@ import {
   X,
   Lock,
   ExternalLink,
+  Smartphone,
 } from 'lucide-react';
+import { useToast } from '../../context/ToastContext';
 import { formatINR } from '../../utils/format';
 
 export const RazorpaySandboxModal = ({
@@ -19,11 +21,14 @@ export const RazorpaySandboxModal = ({
   onPaymentSuccess,
   onPaymentCancel,
 }) => {
+  const { addToast } = useToast();
   const [activeTab, setActiveTab] = useState('upi'); // 'upi' | 'card' | 'netbanking'
   const [processing, setProcessing] = useState(false);
   const [selectedBank, setSelectedBank] = useState('HDFC Bank');
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState('');
   const [qrError, setQrError] = useState(false);
+  const [isQrPulsing, setIsQrPulsing] = useState(false);
+  const [desktopNotice, setDesktopNotice] = useState(null);
 
   const orderAmount = Number(paymentData?.totalPrice || 0);
   const formattedAmount = orderAmount.toFixed(2);
@@ -82,6 +87,89 @@ export const RazorpaySandboxModal = ({
   const handleCancel = () => {
     onClose();
     if (onPaymentCancel) onPaymentCancel();
+  };
+
+  const handleRedirectToApp = (app) => {
+    const ua = navigator?.userAgent || '';
+    const isAndroid = /Android/i.test(ua);
+    const isIOS = /iPhone|iPad|iPod/i.test(ua) || (/Macintosh/i.test(ua) && navigator.maxTouchPoints > 1);
+    const isMobile = isAndroid || isIOS;
+
+    const appConfig = {
+      gpay: {
+        name: 'Google Pay',
+        package: 'com.google.android.apps.nbu.paisa.user',
+        iosScheme: 'gpay://upi/pay',
+      },
+      phonepe: {
+        name: 'PhonePe',
+        package: 'com.phonepe.app',
+        iosScheme: 'phonepe://upi/pay',
+      },
+      paytm: {
+        name: 'Paytm',
+        package: 'net.one97.paytm',
+        iosScheme: 'paytmmp://pay',
+      },
+      any: {
+        name: 'UPI App',
+        package: null,
+        iosScheme: 'upi://pay',
+      },
+    };
+
+    const targetConfig = appConfig[app] || appConfig.any;
+    const baseParams = `pa=${encodeURIComponent(payeeVpa)}&pn=${encodeURIComponent(payeeName)}&am=${formattedAmount}&cu=INR&tn=${encodeURIComponent(transactionNote)}`;
+
+    if (isMobile) {
+      let targetUrl = `upi://pay?${baseParams}`;
+
+      if (isAndroid) {
+        if (targetConfig.package) {
+          targetUrl = `intent://pay?${baseParams}#Intent;scheme=upi;package=${targetConfig.package};end`;
+        } else {
+          targetUrl = `upi://pay?${baseParams}`;
+        }
+      } else if (isIOS) {
+        targetUrl = `${targetConfig.iosScheme}?${baseParams}`;
+      }
+
+      try {
+        const link = document.createElement('a');
+        link.href = targetUrl;
+        link.rel = 'noopener noreferrer';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } catch {
+        window.location.href = `upi://pay?${baseParams}`;
+      }
+    } else {
+      // Desktop computer (Windows / Mac) where mobile URI handlers don't exist
+      // 1. Copy UPI ID to clipboard
+      if (navigator?.clipboard?.writeText) {
+        navigator.clipboard.writeText(payeeVpa).catch(() => {});
+      }
+
+      // 2. Pulse QR code visually
+      setIsQrPulsing(true);
+      setTimeout(() => setIsQrPulsing(false), 2500);
+
+      // 3. Set desktop guidance notice
+      setDesktopNotice({
+        app: targetConfig.name,
+        message: `Open ${targetConfig.name} on your phone and scan the QR code above to pay ${formatINR(orderAmount)} directly. (UPI ID copied to clipboard)`,
+      });
+
+      // 4. Show friendly toast
+      if (addToast) {
+        addToast(
+          `Open ${targetConfig.name} on your phone & scan QR code to pay ${formatINR(orderAmount)}. UPI ID copied to clipboard!`,
+          'info',
+          4000
+        );
+      }
+    }
   };
 
   return (
@@ -145,7 +233,13 @@ export const RazorpaySandboxModal = ({
               {/* Dynamic UPI QR Box */}
               <div className="bg-slate-900 rounded-2xl p-5 text-center border border-slate-700 shadow-inner flex flex-col items-center">
                 {/* QR Container */}
-                <div className="bg-white p-3 rounded-2xl shadow-md inline-block max-w-[210px] mb-2 text-center">
+                <div
+                  className={`bg-white p-3 rounded-2xl shadow-md inline-block max-w-[210px] mb-2 text-center transition-all duration-300 ${
+                    isQrPulsing
+                      ? 'ring-4 ring-emerald-400 scale-105 shadow-emerald-500/40 shadow-lg'
+                      : 'ring-0'
+                  }`}
+                >
                   {qrCodeDataUrl ? (
                     <img
                       src={qrCodeDataUrl}
@@ -169,18 +263,88 @@ export const RazorpaySandboxModal = ({
                 </div>
 
 
-                <p className="text-[11px] text-slate-400 mt-0.5">
-                  Scan to pay with any UPI app (GPay, PhonePe, Paytm, FamApp)
+                <p className="text-[11px] text-slate-400 mt-1">
+                  Scan QR with any app or tap below to pay ₹{orderAmount} directly:
                 </p>
 
-                {/* Direct Mobile UPI Link */}
-                <a
-                  href={upiUri}
-                  className="mt-3 inline-flex sm:hidden items-center justify-center gap-2 w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-2.5 rounded-xl transition-colors shadow-xs"
-                >
-                  <ExternalLink className="w-3.5 h-3.5" />
-                  <span>Tap to Open UPI App (Pre-filled ₹{orderAmount})</span>
-                </a>
+                {/* Direct App Pay Buttons (GPay, PhonePe, Paytm) */}
+                <div className="w-full mt-3 pt-3 border-t border-slate-800 space-y-2">
+                  <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400 block text-center">
+                    Tap to Open App Directly:
+                  </span>
+                  <div className="grid grid-cols-3 gap-2">
+                    {/* Google Pay */}
+                    <button
+                      type="button"
+                      onClick={() => handleRedirectToApp('gpay')}
+                      className="bg-white hover:bg-slate-100 text-slate-900 border border-slate-200 py-2.5 px-2 rounded-xl flex flex-col items-center justify-center gap-1 shadow-xs transition-transform active:scale-95 cursor-pointer font-bold text-[11px]"
+                      title={`Pay ₹${orderAmount} with Google Pay`}
+                    >
+                      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none">
+                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
+                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/>
+                      </svg>
+                      <span>GPay</span>
+                    </button>
+
+                    {/* PhonePe */}
+                    <button
+                      type="button"
+                      onClick={() => handleRedirectToApp('phonepe')}
+                      className="bg-[#5f259f] hover:bg-[#521f8a] text-white py-2.5 px-2 rounded-xl flex flex-col items-center justify-center gap-1 shadow-xs transition-transform active:scale-95 cursor-pointer font-bold text-[11px]"
+                      title={`Pay ₹${orderAmount} with PhonePe`}
+                    >
+                      <div className="w-5 h-5 rounded-full bg-white flex items-center justify-center text-[#5f259f] font-black text-xs leading-none">
+                        पे
+                      </div>
+                      <span>PhonePe</span>
+                    </button>
+
+                    {/* Paytm */}
+                    <button
+                      type="button"
+                      onClick={() => handleRedirectToApp('paytm')}
+                      className="bg-[#002e6e] hover:bg-[#002558] text-white py-2.5 px-2 rounded-xl flex flex-col items-center justify-center gap-1 shadow-xs transition-transform active:scale-95 cursor-pointer font-bold text-[11px]"
+                      title={`Pay ₹${orderAmount} with Paytm`}
+                    >
+                      <span className="font-black text-xs text-[#00baf2] tracking-tighter leading-none">
+                        pay<span className="text-white">tm</span>
+                      </span>
+                      <span>Paytm</span>
+                    </button>
+                  </div>
+
+                  {/* Fallback to any generic UPI app */}
+                  <button
+                    type="button"
+                    onClick={() => handleRedirectToApp('any')}
+                    className="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 text-[11px] font-bold py-2.5 rounded-xl flex items-center justify-center gap-1.5 transition-colors cursor-pointer border border-slate-700 mt-1 active:scale-98"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Pay with Any UPI App (₹{orderAmount})</span>
+                  </button>
+
+                  {/* Desktop Guidance / Mobile Notice */}
+                  {desktopNotice && (
+                    <div className="w-full bg-slate-800/90 border border-emerald-500/50 rounded-xl p-3 text-[11px] text-slate-200 flex items-start gap-2.5 text-left mt-2 shadow-md animate-fadeIn">
+                      <Smartphone className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                      <div className="flex-1 leading-relaxed">
+                        <span className="font-bold text-white">{desktopNotice.app}: </span>
+                        <span>{desktopNotice.message}</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setDesktopNotice(null)}
+                        className="text-slate-400 hover:text-white p-0.5 rounded cursor-pointer"
+                        title="Dismiss"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           )}
