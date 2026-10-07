@@ -79,7 +79,12 @@ export const RazorpaySandboxModal = ({
         <div className="bg-blue-50 dark:bg-blue-950/40 border-b border-blue-200 dark:border-blue-900/60 p-3 flex items-start gap-2 text-xs text-blue-800 dark:text-blue-300">
           <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5 text-blue-600 dark:text-blue-400" />
           <p className="leading-tight text-[11px]">
-            <strong>Razorpay Integration Sandbox:</strong> Razorpay API endpoints are active. Add live credentials to <code className="bg-blue-100 dark:bg-blue-900 px-1 rounded font-mono">.env</code> to switch to production popup anytime.
+            <strong>{paymentData.warningNotice ? 'Gateway Notice: ' : 'Razorpay Sandbox: '}</strong>
+            {paymentData.warningNotice || (
+              <>
+                Test Gateway active. To activate the official popup, paste your unmasked Razorpay Key Secret in <code className="bg-blue-100 dark:bg-blue-900 px-1 rounded font-mono">.env</code>.
+              </>
+            )}
           </p>
         </div>
 
