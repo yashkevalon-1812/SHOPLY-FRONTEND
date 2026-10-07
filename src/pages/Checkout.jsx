@@ -5,9 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import api from '../api/axios';
 import {
-  CreditCard,
   Banknote,
-  QrCode,
   ShieldCheck,
   Lock,
   ArrowRight,
@@ -115,23 +113,20 @@ export const Checkout = () => {
 
     setSubmitting(true);
     try {
-      const orderPayload = {
-        orderItems: cartItems,
-        shippingAddress,
-        paymentMethod,
-        itemsPrice,
-        shippingPrice,
-        taxPrice,
-        discountAmount,
-        totalPrice,
-        couponCode,
-      };
-
-      // 1. Create order in database
-      const { data: createdOrder } = await api.post('/orders', orderPayload);
-
-      // 2. If Cash on Delivery, complete immediately
+      // 1. If Cash on Delivery, complete immediately
       if (paymentMethod === 'Cash on Delivery') {
+        const codOrderPayload = {
+          orderItems: cartItems,
+          shippingAddress,
+          paymentMethod: 'Cash on Delivery',
+          itemsPrice,
+          shippingPrice,
+          taxPrice,
+          discountAmount,
+          totalPrice,
+          couponCode,
+        };
+        const { data: createdOrder } = await api.post('/orders', codOrderPayload);
         clearCart();
         addToast('Order placed successfully (Cash on Delivery)!', 'success');
         navigate(`/order-success/${createdOrder._id}`);
@@ -139,6 +134,17 @@ export const Checkout = () => {
       }
 
       // 3. Razorpay Payment Gateway Flow
+      const { data: createdOrder } = await api.post('/orders', {
+        orderItems: cartItems,
+        shippingAddress,
+        paymentMethod: 'Razorpay',
+        itemsPrice,
+        shippingPrice,
+        taxPrice,
+        discountAmount,
+        totalPrice,
+        couponCode,
+      });
       try {
         const { data: rzpData } = await api.post('/payment/razorpay/create-order', {
           orderId: createdOrder._id,
@@ -357,9 +363,9 @@ export const Checkout = () => {
                   <h2 className="text-base font-bold text-zinc-900 dark:text-white flex items-center gap-2">
                     <span>2. Payment Clearance</span>
                   </h2>
-                  <div className="flex items-center gap-1.5 text-[11px] font-bold text-blue-600 dark:text-blue-400">
+                  <div className="flex items-center gap-1.5 text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
                     <ShieldCheck className="w-4 h-4" />
-                    <span>Razorpay Enabled</span>
+                    <span>100% Secure Checkout</span>
                   </div>
                 </div>
 
@@ -368,9 +374,9 @@ export const Checkout = () => {
                     {
                       id: 'Razorpay',
                       icon: Zap,
-                      title: 'Razorpay Online',
+                      title: 'Online Payment',
                       desc: 'UPI, Cards, NetBanking, Wallets',
-                      badge: 'Recommended',
+                      badge: 'Instant Auto-Clear',
                     },
                     {
                       id: 'Cash on Delivery',
@@ -383,22 +389,22 @@ export const Checkout = () => {
                       key={m.id}
                       type="button"
                       onClick={() => setPaymentMethod(m.id)}
-                      className={`p-4 rounded-xl border text-left transition-all flex flex-col justify-between cursor-pointer relative ${
+                      className={`p-3.5 rounded-xl border text-left transition-all flex flex-col justify-between cursor-pointer relative ${
                         paymentMethod === m.id
                           ? 'bg-zinc-950 text-white dark:bg-amber-500 dark:text-slate-950 border-zinc-950 dark:border-amber-500 shadow-md ring-2 ring-blue-500/30'
                           : 'bg-zinc-50 dark:bg-slate-800 border-zinc-200 dark:border-slate-700 text-zinc-700 dark:text-slate-200 hover:border-zinc-300 dark:hover:border-slate-600'
                       }`}
                     >
                       {m.badge && (
-                        <span className="absolute top-2.5 right-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-[9px] font-black uppercase px-2 py-0.5 rounded-full shadow-xs">
+                        <span className="absolute top-2.5 right-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 text-white text-[9px] font-black uppercase px-2 py-0.5 rounded-full shadow-xs">
                           {m.badge}
                         </span>
                       )}
                       <m.icon className="w-5 h-5 mb-2 text-amber-500 dark:text-inherit" />
                       <div>
-                        <p className="text-xs font-bold">{m.title}</p>
+                        <p className="text-xs font-bold leading-tight">{m.title}</p>
                         <p
-                          className={`text-[10px] ${
+                          className={`text-[10px] mt-0.5 ${
                             paymentMethod === m.id
                               ? 'text-zinc-300 dark:text-slate-800'
                               : 'text-zinc-500 dark:text-slate-400'
@@ -410,54 +416,6 @@ export const Checkout = () => {
                     </button>
                   ))}
                 </div>
-
-                {/* Razorpay Banner Details */}
-                {paymentMethod === 'Razorpay' && (
-                  <div className="mt-4 p-5 rounded-2xl bg-gradient-to-br from-blue-50/70 via-indigo-50/50 to-white dark:from-slate-800/90 dark:via-slate-800/60 dark:to-slate-900 border border-blue-200/80 dark:border-blue-900/60 space-y-3.5 text-xs shadow-xs">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2.5">
-                        <div className="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center text-white font-black text-sm shadow-xs">
-                          R
-                        </div>
-                        <div>
-                          <h4 className="font-bold text-zinc-900 dark:text-white leading-tight">
-                            Razorpay Payment Gateway
-                          </h4>
-                          <p className="text-[10px] text-zinc-500 dark:text-slate-400">
-                            Trusted 256-bit Bank Grade Encrypted Processing
-                          </p>
-                        </div>
-                      </div>
-                      <span className="text-[10px] bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300 font-bold px-2 py-0.5 rounded-md border border-blue-200 dark:border-blue-800">
-                        PCI-DSS Level 1
-                      </span>
-                    </div>
-
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 text-[11px]">
-                      <div className="bg-white dark:bg-slate-800 p-2.5 rounded-xl border border-zinc-200 dark:border-slate-700 text-center">
-                        <span className="block font-bold text-zinc-800 dark:text-slate-200">UPI Instant</span>
-                        <span className="text-[9px] text-zinc-400">GPay, PhonePe, Paytm</span>
-                      </div>
-                      <div className="bg-white dark:bg-slate-800 p-2.5 rounded-xl border border-zinc-200 dark:border-slate-700 text-center">
-                        <span className="block font-bold text-zinc-800 dark:text-slate-200">All Cards</span>
-                        <span className="text-[9px] text-zinc-400">Visa, Master, RuPay</span>
-                      </div>
-                      <div className="bg-white dark:bg-slate-800 p-2.5 rounded-xl border border-zinc-200 dark:border-slate-700 text-center">
-                        <span className="block font-bold text-zinc-800 dark:text-slate-200">NetBanking</span>
-                        <span className="text-[9px] text-zinc-400">50+ Top Banks</span>
-                      </div>
-                      <div className="bg-white dark:bg-slate-800 p-2.5 rounded-xl border border-zinc-200 dark:border-slate-700 text-center">
-                        <span className="block font-bold text-zinc-800 dark:text-slate-200">Wallets</span>
-                        <span className="text-[9px] text-zinc-400">PayLater & Wallets</span>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-2 pt-1 text-[10.5px] text-zinc-600 dark:text-slate-300">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                      <span>Instant clearance with authenticated cryptographic signature verification.</span>
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
 
@@ -541,11 +499,11 @@ export const Checkout = () => {
                   {submitting ? (
                     <span className="flex items-center gap-2">
                       <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></span>
-                      <span>Authorizing Payment...</span>
+                      <span>Confirming Order...</span>
                     </span>
                   ) : paymentMethod === 'Razorpay' ? (
                     <>
-                      <span>Pay {formatINR(totalPrice)} with Razorpay</span>
+                      <span>Pay {formatINR(totalPrice)} Online</span>
                       <ArrowRight className="w-4 h-4" />
                     </>
                   ) : (
