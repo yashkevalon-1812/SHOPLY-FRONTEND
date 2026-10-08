@@ -11,6 +11,7 @@ import {
   Award,
   Zap,
   Clock,
+  ChevronLeft,
   ChevronRight,
   TrendingUp,
   Truck,
@@ -18,10 +19,84 @@ import {
   Headphones,
 } from 'lucide-react';
 
+const heroSlides = [
+  {
+    id: 1,
+    image: '/hero-everything-store.jpg',
+    kicker: 'ALL CATEGORIES / ONE DESTINATION',
+    titleLine1: 'Everything You Need,',
+    titleAccent: 'All in',
+    titleLine2: 'One Place',
+    subtitle: 'From fashion and electronics to home essentials and more — discover top quality products, unbeatable deals and a better way to shop, all at Shoply.',
+    badgeTitle: 'Better Choices',
+    badgeSubtitle: 'Brighter Days ✨',
+    ctaText: 'Shop Now',
+    ctaLink: '/shop',
+  },
+  {
+    id: 2,
+    image: '/hero-studio.jpg',
+    kicker: 'CURATED STUDIO / EXCLUSIVE DROPS',
+    titleLine1: 'Elevate Your Daily Living,',
+    titleAccent: 'Crafted with',
+    titleLine2: 'Artisanal Precision',
+    subtitle: 'Explore limited studio releases, designer electronics, and bespoke lifestyle essentials engineered for uncompromising quality.',
+    badgeTitle: 'Curated Essentials',
+    badgeSubtitle: 'Studio Edition ✨',
+    ctaText: 'Explore Studio',
+    ctaLink: '/shop',
+  },
+  {
+    id: 3,
+    image: '/hero-fashion.jpg',
+    kicker: 'CURATED FASHION / TRENDING APPAREL',
+    titleLine1: 'Define Your Modern Style,',
+    titleAccent: 'Tailored for',
+    titleLine2: 'Bold Confidence',
+    subtitle: 'From seasonal runway collections to everyday statement pieces — discover wardrobe staples designed to turn heads everywhere you go.',
+    badgeTitle: 'Seasonal Picks',
+    badgeSubtitle: 'Urban Luxury 🔥',
+    ctaText: 'Shop Fashion',
+    ctaLink: '/shop?category=Fashion',
+  },
+  {
+    id: 4,
+    image: '/hero-lifestyle.jpg',
+    kicker: 'HOME & LIVING / ARTISANAL DECOR',
+    titleLine1: 'Transform Your Home Space,',
+    titleAccent: 'Curated for',
+    titleLine2: 'Cozy Comfort',
+    subtitle: 'Create your sanctuary with warm textures, handcrafted homeware, and functional aesthetic accents made for inspired everyday living.',
+    badgeTitle: 'Modern Spaces',
+    badgeSubtitle: 'Cozy Living 🌿',
+    ctaText: 'Shop Home & Living',
+    ctaLink: '/shop?category=Home%20%26%20Kitchen',
+  },
+];
+
 export const Home = () => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [flashDeals, setFlashDeals] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isSlidePaused, setIsSlidePaused] = useState(false);
+
+  // Auto-advance hero background slides
+  useEffect(() => {
+    if (isSlidePaused) return;
+    const slideTimer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+    }, 5000);
+    return () => clearInterval(slideTimer);
+  }, [isSlidePaused]);
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
+  };
 
   // Live countdown timer for Mega Sale & Flash Deals
   const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
@@ -97,62 +172,124 @@ export const Home = () => {
       {/* =========================================================================
           1. FULL-BLEED HERO SHOWCASE (Responsive, spacious, studio on desktop)
          ========================================================================= */}
-      <section className="relative overflow-hidden w-full flex flex-col justify-between min-h-[510px] sm:min-h-[550px] md:min-h-[calc(100vh-98px)] md:h-[calc(100vh-98px)] py-8 sm:py-9 md:py-0 bg-[#faf7f2] dark:bg-[#0c1017] border-b border-stone-200/80 dark:border-slate-800 transition-colors">
-        {/* Full-bleed Studio Background Image */}
-        <div className="absolute inset-0 z-0">
-          <img
-            src="/hero-everything-store.jpg"
-            alt="Everything You Need, All in One Place - Shoply Showcase"
-            className="w-full h-full object-cover hero-bg-img select-none pointer-events-none"
-          />
+      <section
+        onMouseEnter={() => setIsSlidePaused(true)}
+        onMouseLeave={() => setIsSlidePaused(false)}
+        className="relative overflow-hidden w-full flex flex-col justify-between min-h-[510px] sm:min-h-[550px] md:min-h-[calc(100vh-98px)] md:h-[calc(100vh-98px)] py-8 sm:py-9 md:py-0 bg-[#faf7f2] dark:bg-[#0c1017] border-b border-stone-200/80 dark:border-slate-800 transition-colors"
+      >
+        {/* Full-bleed Studio Background Image Slider (Slides one by one) */}
+        <div className="absolute inset-0 z-0 overflow-hidden">
+          {/* Sliding Track */}
+          <div
+            className="flex h-full w-full transition-transform duration-700 ease-in-out"
+            style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+          >
+            {heroSlides.map((slide, idx) => (
+              <div key={slide.id} className="min-w-full h-full relative shrink-0">
+                <img
+                  src={slide.image}
+                  alt={slide.kicker}
+                  className="w-full h-full object-cover hero-bg-img select-none pointer-events-none"
+                  loading={idx === 0 ? 'eager' : 'lazy'}
+                />
+              </div>
+            ))}
+          </div>
+
           {/* Subtle gradient scrim on the left to guarantee pristine text contrast while keeping image clear */}
           <div className="absolute inset-0 bg-gradient-to-b from-[#faf7f2]/96 via-[#faf7f2]/92 to-[#faf7f2]/94 sm:bg-gradient-to-r sm:from-[#faf7f2] sm:via-[#faf7f2]/90 sm:via-40% sm:to-transparent dark:from-[#0c1017]/96 dark:via-[#0c1017]/92 dark:to-[#0c1017]/90 sm:dark:from-[#0c1017] sm:dark:via-[#0c1017]/95 sm:dark:to-transparent pointer-events-none"></div>
         </div>
 
-        {/* Top-Right Floating "Better Choices Brighter Days" Script Badge */}
+        {/* Top-Right Floating Script Badge (Dynamically transitions with active slide) */}
         <div className="absolute top-3.5 sm:top-5 lg:top-7 right-3.5 sm:right-8 lg:right-14 z-20 pointer-events-none select-none">
-          <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl border border-stone-200/80 dark:border-slate-700 shadow-xs transform -rotate-2 sm:-rotate-3">
+          <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl border border-stone-200/80 dark:border-slate-700 shadow-xs transform -rotate-2 sm:-rotate-3 transition-all duration-300">
             <p className="font-serif italic text-[10px] sm:text-sm font-semibold text-stone-900 dark:text-stone-100 leading-tight">
-              Better Choices <br />
-              <span className="text-amber-600 dark:text-amber-400 font-bold">Brighter Days ✨</span>
+              {heroSlides[currentSlide].badgeTitle} <br />
+              <span className="text-amber-600 dark:text-amber-400 font-bold">
+                {heroSlides[currentSlide].badgeSubtitle}
+              </span>
             </p>
           </div>
         </div>
 
+        {/* Slider Controls: Next/Prev Arrows & Dots Indicator */}
+        <div className="absolute right-4 sm:right-6 lg:right-12 bottom-24 sm:bottom-28 md:bottom-24 lg:bottom-28 z-20 flex items-center gap-2 select-none">
+          <button
+            type="button"
+            onClick={prevSlide}
+            className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/80 dark:bg-slate-900/80 hover:bg-white dark:hover:bg-slate-800 backdrop-blur-md border border-stone-200/80 dark:border-slate-700/80 text-slate-700 dark:text-slate-200 hover:text-amber-600 dark:hover:text-amber-400 flex items-center justify-center transition-all shadow-xs hover:scale-105 cursor-pointer"
+            title="Previous slide"
+            aria-label="Previous slide"
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </button>
+
+          {/* Dots Indicator */}
+          <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-white/70 dark:bg-slate-900/70 backdrop-blur-md border border-stone-200/60 dark:border-slate-800/60 shadow-2xs">
+            {heroSlides.map((_, idx) => (
+              <button
+                key={idx}
+                type="button"
+                onClick={() => setCurrentSlide(idx)}
+                className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
+                  currentSlide === idx
+                    ? 'w-6 bg-amber-500 shadow-xs'
+                    : 'w-2 bg-stone-300 dark:bg-slate-700 hover:bg-stone-400 dark:hover:bg-slate-500'
+                }`}
+                title={`Go to slide ${idx + 1}`}
+                aria-label={`Go to slide ${idx + 1}`}
+              />
+            ))}
+          </div>
+
+          <button
+            type="button"
+            onClick={nextSlide}
+            className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/80 dark:bg-slate-900/80 hover:bg-white dark:hover:bg-slate-800 backdrop-blur-md border border-stone-200/80 dark:border-slate-700/80 text-slate-700 dark:text-slate-200 hover:text-amber-600 dark:hover:text-amber-400 flex items-center justify-center transition-all shadow-xs hover:scale-105 cursor-pointer"
+            title="Next slide"
+            aria-label="Next slide"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
+
         {/* Middle Main Content */}
         <div className="relative z-10 w-full px-4 sm:px-6 lg:px-12 flex-1 flex flex-col justify-center pt-3.5 sm:pt-6 md:pt-0 pb-4 sm:pb-6">
-          <div className="max-w-xl lg:max-w-2xl space-y-3.5 sm:space-y-4.5 text-left">
+          <div
+            key={currentSlide}
+            className="max-w-xl lg:max-w-2xl space-y-3.5 sm:space-y-4.5 text-left animate-in fade-in duration-500"
+          >
             {/* Category Kicker */}
-            <div className="text-[10px] sm:text-xs font-bold tracking-[0.25em] text-amber-700 dark:text-amber-400 sm:text-stone-500 sm:dark:text-stone-400 uppercase">
-              ALL CATEGORIES / ONE DESTINATION
+            <div className="text-[10px] sm:text-xs font-bold tracking-[0.25em] text-amber-700 dark:text-amber-400 sm:text-stone-500 sm:dark:text-stone-400 uppercase transition-all duration-300">
+              {heroSlides[currentSlide].kicker}
             </div>
 
             {/* Main Headline */}
             <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-[3.25rem] xl:text-[3.6rem] font-bold text-slate-950 dark:text-white tracking-tight leading-[1.18] sm:leading-[1.12]">
               <span className="font-caslon">
-                Everything You Need,
+                {heroSlides[currentSlide].titleLine1}
               </span>{' '}
               <br />
               <span className="font-serif italic font-normal text-slate-900 dark:text-amber-200">
-                All in
+                {heroSlides[currentSlide].titleAccent}
               </span>{' '}
               <span className="font-caslon">
-                One Place
+                {heroSlides[currentSlide].titleLine2}
               </span>
             </h1>
 
             {/* Subtitle */}
             <p className="text-sm sm:text-base text-stone-800 dark:text-slate-100 max-w-lg font-medium sm:font-normal leading-relaxed">
-              From fashion and electronics to home essentials and more — discover top quality products, unbeatable deals and a better way to shop, all at Shoply.
+              {heroSlides[currentSlide].subtitle}
             </p>
 
             {/* CTA Buttons */}
             <div className="flex flex-wrap items-center gap-3 sm:gap-4 pt-2 sm:pt-2.5">
               <Link
-                to="/shop"
+                to={heroSlides[currentSlide].ctaLink || '/shop'}
                 className="inline-flex items-center justify-center gap-2 bg-[#171717] hover:bg-black dark:bg-amber-500 dark:hover:bg-amber-400 text-white dark:text-slate-950 font-semibold text-xs sm:text-sm px-5.5 sm:px-7 py-2.5 sm:py-3 rounded-full shadow-md transition-all hover:scale-105 shrink-0"
               >
-                <span>Shop Now</span>
+                <span>{heroSlides[currentSlide].ctaText || 'Shop Now'}</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
