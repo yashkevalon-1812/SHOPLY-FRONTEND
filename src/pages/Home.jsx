@@ -128,12 +128,17 @@ export const Home = () => {
             </div>
 
             {/* Main Headline */}
-            <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-[3.25rem] xl:text-[3.6rem] font-black sm:font-bold text-slate-950 dark:text-white tracking-tight leading-[1.18] sm:leading-[1.12]">
-              Everything You Need, <br />
+            <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-[3.25rem] xl:text-[3.6rem] font-bold text-slate-950 dark:text-white tracking-tight leading-[1.18] sm:leading-[1.12]">
+              <span className="font-caslon">
+                Everything You Need,
+              </span>{' '}
+              <br />
               <span className="font-serif italic font-normal text-slate-900 dark:text-amber-200">
                 All in
               </span>{' '}
-              One Place
+              <span className="font-caslon">
+                One Place
+              </span>
             </h1>
 
             {/* Subtitle */}
