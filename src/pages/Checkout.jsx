@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import QRCode from 'qrcode';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
@@ -12,11 +13,16 @@ import {
   AlertCircle,
   Zap,
   CheckCircle2,
+  QrCode,
+  Copy,
+  Check,
+  Sparkles,
 } from 'lucide-react';
 import { formatINR } from '../utils/format';
 import { handleImageError } from '../utils/imageHelper';
 import { loadRazorpayScript } from '../utils/razorpay';
 import { RazorpaySandboxModal } from '../components/payment/RazorpaySandboxModal';
+import { BillWiseQrModal } from '../components/payment/BillWiseQrModal';
 
 export const Checkout = () => {
   const {
@@ -44,11 +50,13 @@ export const Checkout = () => {
     country: user?.address?.country || 'India',
   });
 
-  const [paymentMethod, setPaymentMethod] = useState('Razorpay');
+  const [paymentMethod, setPaymentMethod] = useState('UPI_QR');
   const [submitting, setSubmitting] = useState(false);
   const [sandboxPaymentData, setSandboxPaymentData] = useState(null);
   const [showSandboxModal, setShowSandboxModal] = useState(false);
   const [pendingOrderId, setPendingOrderId] = useState(null);
+  const [showBillWiseQrModal, setShowBillWiseQrModal] = useState(false);
+  const [billWiseOrderData, setBillWiseOrderData] = useState(null);
 
   // Reset pendingOrderId if user modifies their cart
   useEffect(() => {
@@ -140,8 +148,68 @@ export const Checkout = () => {
         return;
       }
 
-      // 3. Razorpay Payment Gateway Flow
-      let currentOrderId = pendingOrderId;
+      // 2. Direct UPI QR Code Flow -> Opens Bill-Wise Popup Modal
+      if (paymentMethod === 'UPI_QR') {
+        let currentOrderId = null;
+        if (pendingOrderId) {
+          try {
+            const { data: checkOrder } = await api.get(`/orders/${pendingOrderId}`);
+            // Only reuse if genuinely unpaid and not cancelled
+            if (!checkOrder.isPaid && checkOrder.status !== 'Cancelled') {
+              currentOrderId = pendingOrderId;
+            } else {
+              setPendingOrderId(null);
+            }
+          } catch (_) {
+            setPendingOrderId(null);
+          }
+        }
+
+        if (!currentOrderId) {
+          const { data: createdOrder } = await api.post('/orders', {
+            orderItems: cartItems,
+            shippingAddress,
+            paymentMethod: 'UPI',
+            itemsPrice,
+            shippingPrice,
+            taxPrice,
+            discountAmount,
+            totalPrice,
+            couponCode,
+          });
+          currentOrderId = createdOrder._id;
+          setPendingOrderId(createdOrder._id);
+        }
+
+        setBillWiseOrderData({
+          orderId: currentOrderId,
+          totalPrice,
+          itemsPrice,
+          shippingPrice,
+          taxPrice,
+          discountAmount,
+          orderItems: cartItems,
+        });
+        setShowBillWiseQrModal(true);
+        setSubmitting(false);
+        return;
+      }
+
+      // 3. Razorpay Gateway Flow
+      let currentOrderId = null;
+      if (pendingOrderId) {
+        try {
+          const { data: checkOrder } = await api.get(`/orders/${pendingOrderId}`);
+          if (!checkOrder.isPaid && checkOrder.status !== 'Cancelled') {
+            currentOrderId = pendingOrderId;
+          } else {
+            setPendingOrderId(null);
+          }
+        } catch (_) {
+          setPendingOrderId(null);
+        }
+      }
+
       if (!currentOrderId) {
         const { data: createdOrder } = await api.post('/orders', {
           orderItems: cartItems,
@@ -186,14 +254,49 @@ export const Checkout = () => {
             theme: {
               color: '#0f172a',
             },
+            config: {
+              display: {
+                blocks: {
+                  upi_qr: {
+                    name: 'Pay using UPI QR Code / Apps',
+                    instruments: [
+                      {
+                        method: 'upi',
+                        flows: ['qr', 'intent'],
+                      },
+                    ],
+                  },
+                  other: {
+                    name: 'Cards, NetBanking & Wallets',
+                    instruments: [
+                      { method: 'card' },
+                      { method: 'netbanking' },
+                      { method: 'wallet' },
+                    ],
+                  },
+                },
+                sequence: ['block.upi_qr', 'block.other'],
+                preferences: {
+                  show_default_blocks: true,
+                },
+              },
+            },
             handler: async (response) => {
               await handleVerifyPayment(currentOrderId, response);
             },
             modal: {
-              ondismiss: () => {
+              ondismiss: async () => {
                 setSubmitting(false);
+                if (currentOrderId) {
+                  try {
+                    await api.put(`/orders/${currentOrderId}/cancel`);
+                    setPendingOrderId(null);
+                  } catch (cancelErr) {
+                    console.warn('Failed to auto-cancel order on dismiss:', cancelErr);
+                  }
+                }
                 addToast(
-                  'Payment window closed. You can complete payment anytime from My Orders.',
+                  'Payment window closed. Stock restored.',
                   'info'
                 );
               },
@@ -207,7 +310,7 @@ export const Checkout = () => {
           });
           razorpayInstance.open();
         } else {
-          // Open the interactive Razorpay Sandbox simulator modal
+          // Open the interactive Razorpay Sandbox simulator modal with QR Code
           setSandboxPaymentData({
             ...rzpData,
             orderId: currentOrderId,
@@ -218,6 +321,12 @@ export const Checkout = () => {
         }
       } catch (rzpErr) {
         console.error('Razorpay initialization error:', rzpErr);
+        setPendingOrderId(null);
+        if (rzpErr.response?.data?.isCancelled) {
+          addToast('Re-creating order...', 'info');
+          setSubmitting(false);
+          return handlePlaceOrder(e);
+        }
         addToast(
           rzpErr.response?.data?.message || 'Failed to initiate Razorpay gateway',
           'error'
@@ -382,14 +491,21 @@ export const Checkout = () => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   {[
+                    {
+                      id: 'UPI_QR',
+                      icon: QrCode,
+                      title: 'Scan UPI QR Code',
+                      desc: 'GPay, PhonePe, Paytm, BHIM',
+                      badge: 'Instant QR',
+                    },
                     {
                       id: 'Razorpay',
                       icon: Zap,
                       title: 'Online Payment',
                       desc: 'UPI, Cards, NetBanking, Wallets',
-                      badge: 'Instant Auto-Clear',
+                      badge: 'Gateway',
                     },
                     {
                       id: 'Cash on Delivery',
@@ -401,7 +517,10 @@ export const Checkout = () => {
                     <button
                       key={m.id}
                       type="button"
-                      onClick={() => setPaymentMethod(m.id)}
+                      onClick={() => {
+                        setPaymentMethod(m.id);
+                        setPendingOrderId(null);
+                      }}
                       className={`p-3.5 rounded-xl border text-left transition-all flex flex-col justify-between cursor-pointer relative ${
                         paymentMethod === m.id
                           ? 'bg-zinc-950 text-white dark:bg-amber-500 dark:text-slate-950 border-zinc-950 dark:border-amber-500 shadow-md ring-2 ring-blue-500/30'
@@ -429,6 +548,7 @@ export const Checkout = () => {
                     </button>
                   ))}
                 </div>
+
               </div>
             </div>
 
@@ -504,7 +624,9 @@ export const Checkout = () => {
                   type="submit"
                   disabled={submitting}
                   className={`w-full font-black text-sm py-4 rounded-xl flex items-center justify-center gap-2 shadow-xl disabled:opacity-50 transition-all hover:scale-[1.01] cursor-pointer ${
-                    paymentMethod === 'Razorpay'
+                    paymentMethod === 'UPI_QR'
+                      ? 'bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white shadow-emerald-600/25'
+                      : paymentMethod === 'Razorpay'
                       ? 'bg-blue-600 hover:bg-blue-700 dark:bg-amber-500 dark:hover:bg-amber-400 text-white dark:text-slate-950 shadow-blue-600/20 dark:shadow-amber-500/20'
                       : 'bg-zinc-950 hover:bg-zinc-800 text-white shadow-zinc-950/10'
                   }`}
@@ -512,8 +634,14 @@ export const Checkout = () => {
                   {submitting ? (
                     <span className="flex items-center gap-2">
                       <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></span>
-                      <span>Confirming Order...</span>
+                      <span>Processing Order...</span>
                     </span>
+                  ) : paymentMethod === 'UPI_QR' ? (
+                    <>
+                      <QrCode className="w-4 h-4" />
+                      <span>Pay {formatINR(totalPrice)} via QR Code</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </>
                   ) : paymentMethod === 'Razorpay' ? (
                     <>
                       <span>Pay {formatINR(totalPrice)} Online</span>
@@ -536,9 +664,37 @@ export const Checkout = () => {
           </form>
         </div>
 
-        {/* Razorpay Sandbox Modal */}
+        {/* Bill-Wise Dynamic UPI QR Modal */}
+        <BillWiseQrModal
+          isOpen={showBillWiseQrModal}
+          orderData={billWiseOrderData}
+          onClose={() => {
+            setShowBillWiseQrModal(false);
+            setSubmitting(false);
+          }}
+          onPaymentSuccess={(confirmedOrderId) => {
+            setShowBillWiseQrModal(false);
+            clearCart();
+            setPendingOrderId(null);
+            navigate(`/order-success/${confirmedOrderId}`);
+          }}
+          onPaymentCancel={async () => {
+            setShowBillWiseQrModal(false);
+            setSubmitting(false);
+            if (pendingOrderId) {
+              try {
+                await api.put(`/orders/${pendingOrderId}/cancel`);
+                setPendingOrderId(null);
+              } catch (_) {}
+            }
+            addToast('Payment cancelled. Stock restored.', 'info');
+          }}
+        />
+
+        {/* Razorpay Sandbox & Dynamic QR Modal */}
         <RazorpaySandboxModal
           isOpen={showSandboxModal}
+          initialTab="qr"
           onClose={() => {
             setShowSandboxModal(false);
             setSubmitting(false);

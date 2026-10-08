@@ -5,7 +5,89 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="referrer" content="no-referrer" />
+    <meta http-equiv="Permissions-Policy" content="accelerometer=*, gyroscope=*, magnetometer=*" />
     <title>Shoply — Everything Store</title>
+    <script>
+      // Razorpay SDK Telemetry & RD Biometric Service Noise Neutralizer
+      (function() {
+        try {
+          // 1. Neutralize localhost RD biometric port scans (:37857, :7070, :7071, :11100)
+          var RD_PORTS = [':37857', ':7070', ':7071', ':11100'];
+          var imgDesc = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, 'src');
+          if (imgDesc && imgDesc.set) {
+            Object.defineProperty(HTMLImageElement.prototype, 'src', {
+              get: function() {
+                return imgDesc.get.call(this);
+              },
+              set: function(val) {
+                var s = String(val || '');
+                if (RD_PORTS.some(function(p) { return s.indexOf(p) !== -1; })) {
+                  var self = this;
+                  setTimeout(function() {
+                    try {
+                      if (typeof self.onerror === 'function') {
+                        self.onerror(new Event('error'));
+                      }
+                      self.dispatchEvent(new Event('error'));
+                    } catch (_) {}
+                  }, 0);
+                  return;
+                }
+                return imgDesc.set.call(this, val);
+              },
+              configurable: true,
+            });
+          }
+
+          // 2. Prevent "Refused to get unsafe header" console errors in XMLHttpRequest
+          if (window.XMLHttpRequest && XMLHttpRequest.prototype.getResponseHeader) {
+            var origGetHeader = XMLHttpRequest.prototype.getResponseHeader;
+            XMLHttpRequest.prototype.getResponseHeader = function(name) {
+              if (typeof name === 'string') {
+                var lower = name.toLowerCase();
+                if (lower === 'x-rtb-fingerprint-id' || lower === 'request-id') {
+                  try {
+                    var exposed = (this.getAllResponseHeaders() || '').toLowerCase();
+                    if (exposed.indexOf(lower) === -1) {
+                      return null;
+                    }
+                  } catch (_) {
+                    return null;
+                  }
+                }
+              }
+              return origGetHeader.apply(this, arguments);
+            };
+          }
+
+          // 3. Avoid sensor/accelerometer violation notices
+          if (window.EventTarget && EventTarget.prototype.addEventListener) {
+            var origAddEvent = EventTarget.prototype.addEventListener;
+            EventTarget.prototype.addEventListener = function(type, listener, options) {
+              if (type === 'devicemotion' || type === 'deviceorientation') {
+                var isBlocked = document.permissionsPolicy && typeof document.permissionsPolicy.allowsFeature === 'function' && !document.permissionsPolicy.allowsFeature('accelerometer');
+                if (isBlocked) {
+                  return;
+                }
+              }
+              return origAddEvent.apply(this, arguments);
+            };
+          }
+
+          // 4. Ensure Razorpay iframes are granted sensory and payment permissions
+          var origCreateEl = document.createElement;
+          document.createElement = function(tagName) {
+            var el = origCreateEl.apply(this, arguments);
+            if (typeof tagName === 'string' && tagName.toLowerCase() === 'iframe') {
+              try {
+                el.setAttribute('allow', 'accelerometer *; gyroscope *; magnetometer *; payment *; clipboard-write *');
+              } catch (_) {}
+            }
+            return el;
+          };
+        } catch (_) {}
+      })();
+    </script>
     <script>
       (function() {
         try {

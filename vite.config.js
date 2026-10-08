@@ -7,6 +7,9 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
     port: 5173,
+    headers: {
+      'Permissions-Policy': 'accelerometer=*, gyroscope=*, magnetometer=*',
+    },
     proxy: {
       '/api': {
         target: 'http://localhost:5000',
