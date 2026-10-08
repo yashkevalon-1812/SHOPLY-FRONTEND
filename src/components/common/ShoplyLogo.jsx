@@ -150,7 +150,7 @@ export const ShoplyLogo = ({
         </span>
         {showTagline && (
           <span
-            className={`font-extrabold ${currentSize.tagline} text-amber-600 dark:text-amber-400 uppercase leading-none mt-1 select-none`}
+            className={`font-extrabold ${currentSize.tagline} text-amber-600 dark:text-amber-400 uppercase leading-none mt-1.5 select-none`}
           >
             EVERYTHING STORE
           </span>
