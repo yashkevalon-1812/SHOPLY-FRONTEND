@@ -11,7 +11,6 @@ import {
   Award,
   Zap,
   Clock,
-  ChevronLeft,
   ChevronRight,
   TrendingUp,
   Truck,
@@ -79,24 +78,14 @@ export const Home = () => {
   const [flashDeals, setFlashDeals] = useState([]);
   const [categories, setCategories] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isSlidePaused, setIsSlidePaused] = useState(false);
 
-  // Auto-advance hero background slides
+  // Seamless continuous auto-scroller for hero background slides
   useEffect(() => {
-    if (isSlidePaused) return;
     const slideTimer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
     }, 5000);
     return () => clearInterval(slideTimer);
-  }, [isSlidePaused]);
-
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
-  };
-
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
-  };
+  }, []);
 
   // Live countdown timer for Mega Sale & Flash Deals
   const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
@@ -172,11 +161,7 @@ export const Home = () => {
       {/* =========================================================================
           1. FULL-BLEED HERO SHOWCASE (Responsive, spacious, studio on desktop)
          ========================================================================= */}
-      <section
-        onMouseEnter={() => setIsSlidePaused(true)}
-        onMouseLeave={() => setIsSlidePaused(false)}
-        className="relative overflow-hidden w-full flex flex-col justify-between min-h-[510px] sm:min-h-[550px] md:min-h-[calc(100vh-98px)] md:h-[calc(100vh-98px)] py-8 sm:py-9 md:py-0 bg-[#faf7f2] dark:bg-[#0c1017] border-b border-stone-200/80 dark:border-slate-800 transition-colors"
-      >
+      <section className="relative overflow-hidden w-full flex flex-col justify-between min-h-[510px] sm:min-h-[550px] md:min-h-[calc(100vh-98px)] md:h-[calc(100vh-98px)] py-8 sm:py-9 md:py-0 bg-[#faf7f2] dark:bg-[#0c1017] border-b border-stone-200/80 dark:border-slate-800 transition-colors">
         {/* Full-bleed Studio Background Image Slider (Slides one by one) */}
         <div className="absolute inset-0 z-0 overflow-hidden">
           {/* Sliding Track */}
@@ -210,47 +195,6 @@ export const Home = () => {
               </span>
             </p>
           </div>
-        </div>
-
-        {/* Slider Controls: Next/Prev Arrows & Dots Indicator */}
-        <div className="absolute right-4 sm:right-6 lg:right-12 bottom-24 sm:bottom-28 md:bottom-24 lg:bottom-28 z-20 flex items-center gap-2 select-none">
-          <button
-            type="button"
-            onClick={prevSlide}
-            className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/80 dark:bg-slate-900/80 hover:bg-white dark:hover:bg-slate-800 backdrop-blur-md border border-stone-200/80 dark:border-slate-700/80 text-slate-700 dark:text-slate-200 hover:text-amber-600 dark:hover:text-amber-400 flex items-center justify-center transition-all shadow-xs hover:scale-105 cursor-pointer"
-            title="Previous slide"
-            aria-label="Previous slide"
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </button>
-
-          {/* Dots Indicator */}
-          <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-white/70 dark:bg-slate-900/70 backdrop-blur-md border border-stone-200/60 dark:border-slate-800/60 shadow-2xs">
-            {heroSlides.map((_, idx) => (
-              <button
-                key={idx}
-                type="button"
-                onClick={() => setCurrentSlide(idx)}
-                className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
-                  currentSlide === idx
-                    ? 'w-6 bg-amber-500 shadow-xs'
-                    : 'w-2 bg-stone-300 dark:bg-slate-700 hover:bg-stone-400 dark:hover:bg-slate-500'
-                }`}
-                title={`Go to slide ${idx + 1}`}
-                aria-label={`Go to slide ${idx + 1}`}
-              />
-            ))}
-          </div>
-
-          <button
-            type="button"
-            onClick={nextSlide}
-            className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/80 dark:bg-slate-900/80 hover:bg-white dark:hover:bg-slate-800 backdrop-blur-md border border-stone-200/80 dark:border-slate-700/80 text-slate-700 dark:text-slate-200 hover:text-amber-600 dark:hover:text-amber-400 flex items-center justify-center transition-all shadow-xs hover:scale-105 cursor-pointer"
-            title="Next slide"
-            aria-label="Next slide"
-          >
-            <ChevronRight className="w-4 h-4" />
-          </button>
         </div>
 
         {/* Middle Main Content */}
@@ -303,57 +247,57 @@ export const Home = () => {
         </div>
 
         {/* Bottom Bar: Trust Badges (Spacious frosted card on mobile, flex row on desktop) */}
-        <div className="relative z-10 w-full px-4 sm:px-6 lg:px-12 pt-5 sm:pt-6 md:pt-2 pb-2 sm:pb-8 lg:pb-12">
-          {/* Trust Badges: 2x2 grid on mobile inside a frosted card, flex row on sm+ */}
-          <div className="p-3.5 sm:p-4.5 md:p-0 rounded-2xl bg-white/85 dark:bg-slate-900/85 md:bg-transparent md:dark:bg-transparent backdrop-blur-md md:backdrop-blur-none border border-stone-200/80 dark:border-slate-800/80 md:border-none shadow-xs md:shadow-none">
-            <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-x-4 gap-y-3 sm:gap-5">
+        <div className="relative z-10 w-full px-4 sm:px-6 lg:px-12 pt-6 sm:pt-10 md:pt-4 pb-3 sm:pb-8 lg:pb-12">
+          {/* Trust Badges: 2x2 grid on mobile inside a frosted card, flex row on md+ */}
+          <div className="p-4 sm:p-5 md:p-0 rounded-2xl bg-white/90 dark:bg-slate-900/90 md:bg-transparent md:dark:bg-transparent backdrop-blur-md md:backdrop-blur-none border border-stone-200/80 dark:border-slate-800/80 md:border-none shadow-xs md:shadow-none">
+            <div className="grid grid-cols-2 md:flex md:flex-wrap items-center gap-x-5 sm:gap-x-7 gap-y-4 md:gap-7 lg:gap-8">
               {/* Free Shipping */}
-              <div className="flex items-center gap-2 sm:gap-2.5">
-                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-stone-200/80 dark:bg-slate-800 flex items-center justify-center shrink-0">
-                  <Truck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-900 dark:text-amber-400" />
+              <div className="flex items-center gap-2.5 sm:gap-3.5">
+                <div className="w-8.5 h-8.5 sm:w-10 sm:h-10 md:w-11 md:h-11 rounded-full bg-stone-200/80 dark:bg-slate-800 flex items-center justify-center shrink-0 shadow-2xs">
+                  <Truck className="w-4 h-4 sm:w-5 sm:h-5 text-slate-900 dark:text-amber-400" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white leading-tight truncate">Free Shipping</p>
-                  <p className="text-[9px] sm:text-[10px] text-stone-600 dark:text-slate-400 truncate">On orders over ₹1,999</p>
+                  <p className="text-xs sm:text-sm md:text-[15px] font-bold text-slate-900 dark:text-white leading-tight">Free Shipping</p>
+                  <p className="text-[11px] sm:text-xs text-stone-600 dark:text-slate-300 font-medium mt-0.5">On orders over ₹1,999</p>
                 </div>
               </div>
 
-              <div className="h-6 w-px bg-stone-300/80 dark:bg-slate-800 hidden sm:block"></div>
+              <div className="h-8 sm:h-9 w-px bg-stone-300/80 dark:bg-slate-800 hidden md:block"></div>
 
               {/* Secure Payments */}
-              <div className="flex items-center gap-2 sm:gap-2.5">
-                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-stone-200/80 dark:bg-slate-800 flex items-center justify-center shrink-0">
-                  <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-900 dark:text-amber-400" />
+              <div className="flex items-center gap-2.5 sm:gap-3.5">
+                <div className="w-8.5 h-8.5 sm:w-10 sm:h-10 md:w-11 md:h-11 rounded-full bg-stone-200/80 dark:bg-slate-800 flex items-center justify-center shrink-0 shadow-2xs">
+                  <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5 text-slate-900 dark:text-amber-400" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white leading-tight truncate">Secure Payments</p>
-                  <p className="text-[9px] sm:text-[10px] text-stone-600 dark:text-slate-400 truncate">100% safe & encrypted</p>
+                  <p className="text-xs sm:text-sm md:text-[15px] font-bold text-slate-900 dark:text-white leading-tight">Secure Payments</p>
+                  <p className="text-[11px] sm:text-xs text-stone-600 dark:text-slate-300 font-medium mt-0.5">100% safe & encrypted</p>
                 </div>
               </div>
 
-              <div className="h-6 w-px bg-stone-300/80 dark:bg-slate-800 hidden sm:block"></div>
+              <div className="h-8 sm:h-9 w-px bg-stone-300/80 dark:bg-slate-800 hidden md:block"></div>
 
               {/* Easy Returns */}
-              <div className="flex items-center gap-2 sm:gap-2.5">
-                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-stone-200/80 dark:bg-slate-800 flex items-center justify-center shrink-0">
-                  <RotateCcw className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-900 dark:text-amber-400" />
+              <div className="flex items-center gap-2.5 sm:gap-3.5">
+                <div className="w-8.5 h-8.5 sm:w-10 sm:h-10 md:w-11 md:h-11 rounded-full bg-stone-200/80 dark:bg-slate-800 flex items-center justify-center shrink-0 shadow-2xs">
+                  <RotateCcw className="w-4 h-4 sm:w-5 sm:h-5 text-slate-900 dark:text-amber-400" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white leading-tight truncate">Easy Returns</p>
-                  <p className="text-[9px] sm:text-[10px] text-stone-600 dark:text-slate-400 truncate">Hassle-free within 7 days</p>
+                  <p className="text-xs sm:text-sm md:text-[15px] font-bold text-slate-900 dark:text-white leading-tight">Easy Returns</p>
+                  <p className="text-[11px] sm:text-xs text-stone-600 dark:text-slate-300 font-medium mt-0.5">Hassle-free within 7 days</p>
                 </div>
               </div>
 
-              <div className="h-6 w-px bg-stone-300/80 dark:bg-slate-800 hidden sm:block"></div>
+              <div className="h-8 sm:h-9 w-px bg-stone-300/80 dark:bg-slate-800 hidden md:block"></div>
 
               {/* Call Support */}
-              <div className="flex items-center gap-2 sm:gap-2.5">
-                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-stone-200/80 dark:bg-slate-800 flex items-center justify-center shrink-0">
-                  <Headphones className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-900 dark:text-amber-400" />
+              <div className="flex items-center gap-2.5 sm:gap-3.5">
+                <div className="w-8.5 h-8.5 sm:w-10 sm:h-10 md:w-11 md:h-11 rounded-full bg-stone-200/80 dark:bg-slate-800 flex items-center justify-center shrink-0 shadow-2xs">
+                  <Headphones className="w-4 h-4 sm:w-5 sm:h-5 text-slate-900 dark:text-amber-400" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white leading-tight truncate">Call Support</p>
-                  <p className="text-[9px] sm:text-[10px] text-stone-600 dark:text-slate-400 truncate">24/7 customer service</p>
+                  <p className="text-xs sm:text-sm md:text-[15px] font-bold text-slate-900 dark:text-white leading-tight">Call Support</p>
+                  <p className="text-[11px] sm:text-xs text-stone-600 dark:text-slate-300 font-medium mt-0.5">24/7 customer service</p>
                 </div>
               </div>
             </div>
