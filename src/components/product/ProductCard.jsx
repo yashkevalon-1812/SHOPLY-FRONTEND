@@ -136,7 +136,7 @@ export const ProductCard = ({ product }) => {
       </Link>
 
       {/* Product Information */}
-      <div className="p-3 sm:p-3.5 flex-1 flex flex-col justify-between">
+      <div className="p-3.5 sm:p-4 flex-1 flex flex-col justify-between">
         <div>
           <div className="flex items-center justify-between text-xs mb-1">
             <span className="font-bold text-zinc-500 dark:text-slate-400 tracking-wider uppercase text-[9px] sm:text-[10px]">
@@ -179,24 +179,24 @@ export const ProductCard = ({ product }) => {
           </div>
 
           {/* Action CTAs: Add to Cart + Buy Now */}
-          <div className="grid grid-cols-2 gap-1.5 pt-1 border-t border-zinc-100 dark:border-slate-800">
+          <div className="grid grid-cols-2 gap-2 pt-1.5 border-t border-zinc-100 dark:border-slate-800">
             <button
               onClick={handleAddToCart}
               disabled={product.stock === 0}
-              className="w-full flex items-center justify-center gap-1 bg-zinc-100 hover:bg-zinc-200 dark:bg-slate-800 dark:hover:bg-slate-700 disabled:opacity-50 text-zinc-800 dark:text-slate-200 font-bold text-[11px] sm:text-xs py-1.5 px-1 sm:px-1.5 rounded-lg transition-all cursor-pointer"
+              className="w-full flex items-center justify-center gap-1.5 bg-zinc-100 hover:bg-zinc-200 dark:bg-slate-800 dark:hover:bg-slate-700 disabled:opacity-50 text-zinc-800 dark:text-slate-200 font-bold text-xs py-2 px-1.5 sm:px-2 rounded-xl transition-all cursor-pointer"
               title="Add to Cart"
             >
-              <ShoppingBag className="w-3 h-3 text-zinc-600 dark:text-slate-300 shrink-0" />
+              <ShoppingBag className="w-3.5 h-3.5 text-zinc-600 dark:text-slate-300 shrink-0" />
               <span className="truncate">Add</span>
             </button>
 
             <button
               onClick={handleBuyNow}
               disabled={product.stock === 0}
-              className="w-full flex items-center justify-center gap-1 bg-zinc-950 hover:bg-zinc-800 dark:bg-blue-600 dark:hover:bg-blue-500 disabled:opacity-50 text-white font-bold text-[11px] sm:text-xs py-1.5 px-1 sm:px-1.5 rounded-lg transition-all shadow-sm cursor-pointer"
+              className="w-full flex items-center justify-center gap-1.5 bg-zinc-950 hover:bg-zinc-800 dark:bg-blue-600 dark:hover:bg-blue-500 disabled:opacity-50 text-white font-bold text-xs py-2 px-1.5 sm:px-2 rounded-xl transition-all shadow-sm cursor-pointer"
               title="Instant Direct Checkout"
             >
-              <Zap className="w-3 h-3 text-amber-400 fill-amber-400 shrink-0" />
+              <Zap className="w-3.5 h-3.5 text-amber-400 fill-amber-400 shrink-0" />
               <span className="truncate">Buy Now</span>
             </button>
           </div>

@@ -127,7 +127,7 @@ export const Wishlist = () => {
         ) : (
           /* Wishlist Products Grid */
           <div>
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 md:gap-5">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-6 lg:gap-7 xl:gap-8">
               {wishlistItems.map((product) => (
                 <ProductCard key={product._id || product.id} product={product} />
               ))}

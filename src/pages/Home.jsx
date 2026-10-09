@@ -352,8 +352,8 @@ export const Home = () => {
               </div>
             </div>
 
-            {/* Flash Deals Grid - 5 Cards Per Row on Desktop */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-3.5 lg:gap-4">
+            {/* Flash Deals Grid - 4 Cards Per Row on Desktop with spacious gaps */}
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-6 lg:gap-7 xl:gap-8">
               {flashDeals.map((product) => (
                 <ProductCard key={product._id} product={product} />
               ))}
@@ -380,7 +380,7 @@ export const Home = () => {
               to="/shop"
               className="inline-flex items-center gap-1 text-xs font-bold text-zinc-600 hover:text-zinc-950 dark:text-slate-400 dark:hover:text-white transition-colors"
             >
-              Browse All Categories <ChevronRight className="w-4 h-4" />
+              All Categories <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
 
@@ -436,8 +436,8 @@ export const Home = () => {
             </Link>
           </div>
 
-          {/* Featured Catalog Grid - 5 Cards Per Row on Desktop */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-3.5 lg:gap-4">
+          {/* Featured Catalog Grid - 4 Cards Per Row on Desktop with spacious gaps */}
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-6 lg:gap-7 xl:gap-8">
             {featuredProducts.map((product) => (
               <ProductCard key={product._id} product={product} />
             ))}

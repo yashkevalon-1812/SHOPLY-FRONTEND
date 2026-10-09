@@ -803,7 +803,7 @@ export const ProductDetails = () => {
             <h2 className="text-xl sm:text-2xl font-black text-zinc-950 dark:text-white mb-6">
               Complementary Vault Items
             </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-3.5 sm:gap-4 lg:gap-5">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-6 lg:gap-7 xl:gap-8">
               {related.map((item) => (
                 <ProductCard key={item._id} product={item} />
               ))}
