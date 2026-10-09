@@ -462,14 +462,16 @@ export const Home = () => {
                 In an era of mass commoditization, Shoply stands for bespoke intention. We partner exclusively with certified independent horologists, acoustic engineers, and luxury workshops who honor patient craftsmanship.
               </p>
 
-              <div className="space-y-2.5 pt-1">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 pt-1.5">
                 <div className="flex items-start gap-3">
                   <div className="w-8 h-8 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 flex items-center justify-center shrink-0 mt-0.5">
                     <ShieldCheck className="w-4 h-4 text-amber-600 dark:text-amber-400" />
                   </div>
                   <div>
                     <h4 className="text-xs font-bold text-zinc-900 dark:text-white">Vetted Merchant Guild</h4>
-                    <p className="text-[11px] text-zinc-500 dark:text-slate-400">Every seller passes manual verification by our curation panel before a single product is listed.</p>
+                    <p className="text-[11px] text-zinc-500 dark:text-slate-400 mt-0.5 leading-relaxed">
+                      Every seller passes manual verification by our curation panel before a single product is listed.
+                    </p>
                   </div>
                 </div>
 
@@ -479,19 +481,11 @@ export const Home = () => {
                   </div>
                   <div>
                     <h4 className="text-xs font-bold text-zinc-900 dark:text-white">Express Global Logistics</h4>
-                    <p className="text-[11px] text-zinc-500 dark:text-slate-400">Automated tracking, insured express customs clearance, and carbon-offset fulfillment.</p>
+                    <p className="text-[11px] text-zinc-500 dark:text-slate-400 mt-0.5 leading-relaxed">
+                      Automated tracking, insured express customs clearance, and carbon-offset fulfillment.
+                    </p>
                   </div>
                 </div>
-              </div>
-
-              <div className="pt-2">
-                <Link
-                  to="/about"
-                  className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-700 hover:text-amber-800 dark:text-amber-400 dark:hover:text-amber-300"
-                >
-                  <span>Read our complete craftsmanship philosophy</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
               </div>
             </div>
 
