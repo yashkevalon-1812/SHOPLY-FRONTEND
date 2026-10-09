@@ -201,7 +201,7 @@ export const Footer = () => {
             <p className="text-xs text-zinc-500 dark:text-slate-400 leading-relaxed">
               Subscribe for private vault drops, secret flash discounts, and weekly luxury editorials.
             </p>
-            <form onSubmit={handleSubscribe} className="space-y-2">
+            <form onSubmit={handleSubscribe} className="space-y-2.5">
               <input
                 type="email"
                 required
