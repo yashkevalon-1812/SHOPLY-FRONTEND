@@ -93,7 +93,7 @@ const AnimatedCounter = ({ target, duration = 1800, prefix = '', suffix = '', de
     : Math.floor(count).toLocaleString('en-IN');
 
   return (
-    <span ref={ref} className="tabular-nums inline-block">
+    <span ref={ref} className="tabular-nums inline-block font-google-sans">
       {prefix}{formatted}{suffix}
     </span>
   );
@@ -436,7 +436,7 @@ export const About = () => {
                 <Users className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-sm sm:text-base font-black text-slate-950 dark:text-white leading-tight"><AnimatedCounter target={500000} suffix="+" /></p>
+                <p className="text-sm sm:text-base font-bold font-google-sans text-slate-950 dark:text-white leading-tight"><AnimatedCounter target={500000} suffix="+" /></p>
                 <p className="text-[10px] text-stone-500 dark:text-slate-400 font-medium">Happy Shoppers</p>
               </div>
             </div>
@@ -463,7 +463,7 @@ export const About = () => {
               <Users className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-2xl sm:text-4xl font-black text-slate-950 dark:text-white"><AnimatedCounter target={500000} suffix="+" /></p>
+              <p className="text-3xl sm:text-5xl font-bold font-google-sans text-slate-950 dark:text-white tracking-tight"><AnimatedCounter target={500000} suffix="+" /></p>
               <h3 className="text-xs sm:text-sm font-bold text-stone-700 dark:text-slate-300 mt-1">Conscious Shoppers</h3>
               <p className="text-[11px] text-stone-500 dark:text-slate-400 mt-0.5">Across every state and union territory</p>
             </div>
@@ -474,7 +474,7 @@ export const About = () => {
               <ShoppingBag className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-2xl sm:text-4xl font-black text-slate-950 dark:text-white"><AnimatedCounter target={50000} suffix="+" /></p>
+              <p className="text-3xl sm:text-5xl font-bold font-google-sans text-slate-950 dark:text-white tracking-tight"><AnimatedCounter target={50000} suffix="+" /></p>
               <h3 className="text-xs sm:text-sm font-bold text-stone-700 dark:text-slate-300 mt-1">Curated Products</h3>
               <p className="text-[11px] text-stone-500 dark:text-slate-400 mt-0.5">Electronics, fashion, home & lifestyle</p>
             </div>
@@ -485,7 +485,7 @@ export const About = () => {
               <Truck className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-2xl sm:text-4xl font-black text-slate-950 dark:text-white"><AnimatedCounter target={10000} suffix="+" /></p>
+              <p className="text-3xl sm:text-5xl font-bold font-google-sans text-slate-950 dark:text-white tracking-tight"><AnimatedCounter target={10000} suffix="+" /></p>
               <h3 className="text-xs sm:text-sm font-bold text-stone-700 dark:text-slate-300 mt-1">Pincodes Delivered</h3>
               <p className="text-[11px] text-stone-500 dark:text-slate-400 mt-0.5">99.8% on-time transit precision</p>
             </div>
@@ -496,7 +496,7 @@ export const About = () => {
               <Star className="w-5 h-5 fill-rose-500 text-rose-500" />
             </div>
             <div>
-              <p className="text-2xl sm:text-4xl font-black text-slate-950 dark:text-white"><AnimatedCounter target={4.9} decimals={1} suffix=" / 5.0" /></p>
+              <p className="text-3xl sm:text-5xl font-bold font-google-sans text-slate-950 dark:text-white tracking-tight"><AnimatedCounter target={4.9} decimals={1} suffix=" / 5.0" /></p>
               <h3 className="text-xs sm:text-sm font-bold text-stone-700 dark:text-slate-300 mt-1">Customer Rating</h3>
               <p className="text-[11px] text-stone-500 dark:text-slate-400 mt-0.5">Over 120,000 verified buyer reviews</p>
             </div>
@@ -535,14 +535,14 @@ export const About = () => {
 
               <div className="pt-2 flex items-center gap-6">
                 <div>
-                  <p className="text-xl sm:text-2xl font-black text-slate-950 dark:text-white"><AnimatedCounter target={250} prefix="₹" suffix=" Cr+" /></p>
+                  <p className="text-2xl sm:text-3xl font-bold font-google-sans text-slate-950 dark:text-white"><AnimatedCounter target={250} prefix="₹" suffix=" Cr+" /></p>
                   <p className="text-[10px] sm:text-xs text-stone-500 dark:text-slate-400 font-bold uppercase tracking-wider">
                     Paid to Local Creators
                   </p>
                 </div>
                 <div className="w-px h-10 bg-stone-200 dark:bg-slate-700" />
                 <div>
-                  <p className="text-xl sm:text-2xl font-black text-slate-950 dark:text-white"><AnimatedCounter target={24} suffix=" Metros" /></p>
+                  <p className="text-2xl sm:text-3xl font-bold font-google-sans text-slate-950 dark:text-white"><AnimatedCounter target={24} suffix=" Metros" /></p>
                   <p className="text-[10px] sm:text-xs text-stone-500 dark:text-slate-400 font-bold uppercase tracking-wider">
                     Next-Day Express Hubs
                   </p>
