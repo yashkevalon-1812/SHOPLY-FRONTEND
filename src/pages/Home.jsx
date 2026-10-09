@@ -335,7 +335,7 @@ export const Home = () => {
               {/* Countdown Box */}
               <div className="flex items-center gap-2.5 bg-white dark:bg-[#131d2e] border border-orange-200/80 dark:border-orange-900/40 px-3.5 py-1.5 rounded-xl shadow-xs transition-colors">
                 <Clock className="w-3.5 h-3.5 text-orange-600 dark:text-orange-400 shrink-0" />
-                <span className="text-[11px] text-zinc-600 dark:text-slate-300 font-semibold mr-0.5">Sale Ends In:</span>
+                <span className="text-[15 px] text-zinc-600 dark:text-slate-300 font-semibold mr-0.5">Sale Ends In:</span>
                 <div className="flex items-center gap-1 font-mono text-xs font-black">
                   <span className="bg-zinc-100 dark:bg-slate-800 px-2 py-0.5 rounded border border-zinc-200 dark:border-slate-700 text-zinc-900 dark:text-white">
                     {String(timeLeft.hours).padStart(2, '0')}h

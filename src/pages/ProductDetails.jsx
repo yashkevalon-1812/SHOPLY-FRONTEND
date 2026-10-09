@@ -257,7 +257,7 @@ export const ProductDetails = () => {
                 onError={(e) => handleImageError(e, selectedImage || product.images?.[0])}
               />
               {hasDiscount && (
-                <div className="absolute top-4 left-4 bg-rose-600 text-white text-xs font-black px-3 py-1 rounded-full shadow-md">
+                <div className="absolute top-4 left-4 bg-rose-600 text-white text-xs font-black px-3 py-1 rounded-full shadow-md w-fit inline-flex items-center justify-center whitespace-nowrap">
                   SAVE {discountPercent}%
                 </div>
               )}

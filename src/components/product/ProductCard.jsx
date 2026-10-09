@@ -64,18 +64,20 @@ export const ProductCard = ({ product }) => {
         />
 
         {/* Badges Overlay */}
-        <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
-          {hasDiscount && (
-            <span className="inline-flex items-center gap-1 bg-rose-600 text-white font-extrabold text-[11px] px-2.5 py-0.5 rounded-full shadow-sm">
-              {discountPercent}% OFF
+        <div className="absolute top-3 left-3 flex flex-col items-start gap-1.5 z-10 pointer-events-none">
+          {(hasDiscount || (product.offerTag && product.offerTag !== 'MEGA FLASH SALE')) && (
+            <span className="inline-flex items-center justify-center bg-rose-600 text-white font-black text-[10px] sm:text-[11px] px-2.5 py-0.5 rounded-full shadow-sm w-fit self-start whitespace-nowrap tracking-wide">
+              {product.offerTag && product.offerTag !== 'MEGA FLASH SALE'
+                ? product.offerTag
+                : `${discountPercent}% OFF`}
             </span>
           )}
           {(product.isMegaFlashSale || product.offerTag === 'MEGA FLASH SALE') ? (
-            <span className="inline-flex items-center gap-1 bg-gradient-to-r from-orange-500 to-amber-500 text-white font-black text-[10px] tracking-wide uppercase px-2.5 py-0.5 rounded-full shadow-sm">
+            <span className="inline-flex items-center gap-1 bg-gradient-to-r from-orange-500 to-amber-500 text-white font-black text-[10px] tracking-wide uppercase px-2.5 py-0.5 rounded-full shadow-sm w-fit self-start whitespace-nowrap">
               <Zap className="w-3 h-3 fill-white" /> Mega Flash
             </span>
           ) : product.isFlashDeal ? (
-            <span className="inline-flex items-center gap-1 bg-amber-400 text-zinc-950 font-black text-[10px] tracking-wide uppercase px-2 py-0.5 rounded-full shadow-sm">
+            <span className="inline-flex items-center gap-1 bg-amber-400 text-zinc-950 font-black text-[10px] tracking-wide uppercase px-2 py-0.5 rounded-full shadow-sm w-fit self-start whitespace-nowrap">
               <Flame className="w-3 h-3 fill-zinc-950" /> Flash Deal
             </span>
           ) : null}
