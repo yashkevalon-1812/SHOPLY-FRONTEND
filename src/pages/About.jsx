@@ -361,8 +361,9 @@ export const About = () => {
               <span>Our Story & Mission</span>
             </div>
 
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-slate-950 dark:text-white tracking-tight leading-[1.12]">
+            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-bold text-slate-950 dark:text-white tracking-tight leading-snug">
               Making Everyday Shopping{' '}
+              <br/>
               <span className="bg-gradient-to-r from-amber-500 via-orange-500 to-rose-600 bg-clip-text text-transparent">
                 Better, Faster, and Honest.
               </span>
@@ -375,7 +376,7 @@ export const About = () => {
             </p>
 
             {/* Action Buttons */}
-            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 pt-2">
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
               <Link
                 to="/shop"
                 className="inline-flex items-center gap-2 bg-[#171717] hover:bg-black dark:bg-amber-500 dark:hover:bg-amber-400 text-white dark:text-slate-950 text-xs sm:text-sm font-black px-7 sm:px-8 py-3.5 rounded-full shadow-lg transition-all hover:scale-105 active:scale-95 cursor-pointer"
@@ -394,13 +395,6 @@ export const About = () => {
                 <span>Meet Our Team</span>
               </button>
 
-              <Link
-                to="/seller/register"
-                className="inline-flex items-center gap-1.5 px-4 py-3.5 text-xs font-bold text-stone-600 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors cursor-pointer"
-              >
-                <Store className="w-4 h-4 text-amber-500" />
-                <span>Become a Seller</span>
-              </Link>
             </div>
 
             {/* Quick Trust Row */}
