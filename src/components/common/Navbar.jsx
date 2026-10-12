@@ -36,6 +36,7 @@ export const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [accountDropdownOpen, setAccountDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileAccountSheetOpen, setMobileAccountSheetOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [departments, setDepartments] = useState([]);
 
@@ -79,9 +80,9 @@ export const Navbar = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Prevent background scrolling when mobile drawer is open
+  // Prevent background scrolling when mobile drawer or account sheet is open
   useEffect(() => {
-    if (mobileMenuOpen) {
+    if (mobileMenuOpen || mobileAccountSheetOpen) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
@@ -89,7 +90,7 @@ export const Navbar = () => {
     return () => {
       document.body.style.overflow = '';
     };
-  }, [mobileMenuOpen]);
+  }, [mobileMenuOpen, mobileAccountSheetOpen]);
 
   // Close drawer and dropdowns on Escape key
   useEffect(() => {
@@ -98,6 +99,7 @@ export const Navbar = () => {
         setMobileMenuOpen(false);
         setAccountDropdownOpen(false);
         setIsSearchOpen(false);
+        setMobileAccountSheetOpen(false);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -110,6 +112,7 @@ export const Navbar = () => {
       setMobileMenuOpen(false);
       setAccountDropdownOpen(false);
       setIsSearchOpen(false);
+      setMobileAccountSheetOpen(false);
     }, 0);
     return () => clearTimeout(timer);
   }, [location.pathname]);
@@ -136,7 +139,8 @@ export const Navbar = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full shadow-md">
+    <>
+      <header className="sticky top-0 z-50 w-full shadow-md">
       {/* =========================================================================
           TIER 1: PRIMARY MARKETPLACE HEADER (Amazon / Flipkart Inspired)
          ========================================================================= */}
@@ -152,7 +156,7 @@ export const Navbar = () => {
                 setMobileMenuOpen(!mobileMenuOpen);
                 setAccountDropdownOpen(false);
               }}
-              className="md:hidden w-8.5 h-8.5 rounded-xl flex items-center justify-center text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/80 border border-slate-200 dark:border-slate-800 bg-slate-50/90 dark:bg-slate-900/60 transition-colors cursor-pointer"
+              className="lg:hidden w-8.5 h-8.5 rounded-xl flex items-center justify-center text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/80 border border-slate-200 dark:border-slate-800 bg-slate-50/90 dark:bg-slate-900/60 transition-colors cursor-pointer"
               aria-label="Toggle mobile menu"
             >
               {mobileMenuOpen ? <X className="w-4.5 h-4.5" /> : <Menu className="w-4.5 h-4.5" />}
@@ -173,7 +177,7 @@ export const Navbar = () => {
           </div>
 
           {/* 2. PRIMARY NAVIGATION (Desktop & Tablet): Centered */}
-          <nav className="hidden md:flex items-center gap-1 sm:gap-1.5 lg:gap-2">
+          <nav className="hidden lg:flex items-center gap-1 sm:gap-1.5 lg:gap-2">
             <Link
               to="/"
               className={`px-3.5 py-1.5 rounded-xl font-semibold text-xs sm:text-[13px] tracking-wide transition-all ${
@@ -300,15 +304,15 @@ export const Navbar = () => {
               )}
             </button>
 
-            {/* Notifications Dropdown (Hidden on mobile < sm to avoid cutting off cart, available in drawer) */}
-            <div className="hidden sm:block">
+            {/* Notifications Dropdown (Desktop only, available in mobile drawer) */}
+            <div className="hidden lg:block">
               <NotificationDropdown />
             </div>
 
-            {/* Wishlist Heart Button */}
+            {/* Wishlist Heart Button (Desktop only - shifted to bottom bar on mobile phones) */}
             <Link
               to="/wishlist"
-              className="relative w-8 h-8 sm:w-9.5 sm:h-9.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/60 hover:bg-slate-100 dark:hover:bg-slate-800/80 text-slate-700 dark:text-slate-200 hover:text-rose-600 dark:hover:text-rose-400 flex items-center justify-center transition-colors shadow-2xs shrink-0 cursor-pointer"
+              className="relative hidden lg:flex w-8 h-8 sm:w-9.5 sm:h-9.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/60 hover:bg-slate-100 dark:hover:bg-slate-800/80 text-slate-700 dark:text-slate-200 hover:text-rose-600 dark:hover:text-rose-400 items-center justify-center transition-colors shadow-2xs shrink-0 cursor-pointer"
               title="Wishlist"
               aria-label="Wishlist"
             >
@@ -320,8 +324,8 @@ export const Navbar = () => {
               )}
             </Link>
 
-            {/* 2-LINE AMAZON-STYLE ACCOUNT & LISTS TRIGGER (Hidden on mobile < sm, prominent inside drawer) */}
-            <div className="relative hidden sm:block" ref={accountRef}>
+            {/* 2-LINE AMAZON-STYLE ACCOUNT & LISTS TRIGGER (Desktop only - shifted to bottom bar on mobile phones) */}
+            <div className="relative hidden lg:block" ref={accountRef}>
               <button
                 onClick={() => {
                   setAccountDropdownOpen(!accountDropdownOpen);
@@ -436,10 +440,10 @@ export const Navbar = () => {
               )}
             </div>
 
-            {/* 4. SHOPPING CART (Icon + Badge Number Only) */}
+            {/* 4. SHOPPING CART (Desktop only - shifted to bottom bar on mobile phones) */}
             <Link
               to="/cart"
-              className="relative w-8 h-8 sm:w-9.5 sm:h-9.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/60 hover:bg-slate-100 dark:hover:bg-slate-800/80 text-slate-700 dark:text-slate-200 hover:text-amber-600 dark:hover:text-amber-400 flex items-center justify-center transition-colors shadow-2xs shrink-0 cursor-pointer"
+              className="relative hidden lg:flex w-8 h-8 sm:w-9.5 sm:h-9.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/60 hover:bg-slate-100 dark:hover:bg-slate-800/80 text-slate-700 dark:text-slate-200 hover:text-amber-600 dark:hover:text-amber-400 items-center justify-center transition-colors shadow-2xs shrink-0 cursor-pointer"
               title="Shopping Cart"
               aria-label="Shopping Cart"
             >
@@ -457,7 +461,7 @@ export const Navbar = () => {
           MOBILE OFF-CANVAS LEFT SIDEBAR DRAWER (Full Marketplace Experience)
          ========================================================================= */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-50 md:hidden">
+        <div className="fixed inset-0 z-50 lg:hidden">
           {/* Backdrop Overlay */}
           <div
             className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity duration-300"
@@ -540,6 +544,39 @@ export const Navbar = () => {
                     </div>
                   </div>
                 )}
+              </div>
+
+              {/* Quick Hub: Wishlist & Cart */}
+              <div className="grid grid-cols-2 gap-2 pb-1">
+                <Link
+                  to="/wishlist"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center justify-between p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-white text-xs font-bold transition-all shadow-2xs"
+                >
+                  <div className="flex items-center gap-2">
+                    <Heart className="w-4 h-4 text-rose-500 fill-rose-500/20" />
+                    <span>Wishlist</span>
+                  </div>
+                  {wishlistCount > 0 && (
+                    <span className="h-4.5 min-w-[18px] px-1 rounded-full bg-rose-600 text-white text-[10px] font-black flex items-center justify-center">
+                      {wishlistCount}
+                    </span>
+                  )}
+                </Link>
+
+                <Link
+                  to="/cart"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center justify-between p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-white text-xs font-bold transition-all shadow-2xs"
+                >
+                  <div className="flex items-center gap-2">
+                    <ShoppingCart className="w-4 h-4 text-amber-500" />
+                    <span>Cart</span>
+                  </div>
+                  <span className="h-4.5 min-w-[18px] px-1 rounded-full bg-amber-500 text-slate-950 text-[10px] font-black flex items-center justify-center">
+                    {totalItemsCount || 0}
+                  </span>
+                </Link>
               </div>
 
               {/* Main Navigation Grid */}
@@ -667,5 +704,269 @@ export const Navbar = () => {
         </div>
       )}
     </header>
-  );
+
+    {/* =========================================================================
+        MOBILE BOTTOM NAVIGATION DOCK (Down Side on Phone Screen - ONLY ICONS)
+        Wishlist, Account & Lists, Cart
+       ========================================================================= */}
+    {/* =========================================================================
+        MOBILE BOTTOM NAVIGATION DOCK (Image 1 Phone Screen with Image 2 Icons)
+        Wishlist, Account & Lists, Cart - Clean squircle cards with exact icon styling
+       ========================================================================= */}
+    <nav
+      aria-label="Mobile Navigation"
+      className="fixed bottom-0 inset-x-0 z-50 lg:hidden bg-white/95 dark:bg-[#0c1427]/95 backdrop-blur-xl border-t border-slate-200/90 dark:border-slate-800/90 shadow-[0_-4px_25px_rgba(0,0,0,0.08)] dark:shadow-[0_-4px_25px_rgba(0,0,0,0.6)] pb-[env(safe-area-inset-bottom,0px)]"
+      style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 9999 }}
+    >
+      <div className="flex items-center justify-center gap-6 sm:gap-8 h-16 max-w-sm mx-auto px-4">
+        {/* 1. Wishlist (Image 2 Card: Slate outline heart) */}
+        <Link
+          to="/wishlist"
+          onClick={() => setMobileAccountSheetOpen(false)}
+          title="Wishlist"
+          aria-label="Wishlist"
+          className="group"
+        >
+          <div
+            className={`relative w-12 h-12 rounded-2xl flex items-center justify-center border transition-all duration-200 shadow-xs active:scale-95 ${
+              location.pathname === '/wishlist'
+                ? 'bg-rose-50/40 dark:bg-rose-950/20 border-rose-400 ring-2 ring-rose-400/20 shadow-sm'
+                : 'bg-white dark:bg-slate-900 border-slate-200/90 dark:border-slate-700/80 hover:border-slate-300 dark:hover:border-slate-600'
+            }`}
+          >
+            <Heart
+              className={`w-6 h-6 transition-transform group-hover:scale-105 ${
+                location.pathname === '/wishlist'
+                  ? 'text-rose-500 fill-rose-500'
+                  : 'text-slate-700 dark:text-slate-200'
+              }`}
+              strokeWidth={1.8}
+            />
+            {wishlistCount > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 flex h-5 min-w-[20px] px-1 items-center justify-center rounded-full text-[10px] font-black shadow-md bg-rose-600 text-white">
+                {wishlistCount}
+              </span>
+            )}
+          </div>
+        </Link>
+
+        {/* 2. Account & Lists (Image 2 Card: Peach circle with amber user avatar) */}
+        <button
+          type="button"
+          onClick={() => setMobileAccountSheetOpen(!mobileAccountSheetOpen)}
+          title="Account & Lists"
+          aria-label="Account & Lists"
+          className="group cursor-pointer"
+        >
+          <div
+            className={`relative w-12 h-12 rounded-2xl flex items-center justify-center border transition-all duration-200 shadow-xs active:scale-95 ${
+              mobileAccountSheetOpen || ['/profile', '/orders', '/login', '/register'].includes(location.pathname)
+                ? 'bg-amber-50/40 dark:bg-amber-950/20 border-amber-400 ring-2 ring-amber-400/20 shadow-sm'
+                : 'bg-white dark:bg-slate-900 border-slate-200/90 dark:border-slate-700/80 hover:border-slate-300 dark:hover:border-slate-600'
+            }`}
+          >
+            <div className="w-8 h-8 rounded-full bg-[#fef3c7] dark:bg-amber-950/70 flex items-center justify-center transition-transform group-hover:scale-105">
+              <User className="w-4.5 h-4.5 text-[#d97706] dark:text-amber-400" strokeWidth={2} />
+            </div>
+          </div>
+        </button>
+
+        {/* 3. Shopping Cart (Image 2 Card: Slate outline cart with top-right amber count badge) */}
+        <Link
+          to="/cart"
+          onClick={() => setMobileAccountSheetOpen(false)}
+          title="Shopping Cart"
+          aria-label="Shopping Cart"
+          className="group"
+        >
+          <div
+            className={`relative w-12 h-12 rounded-2xl flex items-center justify-center border transition-all duration-200 shadow-xs active:scale-95 ${
+              location.pathname === '/cart'
+                ? 'bg-amber-50/40 dark:bg-amber-950/20 border-amber-400 ring-2 ring-amber-400/20 shadow-sm'
+                : 'bg-white dark:bg-slate-900 border-slate-200/90 dark:border-slate-700/80 hover:border-slate-300 dark:hover:border-slate-600'
+            }`}
+          >
+            <ShoppingCart
+              className={`w-6 h-6 transition-transform group-hover:scale-105 ${
+                location.pathname === '/cart'
+                  ? 'text-amber-500'
+                  : 'text-slate-700 dark:text-slate-200'
+              }`}
+              strokeWidth={1.8}
+            />
+            <span className="absolute -top-2 -right-2 flex h-5.5 min-w-[22px] px-1 items-center justify-center rounded-full text-[11px] font-black shadow-md bg-amber-500 text-slate-950">
+              {totalItemsCount || 0}
+            </span>
+          </div>
+        </Link>
+      </div>
+    </nav>
+
+    {/* =========================================================================
+        MOBILE ACCOUNT & LISTS BOTTOM SHEET (Slides Up On Tap)
+       ========================================================================= */}
+    {mobileAccountSheetOpen && (
+      <div className="fixed inset-0 z-50 lg:hidden" style={{ zIndex: 10000 }}>
+        {/* Backdrop Overlay */}
+        <div
+          className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity duration-300"
+          onClick={() => setMobileAccountSheetOpen(false)}
+          aria-hidden="true"
+        />
+
+        {/* Bottom Sheet Modal */}
+        <div
+          className="fixed bottom-0 inset-x-0 max-h-[85vh] bg-white dark:bg-[#0b1329] rounded-t-3xl border-t border-slate-200 dark:border-slate-800 shadow-2xl p-4 sm:p-5 pb-8 overflow-y-auto z-50 animate-in slide-in-from-bottom duration-200"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Account & Lists Menu"
+        >
+          {/* Handle Bar */}
+          <div className="w-12 h-1.5 bg-slate-300 dark:bg-slate-700 rounded-full mx-auto mb-4" />
+
+          {/* Header */}
+          <div className="flex items-center justify-between pb-3.5 border-b border-slate-100 dark:border-slate-800/80 mb-4">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8.5 h-8.5 rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold">
+                <User className="w-4.5 h-4.5" />
+              </div>
+              <div>
+                <h3 className="text-sm font-black text-slate-900 dark:text-white leading-tight">
+                  Account & Lists
+                </h3>
+                <p className="text-[10px] text-slate-400">
+                  {user ? `Signed in as ${user.name}` : 'Welcome to Shoply'}
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => setMobileAccountSheetOpen(false)}
+              className="w-8 h-8 rounded-xl flex items-center justify-center text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+              aria-label="Close"
+            >
+              <X className="w-4.5 h-4.5" />
+            </button>
+          </div>
+
+          {user ? (
+            <div className="space-y-4">
+              {/* User Info Card */}
+              <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-800 flex items-center gap-3">
+                <div className="w-11 h-11 rounded-xl bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center font-black text-base shrink-0">
+                  {user.name.charAt(0).toUpperCase()}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs font-bold text-slate-900 dark:text-white truncate">{user.name}</p>
+                  <p className="text-[11px] text-slate-400 truncate">{user.email}</p>
+                  <span className="inline-block mt-1 text-[8px] font-extrabold uppercase px-2 py-0.5 rounded-md bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-200/60 dark:border-amber-800/60">
+                    {user.role}
+                  </span>
+                </div>
+              </div>
+
+              {/* Account Navigation Links */}
+              <div className="space-y-1.5">
+                <Link
+                  to="/profile"
+                  onClick={() => setMobileAccountSheetOpen(false)}
+                  className="flex items-center justify-between p-3 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 hover:border-amber-500 text-xs font-bold text-slate-800 dark:text-slate-200 transition-colors"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <User className="w-4 h-4 text-amber-500" />
+                    <span>My Profile</span>
+                  </div>
+                  <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
+                </Link>
+
+                <Link
+                  to="/orders"
+                  onClick={() => setMobileAccountSheetOpen(false)}
+                  className="flex items-center justify-between p-3 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 hover:border-amber-500 text-xs font-bold text-slate-800 dark:text-slate-200 transition-colors"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <Package className="w-4 h-4 text-amber-500" />
+                    <span>My Orders & Tracking</span>
+                  </div>
+                  <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
+                </Link>
+
+                {user.role === 'admin' && (
+                  <Link
+                    to="/admin"
+                    onClick={() => setMobileAccountSheetOpen(false)}
+                    className="flex items-center justify-between p-3 rounded-xl bg-amber-50/60 dark:bg-amber-950/20 border border-amber-200/80 dark:border-amber-900/40 text-xs font-bold text-amber-700 dark:text-amber-300 transition-colors"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <Shield className="w-4 h-4 text-amber-500" />
+                      <span>Admin Portal</span>
+                    </div>
+                    <ArrowRight className="w-3.5 h-3.5 text-amber-500" />
+                  </Link>
+                )}
+
+                {user.role === 'seller' && (
+                  <Link
+                    to="/seller"
+                    onClick={() => setMobileAccountSheetOpen(false)}
+                    className="flex items-center justify-between p-3 rounded-xl bg-amber-50/60 dark:bg-amber-950/20 border border-amber-200/80 dark:border-amber-900/40 text-xs font-bold text-amber-700 dark:text-amber-300 transition-colors"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <Store className="w-4 h-4 text-amber-500" />
+                      <span>Seller Studio</span>
+                    </div>
+                    <ArrowRight className="w-3.5 h-3.5 text-amber-500" />
+                  </Link>
+                )}
+              </div>
+
+              {/* Sign Out Button */}
+              <button
+                type="button"
+                onClick={() => {
+                  logout();
+                  setMobileAccountSheetOpen(false);
+                }}
+                className="w-full flex items-center justify-center gap-2 p-3 rounded-xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200/60 dark:border-rose-900/40 text-rose-600 dark:text-rose-400 text-xs font-bold transition-colors cursor-pointer"
+              >
+                <LogOut className="w-4 h-4" />
+                <span>Sign Out</span>
+              </button>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <div className="p-4 rounded-2xl bg-amber-50/50 dark:bg-amber-950/20 border border-amber-200/60 dark:border-amber-900/30 text-center space-y-1.5">
+                <p className="text-xs font-black text-slate-900 dark:text-white">
+                  Unlock Your Personalized Shopping Experience
+                </p>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                  Sign in to track orders, manage your wishlist, and enjoy 1-click checkout.
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <Link
+                  to="/login"
+                  onClick={() => setMobileAccountSheetOpen(false)}
+                  className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black shadow-md transition-colors"
+                >
+                  <span>Sign In to Your Account</span>
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+
+                <Link
+                  to="/register"
+                  onClick={() => setMobileAccountSheetOpen(false)}
+                  className="w-full flex items-center justify-center py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 text-xs font-bold transition-colors"
+                >
+                  <span>New customer? Start here</span>
+                </Link>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    )}
+  </>
+);
 };

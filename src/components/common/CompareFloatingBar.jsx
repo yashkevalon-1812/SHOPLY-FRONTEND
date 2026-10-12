@@ -9,7 +9,7 @@ export const CompareFloatingBar = () => {
   if (!compareItems || compareItems.length === 0) return null;
 
   return (
-    <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-40 w-[95%] max-w-2xl bg-zinc-950/95 dark:bg-[#0f172a]/95 text-white backdrop-blur-md border border-zinc-700/60 dark:border-slate-700/80 rounded-2xl shadow-2xl p-2.5 sm:p-3 transition-all duration-300 animate-in slide-in-from-bottom-5">
+    <div className="fixed bottom-20 lg:bottom-4 left-1/2 -translate-x-1/2 z-40 w-[95%] max-w-2xl bg-zinc-950/95 dark:bg-[#0f172a]/95 text-white backdrop-blur-md border border-zinc-700/60 dark:border-slate-700/80 rounded-2xl shadow-2xl p-2.5 sm:p-3 transition-all duration-300 animate-in slide-in-from-bottom-5">
       <div className="flex items-center justify-between gap-3">
         {/* Left: Indicator & Thumbnails */}
         <div className="flex items-center gap-2.5 overflow-x-auto min-w-0 pr-2">

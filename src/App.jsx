@@ -61,7 +61,7 @@ const StorefrontLayout = () => {
   return (
     <div className="flex flex-col min-h-screen bg-slate-50 text-slate-900 dark:bg-[#0b1120] dark:text-slate-100 selection:bg-amber-500 selection:text-slate-950 font-sans antialiased transition-colors duration-200">
       <Navbar />
-      <main className="flex-1">
+      <main className="flex-1 pb-20 lg:pb-0">
         <Outlet />
       </main>
       <Footer />

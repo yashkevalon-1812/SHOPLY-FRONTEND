@@ -17,7 +17,7 @@ export const Footer = () => {
   };
 
   return (
-    <footer className="bg-zinc-50 dark:bg-[#070b14] text-zinc-600 dark:text-slate-400 border-t border-zinc-200 dark:border-slate-800 transition-colors duration-200">
+    <footer className="bg-zinc-50 dark:bg-[#070b14] text-zinc-600 dark:text-slate-400 border-t border-zinc-200 dark:border-slate-800 transition-colors duration-200 pb-20 lg:pb-0">
       {/* =========================================================================
           1. VALUE BADGES BANNER (Responsive 2x2 on Mobile, 4-col on Desktop)
          ========================================================================= */}
