@@ -193,10 +193,10 @@ export const ProductCard = ({ product }) => {
             <button
               onClick={handleBuyNow}
               disabled={product.stock === 0}
-              className="w-full flex items-center justify-center gap-1.5 bg-zinc-950 hover:bg-zinc-800 dark:bg-blue-600 dark:hover:bg-blue-500 disabled:opacity-50 text-white font-bold text-xs py-2 px-1.5 sm:px-2 rounded-xl transition-all shadow-sm cursor-pointer"
+              className="w-full flex items-center justify-center gap-1.5 bg-zinc-950 hover:bg-zinc-800 dark:bg-amber-500 dark:hover:bg-amber-400 disabled:opacity-50 text-white dark:text-slate-950 font-bold text-xs py-2 px-1.5 sm:px-2 rounded-xl transition-all shadow-sm cursor-pointer"
               title="Instant Direct Checkout"
             >
-              <Zap className="w-3.5 h-3.5 text-amber-400 fill-amber-400 shrink-0" />
+              <Zap className="w-3.5 h-3.5 text-amber-400 dark:text-slate-950 fill-amber-400 dark:fill-slate-950 shrink-0" />
               <span className="truncate">Buy Now</span>
             </button>
           </div>

@@ -224,7 +224,7 @@ export const Navbar = () => {
           <div className="flex items-center gap-1 sm:gap-1.5 md:gap-2 shrink-0">
             {/* Search Trigger / Inline Expandable Input (Opens to the left, fixed slot so nav links never move) */}
             <div
-              className="relative w-8.5 h-8.5 sm:w-9.5 sm:h-9.5 shrink-0 flex items-center justify-center"
+              className="relative w-8 h-8 sm:w-9.5 sm:h-9.5 shrink-0 flex items-center justify-center"
               ref={searchContainerRef}
             >
               {/* Trigger Button - stays in its fixed slot */}
@@ -289,7 +289,7 @@ export const Navbar = () => {
             {/* Light / Dark Mode Toggle */}
             <button
               onClick={toggleTheme}
-              className="w-8.5 h-8.5 sm:w-9.5 sm:h-9.5 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/80 border border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/60 flex items-center justify-center transition-colors shadow-2xs shrink-0 cursor-pointer"
+              className="w-8 h-8 sm:w-9.5 sm:h-9.5 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/80 border border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/60 flex items-center justify-center transition-colors shadow-2xs shrink-0 cursor-pointer"
               title={isDark ? 'Switch to Light Theme' : 'Switch to Dark Theme'}
               aria-label="Toggle Theme"
             >
@@ -300,13 +300,15 @@ export const Navbar = () => {
               )}
             </button>
 
-            {/* Notifications Dropdown */}
-            <NotificationDropdown />
+            {/* Notifications Dropdown (Hidden on mobile < sm to avoid cutting off cart, available in drawer) */}
+            <div className="hidden sm:block">
+              <NotificationDropdown />
+            </div>
 
             {/* Wishlist Heart Button */}
             <Link
               to="/wishlist"
-              className="relative w-8.5 h-8.5 sm:w-9.5 sm:h-9.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/60 hover:bg-slate-100 dark:hover:bg-slate-800/80 text-slate-700 dark:text-slate-200 hover:text-rose-600 dark:hover:text-rose-400 flex items-center justify-center transition-colors shadow-2xs shrink-0 cursor-pointer"
+              className="relative w-8 h-8 sm:w-9.5 sm:h-9.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/60 hover:bg-slate-100 dark:hover:bg-slate-800/80 text-slate-700 dark:text-slate-200 hover:text-rose-600 dark:hover:text-rose-400 flex items-center justify-center transition-colors shadow-2xs shrink-0 cursor-pointer"
               title="Wishlist"
               aria-label="Wishlist"
             >
@@ -318,8 +320,8 @@ export const Navbar = () => {
               )}
             </Link>
 
-            {/* 2-LINE AMAZON-STYLE ACCOUNT & LISTS TRIGGER */}
-            <div className="relative" ref={accountRef}>
+            {/* 2-LINE AMAZON-STYLE ACCOUNT & LISTS TRIGGER (Hidden on mobile < sm, prominent inside drawer) */}
+            <div className="relative hidden sm:block" ref={accountRef}>
               <button
                 onClick={() => {
                   setAccountDropdownOpen(!accountDropdownOpen);
@@ -437,7 +439,7 @@ export const Navbar = () => {
             {/* 4. SHOPPING CART (Icon + Badge Number Only) */}
             <Link
               to="/cart"
-              className="relative w-8.5 h-8.5 sm:w-9.5 sm:h-9.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/60 hover:bg-slate-100 dark:hover:bg-slate-800/80 text-slate-700 dark:text-slate-200 hover:text-amber-600 dark:hover:text-amber-400 flex items-center justify-center transition-colors shadow-2xs shrink-0 cursor-pointer"
+              className="relative w-8 h-8 sm:w-9.5 sm:h-9.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/60 hover:bg-slate-100 dark:hover:bg-slate-800/80 text-slate-700 dark:text-slate-200 hover:text-amber-600 dark:hover:text-amber-400 flex items-center justify-center transition-colors shadow-2xs shrink-0 cursor-pointer"
               title="Shopping Cart"
               aria-label="Shopping Cart"
             >

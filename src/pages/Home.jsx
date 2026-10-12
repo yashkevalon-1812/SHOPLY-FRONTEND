@@ -161,7 +161,7 @@ export const Home = () => {
       {/* =========================================================================
           1. FULL-BLEED HERO SHOWCASE (Responsive, spacious, studio on desktop)
          ========================================================================= */}
-      <section className="relative overflow-hidden w-full flex flex-col justify-between min-h-[510px] sm:min-h-[550px] md:min-h-[calc(100vh-98px)] md:h-[calc(100vh-98px)] py-8 sm:py-9 md:py-0 bg-[#faf7f2] dark:bg-[#0c1017] border-b border-stone-200/80 dark:border-slate-800 transition-colors">
+      <section className="relative overflow-hidden w-full flex flex-col justify-between min-h-[480px] sm:min-h-[540px] md:min-h-[calc(100vh-98px)] md:h-[calc(100vh-98px)] py-5 sm:py-8 md:py-0 bg-[#faf7f2] dark:bg-[#0c1017] border-b border-stone-200/80 dark:border-slate-800 transition-colors">
         {/* Full-bleed Studio Background Image Slider (Slides one by one) */}
         <div className="absolute inset-0 z-0 overflow-hidden">
           {/* Sliding Track */}
@@ -182,13 +182,13 @@ export const Home = () => {
           </div>
 
           {/* Subtle gradient scrim on the left to guarantee pristine text contrast while keeping image clear */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#faf7f2]/96 via-[#faf7f2]/92 to-[#faf7f2]/94 sm:bg-gradient-to-r sm:from-[#faf7f2] sm:via-[#faf7f2]/90 sm:via-40% sm:to-transparent dark:from-[#0c1017]/96 dark:via-[#0c1017]/92 dark:to-[#0c1017]/90 sm:dark:from-[#0c1017] sm:dark:via-[#0c1017]/95 sm:dark:to-transparent pointer-events-none"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-[#faf7f2]/88 via-[#faf7f2]/75 to-[#faf7f2]/92 sm:bg-gradient-to-r sm:from-[#faf7f2] sm:via-[#faf7f2]/90 sm:via-40% sm:to-transparent dark:from-[#0c1017]/90 dark:via-[#0c1017]/78 dark:to-[#0c1017]/94 sm:dark:from-[#0c1017] sm:dark:via-[#0c1017]/95 sm:dark:to-transparent pointer-events-none"></div>
         </div>
 
-        {/* Top-Right Floating Script Badge (Dynamically transitions with active slide) */}
-        <div className="absolute top-3.5 sm:top-5 lg:top-7 right-3.5 sm:right-8 lg:right-14 z-20 pointer-events-none select-none">
-          <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl border border-stone-200/80 dark:border-slate-700 shadow-xs transform -rotate-2 sm:-rotate-3 transition-all duration-300">
-            <p className="font-serif italic text-[10px] sm:text-sm font-semibold text-stone-900 dark:text-stone-100 leading-tight">
+        {/* Top-Right Floating Script Badge (Hidden on mobile < sm to eliminate overlap with kicker, shown on sm+) */}
+        <div className="hidden sm:block absolute top-5 lg:top-7 right-6 lg:right-14 z-20 pointer-events-none select-none">
+          <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-3.5 py-2 rounded-2xl border border-stone-200/80 dark:border-slate-700 shadow-xs transform -rotate-2 sm:-rotate-3 transition-all duration-300">
+            <p className="font-serif italic text-xs sm:text-sm font-semibold text-stone-900 dark:text-stone-100 leading-tight">
               {heroSlides[currentSlide].badgeTitle} <br />
               <span className="text-amber-600 dark:text-amber-400 font-bold">
                 {heroSlides[currentSlide].badgeSubtitle}
@@ -198,13 +198,13 @@ export const Home = () => {
         </div>
 
         {/* Middle Main Content */}
-        <div className="relative z-10 w-full px-4 sm:px-6 lg:px-12 flex-1 flex flex-col justify-center pt-3.5 sm:pt-6 md:pt-0 pb-4 sm:pb-6">
+        <div className="relative z-10 w-full px-4 sm:px-6 lg:px-12 flex-1 flex flex-col justify-center pt-3 sm:pt-6 md:pt-0 pb-3 sm:pb-6">
           <div
             key={currentSlide}
-            className="max-w-xl lg:max-w-2xl space-y-3.5 sm:space-y-4.5 text-left animate-in fade-in duration-500"
+            className="max-w-xl lg:max-w-2xl space-y-3 sm:space-y-4 text-left animate-in fade-in duration-500"
           >
             {/* Category Kicker */}
-            <div className="text-[10px] sm:text-xs font-bold tracking-[0.25em] text-amber-700 dark:text-amber-400 sm:text-stone-500 sm:dark:text-stone-400 uppercase transition-all duration-300">
+            <div className="text-[10px] sm:text-xs font-bold tracking-[0.16em] sm:tracking-[0.25em] text-amber-700 dark:text-amber-400 sm:text-stone-500 sm:dark:text-stone-400 uppercase transition-all duration-300">
               {heroSlides[currentSlide].kicker}
             </div>
 
@@ -223,81 +223,81 @@ export const Home = () => {
             </h1>
 
             {/* Subtitle */}
-            <p className="text-sm sm:text-base text-stone-800 dark:text-slate-100 max-w-lg font-medium sm:font-normal leading-relaxed">
+            <p className="text-xs sm:text-base text-stone-800 dark:text-slate-100 max-w-lg font-normal sm:font-normal leading-relaxed">
               {heroSlides[currentSlide].subtitle}
             </p>
 
-            {/* CTA Buttons */}
-            <div className="flex flex-wrap items-center gap-3 sm:gap-4 pt-2 sm:pt-2.5">
+            {/* CTA Buttons - Side by Side on all mobile devices and desktop */}
+            <div className="grid grid-cols-2 gap-2 sm:gap-3.5 pt-1.5 sm:pt-2.5 max-w-sm sm:max-w-md">
               <Link
                 to={heroSlides[currentSlide].ctaLink || '/shop'}
-                className="inline-flex items-center justify-center gap-2 bg-[#171717] hover:bg-black dark:bg-amber-500 dark:hover:bg-amber-400 text-white dark:text-slate-950 font-semibold text-xs sm:text-sm px-5.5 sm:px-7 py-2.5 sm:py-3 rounded-full shadow-md transition-all hover:scale-105 shrink-0"
+                className="w-full inline-flex items-center justify-center gap-1.5 sm:gap-2 bg-[#171717] hover:bg-black dark:bg-amber-500 dark:hover:bg-amber-400 text-white dark:text-slate-950 font-bold text-xs sm:text-sm px-2.5 sm:px-6 py-2.5 sm:py-3 rounded-full shadow-md transition-all hover:scale-105 active:scale-95 text-center"
               >
-                <span>{heroSlides[currentSlide].ctaText || 'Shop Now'}</span>
-                <ArrowRight className="w-4 h-4" />
+                <span className="truncate">{heroSlides[currentSlide].ctaText || 'Shop Now'}</span>
+                <ArrowRight className="w-3.5 h-3.5 shrink-0" />
               </Link>
               <Link
                 to="/shop"
-                className="inline-flex items-center justify-center border border-stone-300 dark:border-slate-700 hover:border-slate-900 dark:hover:border-white bg-white/75 dark:bg-slate-900/60 backdrop-blur-md text-slate-900 dark:text-slate-200 font-semibold text-xs sm:text-sm px-5 sm:px-7 py-2.5 sm:py-3 rounded-full shadow-2xs transition-all hover:bg-white dark:hover:bg-slate-800 shrink-0"
+                className="w-full inline-flex items-center justify-center border border-stone-300 dark:border-slate-700 hover:border-slate-900 dark:hover:border-white bg-white/80 dark:bg-slate-900/60 backdrop-blur-md text-slate-900 dark:text-slate-200 font-bold text-xs sm:text-sm px-2.5 sm:px-6 py-2.5 sm:py-3 rounded-full shadow-2xs transition-all hover:bg-white dark:hover:bg-slate-800 text-center"
               >
-                Explore Categories
+                <span className="truncate">Explore Categories</span>
               </Link>
             </div>
           </div>
         </div>
 
-        {/* Bottom Bar: Trust Badges (Spacious frosted card on mobile, flex row on desktop) */}
-        <div className="relative z-10 w-full px-4 sm:px-6 lg:px-12 pt-6 sm:pt-10 md:pt-4 pb-3 sm:pb-8 lg:pb-12">
+        {/* Bottom Bar: Trust Badges (Compact, clean 2x2 grid on mobile, spacious flex row on desktop) */}
+        <div className="relative z-10 w-full px-3.5 sm:px-6 lg:px-12 pt-3 sm:pt-8 md:pt-4 pb-3 sm:pb-8 lg:pb-12">
           {/* Trust Badges: 2x2 grid on mobile inside a frosted card, flex row on md+ */}
-          <div className="p-4 sm:p-5 md:p-0 rounded-2xl bg-white/90 dark:bg-slate-900/90 md:bg-transparent md:dark:bg-transparent backdrop-blur-md md:backdrop-blur-none border border-stone-200/80 dark:border-slate-800/80 md:border-none shadow-xs md:shadow-none">
-            <div className="grid grid-cols-2 md:flex md:flex-wrap items-center gap-x-5 sm:gap-x-7 gap-y-4 md:gap-7 lg:gap-8">
+          <div className="p-3 sm:p-4 md:p-0 rounded-2xl bg-white/90 dark:bg-slate-900/90 md:bg-transparent md:dark:bg-transparent backdrop-blur-md md:backdrop-blur-none border border-stone-200/80 dark:border-slate-800/80 md:border-none shadow-xs md:shadow-none">
+            <div className="grid grid-cols-2 md:flex md:flex-wrap items-center gap-x-2.5 sm:gap-x-6 gap-y-3 sm:gap-y-4 md:gap-7 lg:gap-8">
               {/* Free Shipping */}
-              <div className="flex items-center gap-2.5 sm:gap-3.5">
-                <div className="w-8.5 h-8.5 sm:w-10 sm:h-10 md:w-11 md:h-11 rounded-full bg-stone-200/80 dark:bg-slate-800 flex items-center justify-center shrink-0 shadow-2xs">
+              <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-11 md:h-11 rounded-full bg-stone-100 dark:bg-slate-800 flex items-center justify-center shrink-0 shadow-2xs">
                   <Truck className="w-4 h-4 sm:w-5 sm:h-5 text-slate-900 dark:text-amber-400" />
                 </div>
-                <div className="min-w-0">
-                  <p className="text-xs sm:text-sm md:text-[15px] font-bold text-slate-900 dark:text-white leading-tight">Free Shipping</p>
-                  <p className="text-[11px] sm:text-xs text-stone-600 dark:text-slate-300 font-medium mt-0.5">On orders over ₹1,999</p>
+                <div className="min-w-0 flex-1">
+                  <p className="text-[11px] sm:text-sm md:text-[15px] font-bold text-slate-900 dark:text-white leading-tight truncate">Free Shipping</p>
+                  <p className="text-[10px] sm:text-xs text-stone-500 dark:text-slate-400 font-medium mt-0.5 leading-tight truncate">Over ₹1,999</p>
                 </div>
               </div>
 
               <div className="h-8 sm:h-9 w-px bg-stone-300/80 dark:bg-slate-800 hidden md:block"></div>
 
               {/* Secure Payments */}
-              <div className="flex items-center gap-2.5 sm:gap-3.5">
-                <div className="w-8.5 h-8.5 sm:w-10 sm:h-10 md:w-11 md:h-11 rounded-full bg-stone-200/80 dark:bg-slate-800 flex items-center justify-center shrink-0 shadow-2xs">
+              <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-11 md:h-11 rounded-full bg-stone-100 dark:bg-slate-800 flex items-center justify-center shrink-0 shadow-2xs">
                   <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5 text-slate-900 dark:text-amber-400" />
                 </div>
-                <div className="min-w-0">
-                  <p className="text-xs sm:text-sm md:text-[15px] font-bold text-slate-900 dark:text-white leading-tight">Secure Payments</p>
-                  <p className="text-[11px] sm:text-xs text-stone-600 dark:text-slate-300 font-medium mt-0.5">100% safe & encrypted</p>
+                <div className="min-w-0 flex-1">
+                  <p className="text-[11px] sm:text-sm md:text-[15px] font-bold text-slate-900 dark:text-white leading-tight truncate">Secure Pay</p>
+                  <p className="text-[10px] sm:text-xs text-stone-500 dark:text-slate-400 font-medium mt-0.5 leading-tight truncate">100% Encrypted</p>
                 </div>
               </div>
 
               <div className="h-8 sm:h-9 w-px bg-stone-300/80 dark:bg-slate-800 hidden md:block"></div>
 
               {/* Easy Returns */}
-              <div className="flex items-center gap-2.5 sm:gap-3.5">
-                <div className="w-8.5 h-8.5 sm:w-10 sm:h-10 md:w-11 md:h-11 rounded-full bg-stone-200/80 dark:bg-slate-800 flex items-center justify-center shrink-0 shadow-2xs">
+              <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-11 md:h-11 rounded-full bg-stone-100 dark:bg-slate-800 flex items-center justify-center shrink-0 shadow-2xs">
                   <RotateCcw className="w-4 h-4 sm:w-5 sm:h-5 text-slate-900 dark:text-amber-400" />
                 </div>
-                <div className="min-w-0">
-                  <p className="text-xs sm:text-sm md:text-[15px] font-bold text-slate-900 dark:text-white leading-tight">Easy Returns</p>
-                  <p className="text-[11px] sm:text-xs text-stone-600 dark:text-slate-300 font-medium mt-0.5">Hassle-free within 7 days</p>
+                <div className="min-w-0 flex-1">
+                  <p className="text-[11px] sm:text-sm md:text-[15px] font-bold text-slate-900 dark:text-white leading-tight truncate">Easy Returns</p>
+                  <p className="text-[10px] sm:text-xs text-stone-500 dark:text-slate-400 font-medium mt-0.5 leading-tight truncate">7-Day Window</p>
                 </div>
               </div>
 
               <div className="h-8 sm:h-9 w-px bg-stone-300/80 dark:bg-slate-800 hidden md:block"></div>
 
               {/* Call Support */}
-              <div className="flex items-center gap-2.5 sm:gap-3.5">
-                <div className="w-8.5 h-8.5 sm:w-10 sm:h-10 md:w-11 md:h-11 rounded-full bg-stone-200/80 dark:bg-slate-800 flex items-center justify-center shrink-0 shadow-2xs">
+              <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-11 md:h-11 rounded-full bg-stone-100 dark:bg-slate-800 flex items-center justify-center shrink-0 shadow-2xs">
                   <Headphones className="w-4 h-4 sm:w-5 sm:h-5 text-slate-900 dark:text-amber-400" />
                 </div>
-                <div className="min-w-0">
-                  <p className="text-xs sm:text-sm md:text-[15px] font-bold text-slate-900 dark:text-white leading-tight">Call Support</p>
-                  <p className="text-[11px] sm:text-xs text-stone-600 dark:text-slate-300 font-medium mt-0.5">24/7 customer service</p>
+                <div className="min-w-0 flex-1">
+                  <p className="text-[11px] sm:text-sm md:text-[15px] font-bold text-slate-900 dark:text-white leading-tight truncate">Call Support</p>
+                  <p className="text-[10px] sm:text-xs text-stone-500 dark:text-slate-400 font-medium mt-0.5 leading-tight truncate">24/7 Service</p>
                 </div>
               </div>
             </div>
@@ -335,7 +335,7 @@ export const Home = () => {
               {/* Countdown Box */}
               <div className="flex items-center gap-2.5 bg-white dark:bg-[#131d2e] border border-orange-200/80 dark:border-orange-900/40 px-3.5 py-1.5 rounded-xl shadow-xs transition-colors">
                 <Clock className="w-3.5 h-3.5 text-orange-600 dark:text-orange-400 shrink-0" />
-                <span className="text-[15 px] text-zinc-600 dark:text-slate-300 font-semibold mr-0.5">Sale Ends In:</span>
+                <span className="text-xs sm:text-sm text-zinc-600 dark:text-slate-300 font-semibold mr-0.5">Sale Ends In:</span>
                 <div className="flex items-center gap-1 font-mono text-xs font-black">
                   <span className="bg-zinc-100 dark:bg-slate-800 px-2 py-0.5 rounded border border-zinc-200 dark:border-slate-700 text-zinc-900 dark:text-white">
                     {String(timeLeft.hours).padStart(2, '0')}h
@@ -353,7 +353,7 @@ export const Home = () => {
             </div>
 
             {/* Flash Deals Grid - 4 Cards Per Row on Desktop with spacious gaps */}
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-6 lg:gap-7 xl:gap-8">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-7 xl:gap-8">
               {flashDeals.map((product) => (
                 <ProductCard key={product._id} product={product} />
               ))}
@@ -437,7 +437,7 @@ export const Home = () => {
           </div>
 
           {/* Featured Catalog Grid - 4 Cards Per Row on Desktop with spacious gaps */}
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-6 lg:gap-7 xl:gap-8">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-7 xl:gap-8">
             {featuredProducts.map((product) => (
               <ProductCard key={product._id} product={product} />
             ))}
