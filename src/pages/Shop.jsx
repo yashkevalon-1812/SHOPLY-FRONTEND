@@ -252,9 +252,9 @@ export const Shop = () => {
 
         {/* Main Layout: Sidebar Filters + Product Grid */}
         <div className="flex flex-col lg:flex-row gap-6 items-start">
-          {/* Desktop Filter Sidebar (Proper Balanced Width: 240px - 256px) */}
-          <aside className="hidden lg:block w-60 xl:w-64 shrink-0">
-            <div className="bg-zinc-50 dark:bg-[#0f172a] border border-zinc-200 dark:border-slate-800 rounded-2xl p-4 space-y-4.5 sticky top-20 shadow-2xs">
+          {/* Desktop Filter Sidebar (Fixed / Sticky in View While Products Scroll) */}
+          <aside className="hidden lg:block w-60 xl:w-64 shrink-0 sticky top-20 z-10 self-start">
+            <div className="bg-zinc-50 dark:bg-[#0f172a] border border-zinc-200 dark:border-slate-800 rounded-2xl p-4 space-y-4.5 shadow-2xs">
               <div className="flex items-center justify-between border-b border-zinc-200 dark:border-slate-800 pb-3">
                 <span className="text-xs font-bold text-zinc-900 dark:text-white flex items-center gap-1.5">
                   <SlidersHorizontal className="w-3.5 h-3.5 text-amber-600" /> Filter Selection
