@@ -198,7 +198,7 @@ export const Home = () => {
         </div>
 
         {/* Middle Main Content */}
-        <div className="relative z-10 w-full px-4 sm:px-6 lg:px-12 flex-1 flex flex-col justify-center pt-3 sm:pt-6 md:pt-0 pb-3 sm:pb-6">
+        <div className="relative z-10 w-full max-w-[1520px] mx-auto px-4 sm:px-6 lg:px-12 flex-1 flex flex-col justify-center pt-3 sm:pt-6 md:pt-0 pb-3 sm:pb-6">
           <div
             key={currentSlide}
             className="max-w-xl lg:max-w-2xl space-y-3 sm:space-y-4 text-left animate-in fade-in duration-500"
@@ -247,7 +247,7 @@ export const Home = () => {
         </div>
 
         {/* Bottom Bar: Trust Badges (Compact, clean 2x2 grid on mobile, spacious flex row on desktop) */}
-        <div className="relative z-10 w-full px-3.5 sm:px-6 lg:px-12 pt-3 sm:pt-8 md:pt-4 pb-3 sm:pb-8 lg:pb-12">
+        <div className="relative z-10 w-full max-w-[1520px] mx-auto px-3.5 sm:px-6 lg:px-12 pt-3 sm:pt-8 md:pt-4 pb-3 sm:pb-8 lg:pb-12">
           {/* Trust Badges: 2x2 grid on mobile inside a frosted card, flex row on md+ */}
           <div className="p-3 sm:p-4 md:p-0 rounded-2xl bg-white/90 dark:bg-slate-900/90 md:bg-transparent md:dark:bg-transparent backdrop-blur-md md:backdrop-blur-none border border-stone-200/80 dark:border-slate-800/80 md:border-none shadow-xs md:shadow-none">
             <div className="grid grid-cols-2 md:flex md:flex-wrap items-center gap-x-2.5 sm:gap-x-6 gap-y-3 sm:gap-y-4 md:gap-7 lg:gap-8">
@@ -312,7 +312,7 @@ export const Home = () => {
           id="mega-sale"
           className="py-6 sm:py-8 bg-gradient-to-b from-orange-50/40 via-amber-50/20 to-white dark:from-[#0e1726] dark:via-[#0b1120] dark:to-[#0b1120] border-b border-zinc-200 dark:border-slate-800 transition-colors"
         >
-          <div className="px-4 sm:px-6 lg:px-8">
+          <div className="max-w-[1520px] mx-auto px-4 sm:px-6 lg:px-8">
             {/* Header with Countdown Clock */}
             <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-3 sm:gap-4 mb-4 sm:mb-5">
               <div>
@@ -366,7 +366,7 @@ export const Home = () => {
           3. CURATED CATEGORIES (Minimal Spacing)
          ========================================================================= */}
       <section className="py-6 sm:py-8 border-b border-zinc-200 dark:border-slate-800 transition-colors">
-        <div className="px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1520px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-end mb-4 sm:mb-5">
             <div>
               <p className="text-[11px] font-bold uppercase tracking-widest text-amber-600 dark:text-amber-400 mb-0.5">
@@ -417,7 +417,7 @@ export const Home = () => {
           4. FEATURED MARKETPLACE ICONS (Minimal Spacing)
          ========================================================================= */}
       <section className="py-6 sm:py-8 border-b border-zinc-200 dark:border-slate-800 transition-colors">
-        <div className="px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1520px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-3 mb-4 sm:mb-5">
             <div>
               <div className="inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-widest text-amber-600 dark:text-amber-400 mb-0.5">
@@ -449,7 +449,7 @@ export const Home = () => {
           5. BRAND ETHOS / WHY SHOPLY (Minimal Spacing)
          ========================================================================= */}
       <section className="py-6 sm:py-8 bg-zinc-50 dark:bg-[#090e1a] transition-colors">
-        <div className="px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1520px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
             <div className="lg:col-span-6 space-y-3.5">
               <span className="text-[11px] font-black uppercase tracking-widest text-amber-600 dark:text-amber-400">

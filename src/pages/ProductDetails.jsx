@@ -390,7 +390,7 @@ export const ProductDetails = () => {
                   className="w-full bg-zinc-950 hover:bg-zinc-800 dark:bg-amber-500 dark:hover:bg-amber-400 dark:text-slate-950 disabled:opacity-50 text-white font-black text-sm py-4 rounded-2xl flex items-center justify-center gap-2 shadow-xl shadow-zinc-950/10 dark:shadow-amber-500/10 transition-all hover:scale-[1.01] cursor-pointer"
                 >
                   <Zap className="w-4 h-4 text-amber-400 dark:text-slate-950 fill-amber-400 dark:fill-slate-950" />
-                  <span>Buy Now — Instant Direct Checkout</span>
+                  <span>Buy Now<span className="hidden sm:inline"> — Instant Direct Checkout</span></span>
                 </button>
 
                 <button
@@ -399,7 +399,7 @@ export const ProductDetails = () => {
                   className="w-full bg-zinc-100 hover:bg-zinc-200 dark:bg-slate-800 dark:hover:bg-slate-700 disabled:opacity-50 text-zinc-900 dark:text-white font-bold text-sm py-3.5 rounded-2xl flex items-center justify-center gap-2 border border-zinc-200 dark:border-slate-700 transition-all cursor-pointer"
                 >
                   <ShoppingBag className="w-4 h-4 text-zinc-600 dark:text-slate-300" />
-                  <span>Add to Shopping Cart</span>
+                  <span>Add to <span className="hidden sm:inline">Shopping </span>Cart</span>
                 </button>
               </div>
             </div>

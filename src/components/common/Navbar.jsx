@@ -710,91 +710,84 @@ export const Navbar = () => {
         Wishlist, Account & Lists, Cart
        ========================================================================= */}
     {/* =========================================================================
-        MOBILE BOTTOM NAVIGATION DOCK (Image 1 Phone Screen with Image 2 Icons)
-        Wishlist, Account & Lists, Cart - Clean squircle cards with exact icon styling
+        MOBILE BOTTOM NAVIGATION DOCK (Proper Balanced Grid Spacing & Icon Size)
+        Wishlist, Account & Lists, Cart - 3-Col Even Grid, 52px Squircles, 24px Icons
        ========================================================================= */}
     <nav
       aria-label="Mobile Navigation"
       className="fixed bottom-0 inset-x-0 z-50 lg:hidden bg-white/95 dark:bg-[#0c1427]/95 backdrop-blur-xl border-t border-slate-200/90 dark:border-slate-800/90 shadow-[0_-4px_25px_rgba(0,0,0,0.08)] dark:shadow-[0_-4px_25px_rgba(0,0,0,0.6)] pb-[env(safe-area-inset-bottom,0px)]"
       style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 9999 }}
     >
-      <div className="flex items-center justify-center gap-6 sm:gap-8 h-16 max-w-sm mx-auto px-4">
-        {/* 1. Wishlist (Image 2 Card: Slate outline heart) */}
+      <div className="grid grid-cols-3 place-items-center h-16 max-w-sm mx-auto px-6">
+        {/* 1. Wishlist (Card: Squircle card with dark outline heart) */}
         <Link
           to="/wishlist"
           onClick={() => setMobileAccountSheetOpen(false)}
           title="Wishlist"
           aria-label="Wishlist"
-          className="group"
+          className="group block"
         >
           <div
-            className={`relative w-12 h-12 rounded-2xl flex items-center justify-center border transition-all duration-200 shadow-xs active:scale-95 ${
-              location.pathname === '/wishlist'
-                ? 'bg-rose-50/40 dark:bg-rose-950/20 border-rose-400 ring-2 ring-rose-400/20 shadow-sm'
-                : 'bg-white dark:bg-slate-900 border-slate-200/90 dark:border-slate-700/80 hover:border-slate-300 dark:hover:border-slate-600'
-            }`}
+            className="relative flex items-center justify-center bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-700/80 shadow-xs hover:border-slate-300 dark:hover:border-slate-600 transition-all duration-200 active:scale-95"
+            style={{ width: '52px', height: '52px', borderRadius: '16px' }}
           >
             <Heart
-              className={`w-6 h-6 transition-transform group-hover:scale-105 ${
-                location.pathname === '/wishlist'
-                  ? 'text-rose-500 fill-rose-500'
-                  : 'text-slate-700 dark:text-slate-200'
-              }`}
-              strokeWidth={1.8}
+              className="w-6 h-6 text-slate-800 dark:text-slate-100 transition-transform group-hover:scale-105"
+              strokeWidth={2}
             />
             {wishlistCount > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 flex h-5 min-w-[20px] px-1 items-center justify-center rounded-full text-[10px] font-black shadow-md bg-rose-600 text-white">
+              <span className="absolute -top-1 -right-1 flex h-4.5 min-w-[18px] px-1 items-center justify-center rounded-full text-[9px] font-black shadow-md bg-rose-600 text-white">
                 {wishlistCount}
               </span>
             )}
           </div>
         </Link>
 
-        {/* 2. Account & Lists (Image 2 Card: Peach circle with amber user avatar) */}
+        {/* 2. Account & Lists (Card: Squircle card with peach circular disc & amber user) */}
         <button
           type="button"
           onClick={() => setMobileAccountSheetOpen(!mobileAccountSheetOpen)}
           title="Account & Lists"
           aria-label="Account & Lists"
-          className="group cursor-pointer"
+          className="group block cursor-pointer"
         >
           <div
-            className={`relative w-12 h-12 rounded-2xl flex items-center justify-center border transition-all duration-200 shadow-xs active:scale-95 ${
-              mobileAccountSheetOpen || ['/profile', '/orders', '/login', '/register'].includes(location.pathname)
-                ? 'bg-amber-50/40 dark:bg-amber-950/20 border-amber-400 ring-2 ring-amber-400/20 shadow-sm'
-                : 'bg-white dark:bg-slate-900 border-slate-200/90 dark:border-slate-700/80 hover:border-slate-300 dark:hover:border-slate-600'
-            }`}
+            className="relative flex items-center justify-center bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-700/80 shadow-xs hover:border-slate-300 dark:hover:border-slate-600 transition-all duration-200 active:scale-95"
+            style={{ width: '52px', height: '52px', borderRadius: '16px' }}
           >
-            <div className="w-8 h-8 rounded-full bg-[#fef3c7] dark:bg-amber-950/70 flex items-center justify-center transition-transform group-hover:scale-105">
-              <User className="w-4.5 h-4.5 text-[#d97706] dark:text-amber-400" strokeWidth={2} />
+            <div
+              className="w-9 h-9 rounded-full flex items-center justify-center transition-transform group-hover:scale-105"
+              style={{ backgroundColor: '#ffedd5' }}
+            >
+              <User
+                className="w-5 h-5 text-[#d97706]"
+                strokeWidth={2.2}
+                style={{ color: '#d97706' }}
+              />
             </div>
           </div>
         </button>
 
-        {/* 3. Shopping Cart (Image 2 Card: Slate outline cart with top-right amber count badge) */}
+        {/* 3. Shopping Cart (Card: Squircle card with slate outline cart & orange count badge) */}
         <Link
           to="/cart"
           onClick={() => setMobileAccountSheetOpen(false)}
           title="Shopping Cart"
           aria-label="Shopping Cart"
-          className="group"
+          className="group block"
         >
           <div
-            className={`relative w-12 h-12 rounded-2xl flex items-center justify-center border transition-all duration-200 shadow-xs active:scale-95 ${
-              location.pathname === '/cart'
-                ? 'bg-amber-50/40 dark:bg-amber-950/20 border-amber-400 ring-2 ring-amber-400/20 shadow-sm'
-                : 'bg-white dark:bg-slate-900 border-slate-200/90 dark:border-slate-700/80 hover:border-slate-300 dark:hover:border-slate-600'
-            }`}
+            className="relative flex items-center justify-center bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-700/80 shadow-xs hover:border-slate-300 dark:hover:border-slate-600 transition-all duration-200 active:scale-95"
+            style={{ width: '52px', height: '52px', borderRadius: '16px' }}
           >
             <ShoppingCart
-              className={`w-6 h-6 transition-transform group-hover:scale-105 ${
-                location.pathname === '/cart'
-                  ? 'text-amber-500'
-                  : 'text-slate-700 dark:text-slate-200'
-              }`}
-              strokeWidth={1.8}
+              className="w-6 h-6 text-slate-800 dark:text-slate-100 transition-transform group-hover:scale-105"
+              strokeWidth={2}
             />
-            <span className="absolute -top-2 -right-2 flex h-5.5 min-w-[22px] px-1 items-center justify-center rounded-full text-[11px] font-black shadow-md bg-amber-500 text-slate-950">
+            <span
+              className="absolute -top-1.5 -right-1.5 flex h-5.5 min-w-[22px] px-1 items-center justify-center rounded-full text-[11px] font-black shadow-md bg-amber-500 text-slate-950"
+              style={{ backgroundColor: '#f59e0b', color: '#020617' }}
+            >
               {totalItemsCount || 0}
             </span>
           </div>
