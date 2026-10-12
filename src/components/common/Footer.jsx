@@ -7,6 +7,19 @@ export const Footer = () => {
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
 
+  // Instantly reset scroll to top on any footer navigation click
+  const scrollToTop = () => {
+    try {
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    } catch (_) {
+      window.scrollTo(0, 0);
+    }
+    if (document.documentElement) document.documentElement.scrollTop = 0;
+    if (document.body) document.body.scrollTop = 0;
+    const root = document.getElementById('root');
+    if (root) root.scrollTop = 0;
+  };
+
   const handleSubscribe = (e) => {
     e.preventDefault();
     if (newsletterEmail.trim()) {
@@ -94,7 +107,7 @@ export const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-10">
           {/* Brand Bio Column */}
           <div className="lg:col-span-2 space-y-3 sm:space-y-4">
-            <Link to="/" className="inline-block group" aria-label="Shoply Home">
+            <Link to="/" onClick={scrollToTop} className="inline-block group" aria-label="Shoply Home">
               <ShoplyLogo size="lg" />
             </Link>
             <p className="text-xs sm:text-sm text-zinc-600 dark:text-slate-300 leading-relaxed max-w-sm font-normal">
@@ -120,32 +133,32 @@ export const Footer = () => {
                 </h3>
                 <ul className="space-y-1.5 sm:space-y-2 text-xs sm:text-sm text-zinc-600 dark:text-slate-300 font-medium">
                   <li>
-                    <Link to="/shop?category=Luxury%20Watches" className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors block py-0.5">
+                    <Link to="/shop?category=Luxury%20Watches" onClick={scrollToTop} className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors block py-0.5">
                       Luxury Watches
                     </Link>
                   </li>
                   <li>
-                    <Link to="/shop?category=Audio" className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors block py-0.5">
+                    <Link to="/shop?category=Audio" onClick={scrollToTop} className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors block py-0.5">
                       Acoustic & Audio
                     </Link>
                   </li>
                   <li>
-                    <Link to="/shop?category=Electronics" className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors block py-0.5">
+                    <Link to="/shop?category=Electronics" onClick={scrollToTop} className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors block py-0.5">
                       Next-Gen Tech
                     </Link>
                   </li>
                   <li>
-                    <Link to="/shop?category=Fashion" className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors block py-0.5">
+                    <Link to="/shop?category=Fashion" onClick={scrollToTop} className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors block py-0.5">
                       Apparel & Leather
                     </Link>
                   </li>
                   <li>
-                    <Link to="/shop?category=Footwear" className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors block py-0.5">
+                    <Link to="/shop?category=Footwear" onClick={scrollToTop} className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors block py-0.5">
                       Designer Footwear
                     </Link>
                   </li>
                   <li>
-                    <Link to="/shop?category=Home%20%26%20Living" className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors block py-0.5">
+                    <Link to="/shop?category=Home%20%26%20Living" onClick={scrollToTop} className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors block py-0.5">
                       Home & Living
                     </Link>
                   </li>
@@ -159,32 +172,32 @@ export const Footer = () => {
                 </h3>
                 <ul className="space-y-1.5 sm:space-y-2 text-xs sm:text-sm text-zinc-600 dark:text-slate-300 font-medium">
                   <li>
-                    <Link to="/orders" className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors block py-0.5">
+                    <Link to="/orders" onClick={scrollToTop} className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors block py-0.5">
                       Track Orders
                     </Link>
                   </li>
                   <li>
-                    <Link to="/contact" className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors block py-0.5">
+                    <Link to="/contact" onClick={scrollToTop} className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors block py-0.5">
                       Support Center
                     </Link>
                   </li>
                   <li>
-                    <Link to="/about" className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors block py-0.5">
+                    <Link to="/about" onClick={scrollToTop} className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors block py-0.5">
                       Our Provenance
                     </Link>
                   </li>
                   <li>
-                    <Link to="/seller/register" className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors block py-0.5">
+                    <Link to="/seller/register" onClick={scrollToTop} className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors block py-0.5">
                       Become a Seller
                     </Link>
                   </li>
                   <li>
-                    <Link to="/seller/login" className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors block py-0.5">
+                    <Link to="/seller/login" onClick={scrollToTop} className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors block py-0.5">
                       Seller Studio
                     </Link>
                   </li>
                   <li>
-                    <Link to="/contact" className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors block py-0.5">
+                    <Link to="/contact" onClick={scrollToTop} className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors block py-0.5">
                       FAQs & Warranty
                     </Link>
                   </li>
@@ -236,13 +249,13 @@ export const Footer = () => {
         <div className="mt-8 pt-5 sm:mt-10 sm:pt-6 border-t border-zinc-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left text-[11px] sm:text-xs text-zinc-500 dark:text-slate-400">
           <p>© {new Date().getFullYear()} Shoply Inc. All rights reserved.</p>
           <div className="flex flex-wrap items-center justify-center sm:justify-end gap-x-4 gap-y-1.5 font-medium">
-            <Link to="/about" className="hover:text-zinc-900 dark:hover:text-white transition-colors">
+            <Link to="/about" onClick={scrollToTop} className="hover:text-zinc-900 dark:hover:text-white transition-colors">
               Privacy Policy
             </Link>
-            <Link to="/about" className="hover:text-zinc-900 dark:hover:text-white transition-colors">
+            <Link to="/about" onClick={scrollToTop} className="hover:text-zinc-900 dark:hover:text-white transition-colors">
               Terms of Service
             </Link>
-            <Link to="/about" className="hover:text-zinc-900 dark:hover:text-white transition-colors">
+            <Link to="/about" onClick={scrollToTop} className="hover:text-zinc-900 dark:hover:text-white transition-colors">
               Security Audits
             </Link>
           </div>
@@ -251,3 +264,4 @@ export const Footer = () => {
     </footer>
   );
 };
+export default Footer;
