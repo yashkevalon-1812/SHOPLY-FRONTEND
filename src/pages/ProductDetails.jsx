@@ -36,7 +36,7 @@ export const ProductDetails = () => {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState('');
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState(0);
   const [activeTab, setActiveTab] = useState('description');
 
   const [reviewRating, setReviewRating] = useState(5);
@@ -346,7 +346,7 @@ export const ProductDetails = () => {
                   <span className="text-xs font-bold text-zinc-700 dark:text-slate-300">Quantity:</span>
                   <div className="flex items-center bg-zinc-50 dark:bg-slate-800/80 border border-zinc-200 dark:border-slate-700 rounded-xl">
                     <button
-                      onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                      onClick={() => setQuantity((q) => Math.max(0, q - 1))}
                       className="p-2.5 text-zinc-600 dark:text-slate-400 hover:text-zinc-950 dark:hover:text-white transition-colors cursor-pointer"
                     >
                       <Minus className="w-3.5 h-3.5" />
@@ -382,23 +382,23 @@ export const ProductDetails = () => {
                 </div>
               )}
 
-              {/* Conversion Buttons: Buy Now & Add to Cart */}
-              <div className="space-y-2.5 pt-2">
-                <button
-                  onClick={handleBuyNow}
-                  disabled={product.stock === 0}
-                  className="w-full bg-zinc-950 hover:bg-zinc-800 dark:bg-amber-500 dark:hover:bg-amber-400 dark:text-slate-950 disabled:opacity-50 text-white font-black text-sm py-4 rounded-2xl flex items-center justify-center shadow-xl shadow-zinc-950/10 dark:shadow-amber-500/10 transition-all hover:scale-[1.01] cursor-pointer"
-                >
-                  <span>Buy Now<span className="hidden sm:inline"> — Instant Direct Checkout</span></span>
-                </button>
-
+              {/* Conversion Buttons: Add to Cart & Buy Now (Side by Side) */}
+              <div className="grid grid-cols-2 gap-2 sm:gap-3 pt-2">
                 <button
                   onClick={handleAddToCart}
                   disabled={product.stock === 0}
-                  className="w-full bg-zinc-100 hover:bg-zinc-200 dark:bg-slate-800 dark:hover:bg-slate-700 disabled:opacity-50 text-zinc-900 dark:text-white font-bold text-sm py-3.5 rounded-2xl flex items-center justify-center gap-2 border border-zinc-200 dark:border-slate-700 transition-all cursor-pointer"
+                  className="w-full bg-zinc-100 hover:bg-zinc-200 dark:bg-slate-800 dark:hover:bg-slate-700 disabled:opacity-50 text-zinc-900 dark:text-white font-bold text-xs sm:text-sm py-3.5 sm:py-4 rounded-xl sm:rounded-2xl flex items-center justify-center gap-1.5 sm:gap-2 border border-zinc-200 dark:border-slate-700 transition-all cursor-pointer whitespace-nowrap shadow-xs"
                 >
-                  <ShoppingBag className="w-4 h-4 text-zinc-600 dark:text-slate-300" />
-                  <span>Add to <span className="hidden sm:inline">Shopping </span>Cart</span>
+                  <ShoppingBag className="w-4 h-4 text-zinc-600 dark:text-slate-300 shrink-0" />
+                  <span>Add to Cart</span>
+                </button>
+
+                <button
+                  onClick={handleBuyNow}
+                  disabled={product.stock === 0}
+                  className="w-full bg-zinc-950 hover:bg-zinc-800 dark:bg-amber-500 dark:hover:bg-amber-400 dark:text-slate-950 disabled:opacity-50 text-white font-black text-xs sm:text-sm py-3.5 sm:py-4 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-xl shadow-zinc-950/10 dark:shadow-amber-500/10 transition-all hover:scale-[1.01] cursor-pointer whitespace-nowrap"
+                >
+                  <span>Buy Now</span>
                 </button>
               </div>
             </div>
