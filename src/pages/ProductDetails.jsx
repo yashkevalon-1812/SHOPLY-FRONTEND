@@ -387,9 +387,8 @@ export const ProductDetails = () => {
                 <button
                   onClick={handleBuyNow}
                   disabled={product.stock === 0}
-                  className="w-full bg-zinc-950 hover:bg-zinc-800 dark:bg-amber-500 dark:hover:bg-amber-400 dark:text-slate-950 disabled:opacity-50 text-white font-black text-sm py-4 rounded-2xl flex items-center justify-center gap-2 shadow-xl shadow-zinc-950/10 dark:shadow-amber-500/10 transition-all hover:scale-[1.01] cursor-pointer"
+                  className="w-full bg-zinc-950 hover:bg-zinc-800 dark:bg-amber-500 dark:hover:bg-amber-400 dark:text-slate-950 disabled:opacity-50 text-white font-black text-sm py-4 rounded-2xl flex items-center justify-center shadow-xl shadow-zinc-950/10 dark:shadow-amber-500/10 transition-all hover:scale-[1.01] cursor-pointer"
                 >
-                  <Zap className="w-4 h-4 text-amber-400 dark:text-slate-950 fill-amber-400 dark:fill-slate-950" />
                   <span>Buy Now<span className="hidden sm:inline"> — Instant Direct Checkout</span></span>
                 </button>
 
