@@ -470,7 +470,10 @@ export const Navbar = () => {
                                   </span>
                                 )}
                               </div>
-                              <p className="text-xs sm:text-[13px] font-semibold text-slate-900 dark:text-white line-clamp-1 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
+                              <p
+                                style={{ WebkitTextStroke: '0.22px currentColor' }}
+                                className="font-product-title text-xs sm:text-[13.5px] font-extrabold text-slate-950 dark:text-white line-clamp-1 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors tracking-tight leading-snug"
+                              >
                                 {product.title}
                               </p>
                               <div className="flex items-baseline gap-1.5 mt-0.5">

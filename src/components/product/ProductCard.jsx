@@ -146,7 +146,10 @@ export const ProductCard = ({ product }) => {
           </div>
 
           <Link to={`/product/${product._id}`} className="block">
-            <h3 className="font-bold text-xs sm:text-sm text-zinc-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2 leading-snug mb-1.5">
+            <h3
+              style={{ WebkitTextStroke: '0.22px currentColor' }}
+              className="font-product-title font-extrabold text-xs sm:text-[13.5px] text-zinc-950 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors line-clamp-2 leading-[1.38] tracking-tight mb-1.5"
+            >
               {product.title}
             </h3>
           </Link>

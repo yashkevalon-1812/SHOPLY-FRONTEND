@@ -191,13 +191,20 @@ export const CompareModal = () => {
                           />
                         </div>
 
-                        <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 block truncate">
-                          {item.category}
-                        </span>
+                        <div className="mb-1">
+                          <span className="inline-flex items-center text-[9px] sm:text-[9.5px] font-bold uppercase tracking-[0.08em] text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 border border-amber-200/60 dark:border-amber-800/50 px-2 py-0.5 rounded-md truncate max-w-full">
+                            {item.category}
+                          </span>
+                        </div>
                         <Link
                           to={`/product/${item._id}`}
                           onClick={closeCompare}
-                          className="block font-bold text-xs sm:text-sm text-zinc-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 line-clamp-2 mt-0.5 leading-snug"
+                          style={{
+                            fontFamily: "'Google Sans', Roboto, sans-serif",
+                            WebkitTextStroke: '0.28px currentColor',
+                          }}
+                          className="block font-product-title font-extrabold text-[13px] sm:text-[14px] md:text-[14.5px] text-slate-950 dark:text-white hover:text-amber-600 dark:hover:text-amber-400 line-clamp-2 mt-0.5 leading-[1.38] tracking-tight transition-colors duration-150"
+                          title={item.title}
                         >
                           {item.title}
                         </Link>
