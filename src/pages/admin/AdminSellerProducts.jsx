@@ -818,11 +818,11 @@ export const AdminSellerProducts = () => {
                                         <button
                                           type="button"
                                           onClick={() => handleApproveProduct(p._id, p.title)}
-                                          className="flex items-center gap-1 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer hover:scale-105"
+                                          className="p-1.5 text-lg font-bold text-zinc-900 dark:text-white hover:scale-125 transition-transform cursor-pointer leading-none inline-flex items-center justify-center"
                                           title="Approve this product and publish to live storefront"
+                                          aria-label="Approve"
                                         >
-                                          <Check className="w-3.5 h-3.5" />
-                                          <span>Approve</span>
+                                          ✓
                                         </button>
                                       )}
 
@@ -831,11 +831,11 @@ export const AdminSellerProducts = () => {
                                         <button
                                           type="button"
                                           onClick={() => openRejectModal(p)}
-                                          className="flex items-center gap-1 px-2.5 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 dark:bg-rose-950/40 dark:hover:bg-rose-900/60 dark:text-rose-300 border border-rose-200 dark:border-rose-900 rounded-xl text-xs font-bold transition-all cursor-pointer"
+                                          className="p-1.5 text-lg font-bold text-zinc-900 dark:text-white hover:scale-125 transition-transform cursor-pointer leading-none inline-flex items-center justify-center"
                                           title="Reject this product listing"
+                                          aria-label="Reject"
                                         >
-                                          <X className="w-3.5 h-3.5" />
-                                          <span>Reject</span>
+                                          ✘
                                         </button>
                                       )}
 
@@ -866,11 +866,11 @@ export const AdminSellerProducts = () => {
                                         <button
                                           type="button"
                                           onClick={() => handleApproveProduct(p._id, p.title)}
-                                          className="flex items-center gap-1 px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white dark:bg-amber-500 dark:text-slate-950 rounded-xl text-xs font-bold transition-all cursor-pointer"
+                                          className="p-1.5 text-lg font-bold text-zinc-900 dark:text-white hover:scale-125 transition-transform cursor-pointer leading-none inline-flex items-center justify-center"
                                           title="Re-approve this product"
+                                          aria-label="Re-Approve"
                                         >
-                                          <Check className="w-3.5 h-3.5" />
-                                          <span>Re-Approve</span>
+                                          ✓
                                         </button>
                                       )}
 

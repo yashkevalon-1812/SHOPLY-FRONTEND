@@ -203,21 +203,23 @@ export const AdminDashboard = () => {
                   )}
                 </div>
 
-                <div className="flex items-center gap-2 w-full sm:w-auto shrink-0">
+                <div className="flex items-center gap-3 shrink-0">
                   <button
                     onClick={() => handleQuickStatusUpdate(seller._id, 'active')}
-                    className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3.5 py-2 rounded-xl shadow-xs transition-all text-xs"
+                    className="p-1.5 text-lg font-bold text-zinc-900 dark:text-white hover:scale-125 transition-transform cursor-pointer leading-none inline-flex items-center justify-center"
+                    title="Approve Seller"
+                    aria-label="Approve"
                   >
-                    <Check className="w-3.5 h-3.5" />
-                    <span>Approve</span>
+                    ✓
                   </button>
 
                   <button
                     onClick={() => handleQuickStatusUpdate(seller._id, 'rejected')}
-                    className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 bg-white dark:bg-slate-900 hover:bg-rose-50 text-rose-700 dark:text-rose-400 border border-slate-200 dark:border-slate-800 hover:border-rose-200 px-3.5 py-2 rounded-xl transition-all text-xs font-semibold"
+                    className="p-1.5 text-lg font-bold text-zinc-900 dark:text-white hover:scale-125 transition-transform cursor-pointer leading-none inline-flex items-center justify-center"
+                    title="Reject Seller"
+                    aria-label="Reject"
                   >
-                    <X className="w-3.5 h-3.5" />
-                    <span>Reject</span>
+                    ✘
                   </button>
                 </div>
               </div>

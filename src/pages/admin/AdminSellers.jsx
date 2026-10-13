@@ -179,11 +179,11 @@ export const AdminSellers = () => {
                             onClick={() =>
                               handleUpdateStatus(seller._id, 'active', seller.shopName)
                             }
-                            className="flex items-center gap-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-xl shadow-xs transition-all text-xs"
+                            className="p-1.5 text-lg font-bold text-zinc-900 dark:text-white hover:scale-125 transition-transform cursor-pointer leading-none inline-flex items-center justify-center"
                             title="Approve & Activate Seller"
+                            aria-label="Approve Active"
                           >
-                            <Check className="w-3.5 h-3.5" />
-                            <span>Approve Active</span>
+                            ✓
                           </button>
                         )}
 
@@ -192,11 +192,11 @@ export const AdminSellers = () => {
                             onClick={() =>
                               handleUpdateStatus(seller._id, 'rejected', seller.shopName)
                             }
-                            className="flex items-center gap-1 bg-white hover:bg-rose-50 text-rose-700 border border-slate-200 hover:border-rose-200 px-3 py-1.5 rounded-xl transition-all text-xs font-semibold"
+                            className="p-1.5 text-lg font-bold text-zinc-900 dark:text-white hover:scale-125 transition-transform cursor-pointer leading-none inline-flex items-center justify-center"
                             title="Reject or Suspend Seller"
+                            aria-label="Reject"
                           >
-                            <X className="w-3.5 h-3.5" />
-                            <span>Reject</span>
+                            ✘
                           </button>
                         )}
 
