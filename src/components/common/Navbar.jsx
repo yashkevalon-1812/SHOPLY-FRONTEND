@@ -16,6 +16,8 @@ import {
   Moon,
   ArrowRight,
   Package,
+  Loader2,
+  Star,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
@@ -23,6 +25,8 @@ import { useTheme } from '../../context/ThemeContext';
 import { useWishlist } from '../../context/WishlistContext';
 import { NotificationDropdown } from './NotificationDropdown';
 import { ShoplyLogoMark } from './ShoplyLogo';
+import { formatINR } from '../../utils/format';
+import { handleImageError, DEFAULT_PRODUCT_PLACEHOLDER } from '../../utils/imageHelper';
 import api from '../../api/axios';
 
 export const Navbar = () => {
@@ -34,6 +38,9 @@ export const Navbar = () => {
   const location = useLocation();
 
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchTotal, setSearchTotal] = useState(0);
   const [accountDropdownOpen, setAccountDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileAccountSheetOpen, setMobileAccountSheetOpen] = useState(false);
@@ -117,6 +124,46 @@ export const Navbar = () => {
     return () => clearTimeout(timer);
   }, [location.pathname]);
 
+  // Live Instant Search Effect: automatically shows matching products as user types (no Enter key needed)
+  useEffect(() => {
+    const cleanQuery = searchQuery.trim();
+    if (!cleanQuery || !isSearchOpen) {
+      setSearchResults([]);
+      setIsSearching(false);
+      setSearchTotal(0);
+      return;
+    }
+
+    setIsSearching(true);
+    const timer = setTimeout(async () => {
+      try {
+        const { data } = await api.get(`/products?keyword=${encodeURIComponent(cleanQuery)}&limit=6`);
+        const list = Array.isArray(data)
+          ? data
+          : Array.isArray(data?.products)
+          ? data.products
+          : [];
+        setSearchResults(list);
+        setSearchTotal(typeof data?.total === 'number' ? data.total : list.length);
+
+        // If currently on /shop, also update the page catalog live in real-time
+        if (location.pathname === '/shop') {
+          const nextParams = new URLSearchParams(location.search);
+          nextParams.set('keyword', cleanQuery);
+          navigate(`/shop?${nextParams.toString()}`, { replace: true });
+        }
+      } catch (err) {
+        console.error('Instant search error:', err);
+        setSearchResults([]);
+        setSearchTotal(0);
+      } finally {
+        setIsSearching(false);
+      }
+    }, 220);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery, isSearchOpen, location.pathname, location.search, navigate]);
+
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     const cleanQuery = searchQuery.trim();
@@ -127,6 +174,25 @@ export const Navbar = () => {
     }
     setMobileMenuOpen(false);
     setIsSearchOpen(false);
+    setSearchResults([]);
+  };
+
+  const handleSelectProduct = (productId) => {
+    setIsSearchOpen(false);
+    setSearchQuery('');
+    setSearchResults([]);
+    navigate(`/product/${productId}`);
+  };
+
+  const handleViewAllResults = () => {
+    const cleanQuery = searchQuery.trim();
+    setIsSearchOpen(false);
+    setSearchResults([]);
+    if (cleanQuery) {
+      navigate(`/shop?keyword=${encodeURIComponent(cleanQuery)}`);
+    } else {
+      navigate('/shop');
+    }
   };
 
   const handleDepartmentSelect = (catName) => {
@@ -287,6 +353,124 @@ export const Navbar = () => {
                     <X className="w-3.5 h-3.5" />
                   </button>
                 </form>
+              )}
+
+              {/* Live Instant Search Dropdown (Displays automatically without pressing Enter) */}
+              {isSearchOpen && searchQuery.trim().length > 0 && (
+                <div
+                  className="fixed top-15.5 left-2.5 right-2.5 sm:absolute sm:top-[calc(100%+8px)] sm:left-auto sm:right-0 w-auto sm:w-92 md:w-[420px] max-h-[75vh] sm:max-h-[480px] flex flex-col bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-1 duration-150"
+                  role="listbox"
+                  aria-label="Search results"
+                >
+                  {/* Results Header */}
+                  <div className="px-3.5 py-2.5 bg-slate-50/90 dark:bg-slate-900/90 border-b border-slate-200/80 dark:border-slate-800 flex items-center justify-between shrink-0">
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+                      <span className="text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">
+                        {isSearching ? 'Searching Catalog...' : `Found ${searchTotal} ${searchTotal === 1 ? 'item' : 'items'}`}
+                      </span>
+                    </div>
+                    {isSearching && (
+                      <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-500" />
+                    )}
+                  </div>
+
+                  {/* Results List */}
+                  <div className="flex-1 overflow-y-auto overscroll-contain divide-y divide-slate-100 dark:divide-slate-800/80">
+                    {isSearching && searchResults.length === 0 ? (
+                      <div className="p-4 space-y-3">
+                        {[1, 2, 3].map((n) => (
+                          <div key={n} className="flex items-center gap-3 animate-pulse">
+                            <div className="w-12 h-12 rounded-xl bg-slate-200 dark:bg-slate-800 shrink-0" />
+                            <div className="flex-1 space-y-1.5">
+                              <div className="h-3 bg-slate-200 dark:bg-slate-800 rounded w-3/4" />
+                              <div className="h-2.5 bg-slate-200 dark:bg-slate-800 rounded w-1/3" />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : searchResults.length === 0 ? (
+                      <div className="p-6 text-center">
+                        <div className="w-10 h-10 mx-auto mb-2 rounded-full bg-amber-500/10 text-amber-500 flex items-center justify-center">
+                          <Search className="w-5 h-5" />
+                        </div>
+                        <p className="text-xs font-semibold text-slate-800 dark:text-slate-200">
+                          No products found for "{searchQuery.trim()}"
+                        </p>
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
+                          Try searching for a different keyword or browse all items.
+                        </p>
+                      </div>
+                    ) : (
+                      searchResults.map((product) => {
+                        const effectivePrice =
+                          product.discountPrice > 0 ? product.discountPrice : product.price;
+                        const hasDiscount =
+                          product.discountPrice > 0 && product.discountPrice < product.price;
+                        const rawImg = Array.isArray(product.images) && product.images.length > 0
+                          ? product.images[0]
+                          : product.image || DEFAULT_PRODUCT_PLACEHOLDER;
+
+                        return (
+                          <button
+                            key={product._id}
+                            type="button"
+                            onClick={() => handleSelectProduct(product._id)}
+                            className="w-full text-left p-2.5 sm:p-3 hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors flex items-center gap-3 group cursor-pointer"
+                          >
+                            <img
+                              src={rawImg}
+                              alt={product.title}
+                              onError={(e) => handleImageError(e, rawImg)}
+                              className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 object-cover shrink-0 group-hover:scale-105 transition-transform"
+                            />
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-1.5 mb-0.5">
+                                <span className="text-[9px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 truncate">
+                                  {product.category || 'Product'}
+                                </span>
+                                {product.rating > 0 && (
+                                  <span className="inline-flex items-center text-[10px] text-amber-500 font-semibold shrink-0">
+                                    <Star className="w-2.5 h-2.5 fill-amber-400 text-amber-400 mr-0.5" />
+                                    {product.rating}
+                                  </span>
+                                )}
+                              </div>
+                              <p className="text-xs sm:text-[13px] font-semibold text-slate-900 dark:text-white line-clamp-1 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
+                                {product.title}
+                              </p>
+                              <div className="flex items-baseline gap-1.5 mt-0.5">
+                                <span className="text-xs font-bold text-slate-900 dark:text-white">
+                                  {formatINR(effectivePrice)}
+                                </span>
+                                {hasDiscount && (
+                                  <span className="text-[10px] text-slate-400 dark:text-slate-500 line-through">
+                                    {formatINR(product.price)}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                            <ArrowRight className="w-4 h-4 text-slate-300 dark:text-slate-600 group-hover:text-amber-500 group-hover:translate-x-0.5 transition-all shrink-0" />
+                          </button>
+                        );
+                      })
+                    )}
+                  </div>
+
+                  {/* Results Footer: Full Search Link */}
+                  {searchResults.length > 0 && (
+                    <div className="p-2 sm:p-2.5 bg-slate-50 dark:bg-slate-900/90 border-t border-slate-200/80 dark:border-slate-800 shrink-0">
+                      <button
+                        type="button"
+                        onClick={handleViewAllResults}
+                        className="w-full py-2 px-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-xs"
+                      >
+                        <span>See all {searchTotal} results for "{searchQuery.trim()}"</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  )}
+                </div>
               )}
             </div>
 

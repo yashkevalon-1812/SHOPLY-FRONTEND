@@ -21,6 +21,7 @@ export const Shop = () => {
 
   // Filters state initialized from URL query params
   const [keyword, setKeyword] = useState(searchParams.get('keyword') || '');
+  const [debouncedKeyword, setDebouncedKeyword] = useState(searchParams.get('keyword') || '');
   const [category, setCategory] = useState(searchParams.get('category') || 'All');
   const [minPrice, setMinPrice] = useState(searchParams.get('minPrice') || '');
   const [maxPrice, setMaxPrice] = useState(searchParams.get('maxPrice') || '');
@@ -31,6 +32,28 @@ export const Shop = () => {
   const [categoriesList, setCategoriesList] = useState([]);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
+  // Debounce keyword input so typing automatically filters catalog without spamming API or needing Enter
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedKeyword(keyword);
+    }, 280);
+    return () => clearTimeout(timer);
+  }, [keyword]);
+
+  // Sync URL search params when debouncedKeyword changes
+  useEffect(() => {
+    const currentParam = searchParams.get('keyword') || '';
+    if (currentParam !== debouncedKeyword) {
+      const nextParams = new URLSearchParams(searchParams);
+      if (debouncedKeyword) {
+        nextParams.set('keyword', debouncedKeyword);
+      } else {
+        nextParams.delete('keyword');
+      }
+      setSearchParams(nextParams, { replace: true });
+    }
+  }, [debouncedKeyword]);
+
   useEffect(() => {
     if (searchParams.get('filter') === 'wishlist') {
       navigate('/wishlist', { replace: true });
@@ -39,7 +62,10 @@ export const Shop = () => {
     const urlCategory = searchParams.get('category');
     const urlKeyword = searchParams.get('keyword');
     if (urlCategory) setCategory(urlCategory);
-    if (urlKeyword !== null) setKeyword(urlKeyword);
+    if (urlKeyword !== null && urlKeyword !== keyword) {
+      setKeyword(urlKeyword);
+      setDebouncedKeyword(urlKeyword);
+    }
   }, [searchParams, navigate]);
 
   useEffect(() => {
@@ -69,7 +95,7 @@ export const Shop = () => {
       setProductsError('');
       try {
         const params = new URLSearchParams();
-        if (keyword) params.append('keyword', keyword);
+        if (debouncedKeyword) params.append('keyword', debouncedKeyword);
         if (category && category !== 'All') params.append('category', category);
         if (minPrice) params.append('minPrice', minPrice);
         if (maxPrice) params.append('maxPrice', maxPrice);
@@ -101,7 +127,7 @@ export const Shop = () => {
     };
 
     fetchProducts();
-  }, [keyword, category, minPrice, maxPrice, rating, inStock, sort]);
+  }, [debouncedKeyword, category, minPrice, maxPrice, rating, inStock, sort]);
 
   useEffect(() => {
     if (mobileFilterOpen) {
@@ -163,6 +189,7 @@ export const Shop = () => {
 
   const handleRemoveKeyword = () => {
     setKeyword('');
+    setDebouncedKeyword('');
     const nextParams = new URLSearchParams(searchParams);
     nextParams.delete('keyword');
     setSearchParams(nextParams, { replace: true });
@@ -193,6 +220,7 @@ export const Shop = () => {
 
   const handleResetFilters = () => {
     setKeyword('');
+    setDebouncedKeyword('');
     setCategory('All');
     setMinPrice('');
     setMaxPrice('');
@@ -281,6 +309,16 @@ export const Shop = () => {
                     className="w-full bg-white dark:bg-[#131d2e] border border-zinc-200 dark:border-slate-700 rounded-xl px-3 py-1.5 pl-8.5 text-xs text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:border-zinc-400 dark:focus:border-slate-500 transition-colors"
                   />
                   <Search className="w-3.5 h-3.5 text-zinc-400 absolute left-2.5 top-2.5" />
+                  {keyword && (
+                    <button
+                      type="button"
+                      onClick={handleRemoveKeyword}
+                      className="absolute right-2.5 top-2.5 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 p-0.5 cursor-pointer"
+                      aria-label="Clear keyword search"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  )}
                 </div>
               </div>
 
