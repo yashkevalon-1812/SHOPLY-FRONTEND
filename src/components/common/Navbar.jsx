@@ -41,6 +41,7 @@ export const Navbar = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [searchTotal, setSearchTotal] = useState(0);
+  const [isDropdownDismissed, setIsDropdownDismissed] = useState(false);
   const [accountDropdownOpen, setAccountDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileAccountSheetOpen, setMobileAccountSheetOpen] = useState(false);
@@ -73,6 +74,13 @@ export const Navbar = () => {
       .catch(() => {});
   }, []);
 
+  const handleCloseSearch = () => {
+    setIsSearchOpen(false);
+    setSearchQuery('');
+    setSearchResults([]);
+    setIsDropdownDismissed(false);
+  };
+
   // Close dropdowns and search when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -80,7 +88,7 @@ export const Navbar = () => {
         setAccountDropdownOpen(false);
       }
       if (searchContainerRef.current && !searchContainerRef.current.contains(event.target)) {
-        setIsSearchOpen(false);
+        handleCloseSearch();
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -105,7 +113,7 @@ export const Navbar = () => {
       if (e.key === 'Escape') {
         setMobileMenuOpen(false);
         setAccountDropdownOpen(false);
-        setIsSearchOpen(false);
+        handleCloseSearch();
         setMobileAccountSheetOpen(false);
       }
     };
@@ -113,21 +121,33 @@ export const Navbar = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  // Auto-close dropdowns on route changes
+  // Sync search input with URL on route changes:
+  // If user entered a keyword and is on /shop?keyword=..., keep search input open showing that word!
+  // If navigating to another page without a keyword, close search and remove the word automatically.
   useEffect(() => {
     const timer = setTimeout(() => {
       setMobileMenuOpen(false);
       setAccountDropdownOpen(false);
-      setIsSearchOpen(false);
       setMobileAccountSheetOpen(false);
+
+      const params = new URLSearchParams(location.search);
+      const kw = params.get('keyword');
+      if (location.pathname === '/shop' && kw) {
+        setSearchQuery(kw);
+        setIsSearchOpen(true);
+        setIsDropdownDismissed(true);
+        setSearchResults([]);
+      } else if (location.pathname !== '/shop') {
+        handleCloseSearch();
+      }
     }, 0);
     return () => clearTimeout(timer);
-  }, [location.pathname]);
+  }, [location.pathname, location.search]);
 
   // Live Instant Search Effect: automatically shows matching products as user types (no Enter key needed)
   useEffect(() => {
     const cleanQuery = searchQuery.trim();
-    if (!cleanQuery || !isSearchOpen) {
+    if (!cleanQuery || !isSearchOpen || isDropdownDismissed) {
       setSearchResults([]);
       setIsSearching(false);
       setSearchTotal(0);
@@ -145,13 +165,6 @@ export const Navbar = () => {
           : [];
         setSearchResults(list);
         setSearchTotal(typeof data?.total === 'number' ? data.total : list.length);
-
-        // If currently on /shop, also update the page catalog live in real-time
-        if (location.pathname === '/shop') {
-          const nextParams = new URLSearchParams(location.search);
-          nextParams.set('keyword', cleanQuery);
-          navigate(`/shop?${nextParams.toString()}`, { replace: true });
-        }
       } catch (err) {
         console.error('Instant search error:', err);
         setSearchResults([]);
@@ -162,40 +175,47 @@ export const Navbar = () => {
     }, 220);
 
     return () => clearTimeout(timer);
-  }, [searchQuery, isSearchOpen, location.pathname, location.search, navigate]);
+  }, [searchQuery, isSearchOpen, isDropdownDismissed]);
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     const cleanQuery = searchQuery.trim();
+    setIsDropdownDismissed(true);
+    setSearchResults([]);
+    setIsSearching(false);
     if (cleanQuery) {
+      setIsSearchOpen(true);
+      setSearchQuery(cleanQuery);
       navigate(`/shop?keyword=${encodeURIComponent(cleanQuery)}`);
     } else {
+      handleCloseSearch();
       navigate('/shop');
     }
     setMobileMenuOpen(false);
-    setIsSearchOpen(false);
-    setSearchResults([]);
   };
 
   const handleSelectProduct = (productId) => {
-    setIsSearchOpen(false);
-    setSearchQuery('');
-    setSearchResults([]);
+    handleCloseSearch();
     navigate(`/product/${productId}`);
   };
 
   const handleViewAllResults = () => {
     const cleanQuery = searchQuery.trim();
-    setIsSearchOpen(false);
+    setIsDropdownDismissed(true);
     setSearchResults([]);
+    setIsSearching(false);
     if (cleanQuery) {
+      setIsSearchOpen(true);
+      setSearchQuery(cleanQuery);
       navigate(`/shop?keyword=${encodeURIComponent(cleanQuery)}`);
     } else {
+      handleCloseSearch();
       navigate('/shop');
     }
   };
 
   const handleDepartmentSelect = (catName) => {
+    handleCloseSearch();
     if (!catName || catName === 'All') {
       navigate('/shop');
     } else {
@@ -301,8 +321,13 @@ export const Navbar = () => {
               <button
                 type="button"
                 onClick={() => {
-                  setIsSearchOpen(!isSearchOpen);
-                  setAccountDropdownOpen(false);
+                  if (isSearchOpen) {
+                    handleCloseSearch();
+                  } else {
+                    setIsSearchOpen(true);
+                    setIsDropdownDismissed(false);
+                    setAccountDropdownOpen(false);
+                  }
                 }}
                 className={`w-full h-full rounded-xl border flex items-center justify-center transition-colors shadow-2xs shrink-0 cursor-pointer ${
                   isSearchOpen
@@ -326,14 +351,26 @@ export const Navbar = () => {
                     ref={searchInputRef}
                     type="text"
                     value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onChange={(e) => {
+                      setSearchQuery(e.target.value);
+                      setIsDropdownDismissed(false);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        handleSearchSubmit(e);
+                      }
+                    }}
                     placeholder="Search Shoply..."
                     className="w-full h-full px-2 text-xs sm:text-[13px] text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 bg-transparent focus:outline-none min-w-0"
                   />
+                  <button type="submit" className="hidden" tabIndex={-1} aria-hidden="true" />
                   {searchQuery && (
                     <button
                       type="button"
-                      onClick={() => setSearchQuery('')}
+                      onClick={() => {
+                        setSearchQuery('');
+                        setSearchResults([]);
+                      }}
                       className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 shrink-0 cursor-pointer"
                       aria-label="Clear input"
                     >
@@ -342,10 +379,7 @@ export const Navbar = () => {
                   )}
                   <button
                     type="button"
-                    onClick={() => {
-                      setIsSearchOpen(false);
-                      setSearchQuery('');
-                    }}
+                    onClick={handleCloseSearch}
                     className="h-full px-2.5 text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shrink-0 cursor-pointer border-l border-slate-200 dark:border-slate-800"
                     title="Close search"
                     aria-label="Close search"
@@ -356,7 +390,7 @@ export const Navbar = () => {
               )}
 
               {/* Live Instant Search Dropdown (Displays automatically without pressing Enter) */}
-              {isSearchOpen && searchQuery.trim().length > 0 && (
+              {isSearchOpen && !isDropdownDismissed && searchQuery.trim().length > 0 && (
                 <div
                   className="fixed top-15.5 left-2.5 right-2.5 sm:absolute sm:top-[calc(100%+8px)] sm:left-auto sm:right-0 w-auto sm:w-92 md:w-[420px] max-h-[75vh] sm:max-h-[480px] flex flex-col bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-1 duration-150"
                   role="listbox"
