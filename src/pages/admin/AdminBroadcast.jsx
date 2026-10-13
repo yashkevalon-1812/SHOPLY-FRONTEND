@@ -240,22 +240,22 @@ export const AdminBroadcast = () => {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-200 dark:border-slate-800 pb-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-200 dark:border-slate-800 pb-5 sm:pb-6">
         <div>
           <div className="flex items-center gap-2">
-            <span className="p-2 rounded-xl bg-blue-50 text-blue-600 dark:bg-blue-950/40 dark:text-blue-400">
-              <Radio className="w-5 h-5 animate-pulse" />
+            <span className="p-1.5 sm:p-2 rounded-xl bg-blue-50 text-blue-600 dark:bg-blue-950/40 dark:text-blue-400">
+              <Radio className="w-4 h-4 sm:w-5 sm:h-5 animate-pulse" />
             </span>
-            <span className="text-xs font-black uppercase tracking-widest text-blue-600 dark:text-blue-400">
+            <span className="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-blue-600 dark:text-blue-400">
               Platform Communication Terminal
             </span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mt-1 tracking-tight">
+          <h1 className="text-xl sm:text-3xl font-black text-slate-900 dark:text-white mt-1.5 tracking-tight">
             Notification Broadcast Center
           </h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
             Dispatch instant notifications, flash drops, or platform advisories to buyers and merchants.
           </p>
         </div>
@@ -264,9 +264,9 @@ export const AdminBroadcast = () => {
           type="button"
           onClick={fetchBroadcastHistory}
           disabled={loading}
-          className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-800 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shadow-2xs"
+          className="inline-flex items-center gap-2 px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shadow-2xs"
         >
-          <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${loading ? 'animate-spin' : ''}`} />
           <span>Sync Log</span>
         </button>
       </div>
@@ -274,89 +274,97 @@ export const AdminBroadcast = () => {
       {/* Metric Cards - Responsive 2-Col Mobile, 4-Col Desktop */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
         {/* Total Broadcasts */}
-        <div className="p-3.5 sm:p-5 rounded-2xl bg-white dark:bg-[#131d2e] border border-slate-200 dark:border-slate-800 shadow-xs flex items-center justify-between min-w-0">
-          <div className="min-w-0 flex-1 pr-2">
-            <p className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-wider truncate">Total Broadcasts</p>
-            <p className="text-base sm:text-xl md:text-2xl font-black text-slate-900 dark:text-white mt-1 truncate">
+        <div className="p-3 sm:p-5 rounded-2xl bg-white dark:bg-[#131d2e] border border-slate-200 dark:border-slate-800 shadow-xs flex items-center justify-between min-w-0 gap-2">
+          <div className="min-w-0 flex-1">
+            <p className="text-xs sm:text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-normal sm:tracking-wider leading-tight">
+              Total Broadcasts
+            </p>
+            <p className="text-lg sm:text-2xl font-black text-slate-900 dark:text-white mt-1">
               {stats.totalBroadcasts}
             </p>
           </div>
-          <div className="w-8 h-8 sm:w-11 sm:h-11 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
-            <Radio className="w-4 h-4 sm:w-5 sm:h-5" />
+          <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
+            <Radio className="w-4 h-4 sm:w-6 sm:h-6" />
           </div>
         </div>
 
         {/* Storewide Community Reach */}
-        <div className="p-3.5 sm:p-5 rounded-2xl bg-white dark:bg-[#131d2e] border border-slate-200 dark:border-slate-800 shadow-xs flex items-center justify-between min-w-0">
-          <div className="min-w-0 flex-1 pr-2">
-            <p className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-wider truncate">All-Users Broadcasts</p>
-            <p className="text-base sm:text-xl md:text-2xl font-black text-slate-900 dark:text-white mt-1 truncate">
+        <div className="p-3 sm:p-5 rounded-2xl bg-white dark:bg-[#131d2e] border border-slate-200 dark:border-slate-800 shadow-xs flex items-center justify-between min-w-0 gap-2">
+          <div className="min-w-0 flex-1">
+            <p className="text-xs sm:text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-normal sm:tracking-wider leading-tight">
+              All Users Reach
+            </p>
+            <p className="text-lg sm:text-2xl font-black text-slate-900 dark:text-white mt-1">
               {stats.audienceStats?.all || 0}
             </p>
           </div>
-          <div className="w-8 h-8 sm:w-11 sm:h-11 rounded-xl bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0">
-            <Users className="w-4 h-4 sm:w-5 sm:h-5" />
+          <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-xl bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0">
+            <Users className="w-4 h-4 sm:w-6 sm:h-6" />
           </div>
         </div>
 
         {/* Seller Studio Targeted */}
-        <div className="p-3.5 sm:p-5 rounded-2xl bg-white dark:bg-[#131d2e] border border-slate-200 dark:border-slate-800 shadow-xs flex items-center justify-between min-w-0">
-          <div className="min-w-0 flex-1 pr-2">
-            <p className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-wider truncate">Merchant Specific</p>
-            <p className="text-base sm:text-xl md:text-2xl font-black text-slate-900 dark:text-white mt-1 truncate">
+        <div className="p-3 sm:p-5 rounded-2xl bg-white dark:bg-[#131d2e] border border-slate-200 dark:border-slate-800 shadow-xs flex items-center justify-between min-w-0 gap-2">
+          <div className="min-w-0 flex-1">
+            <p className="text-xs sm:text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-normal sm:tracking-wider leading-tight">
+              Merchant Specific
+            </p>
+            <p className="text-lg sm:text-2xl font-black text-slate-900 dark:text-white mt-1">
               {stats.audienceStats?.sellers || 0}
             </p>
           </div>
-          <div className="w-8 h-8 sm:w-11 sm:h-11 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
-            <Store className="w-4 h-4 sm:w-5 sm:h-5" />
+          <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+            <Store className="w-4 h-4 sm:w-6 sm:h-6" />
           </div>
         </div>
 
         {/* Total Reads */}
-        <div className="p-3.5 sm:p-5 rounded-2xl bg-white dark:bg-[#131d2e] border border-slate-200 dark:border-slate-800 shadow-xs flex items-center justify-between min-w-0">
-          <div className="min-w-0 flex-1 pr-2">
-            <p className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-wider truncate">Read Receipts</p>
-            <p className="text-base sm:text-xl md:text-2xl font-black text-emerald-600 dark:text-emerald-400 mt-1 truncate">
+        <div className="p-3 sm:p-5 rounded-2xl bg-white dark:bg-[#131d2e] border border-slate-200 dark:border-slate-800 shadow-xs flex items-center justify-between min-w-0 gap-2">
+          <div className="min-w-0 flex-1">
+            <p className="text-xs sm:text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-normal sm:tracking-wider leading-tight">
+              Read Receipts
+            </p>
+            <p className="text-lg sm:text-2xl font-black text-emerald-600 dark:text-emerald-400 mt-1">
               {stats.totalReads}
             </p>
           </div>
-          <div className="w-8 h-8 sm:w-11 sm:h-11 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
-            <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" />
+          <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+            <CheckCircle2 className="w-4 h-4 sm:w-6 sm:h-6" />
           </div>
         </div>
       </div>
 
       {/* Main Split Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
         {/* =========================================================================
             LEFT COLUMN: COMPOSE & DISPATCH BROADCAST
            ========================================================================= */}
-        <div className="lg:col-span-5 bg-white dark:bg-[#131d2e] border border-slate-200 dark:border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xs space-y-6">
-          <div className="pb-4 border-b border-slate-100 dark:border-slate-800">
+        <div className="lg:col-span-5 bg-white dark:bg-[#131d2e] border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-6 shadow-xs space-y-5 sm:space-y-6">
+          <div className="pb-3.5 sm:pb-4 border-b border-slate-100 dark:border-slate-800">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-              <h2 className="text-xs font-black uppercase tracking-wider text-slate-900 dark:text-white">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+              <h2 className="text-sm sm:text-base font-extrabold uppercase tracking-wide text-slate-900 dark:text-white">
                 COMPOSE NEW BROADCAST
               </h2>
             </div>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
               Draft reactive notifications with deep-links and audience scoping
             </p>
           </div>
 
-          <form onSubmit={handleSendBroadcast} className="space-y-4">
+          <form onSubmit={handleSendBroadcast} className="space-y-4 sm:space-y-5">
             {/* Template Presets */}
             <div>
-              <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5 sm:mb-2">
                 QUICK HEADLINE PRESETS
               </label>
-              <div className="flex flex-wrap gap-1.5">
+              <div className="flex flex-wrap gap-1.5 sm:gap-2">
                 {TITLE_TEMPLATES.map((tmpl) => (
                   <button
                     key={tmpl.label}
                     type="button"
                     onClick={() => setForm({ ...form, title: tmpl.text })}
-                    className="text-[10px] font-semibold px-2.5 py-1 rounded-lg bg-slate-50 dark:bg-[#0c1421] border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:border-blue-400 hover:text-blue-600 transition-colors"
+                    className="text-xs font-semibold px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg bg-slate-50 dark:bg-[#0c1421] border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-blue-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                   >
                     {tmpl.label}
                   </button>
@@ -367,10 +375,10 @@ export const AdminBroadcast = () => {
             {/* Notification Title */}
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <label className="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">
                   NOTIFICATION HEADLINE
                 </label>
-                <span className="text-[10px] text-slate-400">{form.title.length}/120</span>
+                <span className="text-xs text-slate-400 font-medium">{form.title.length}/120</span>
               </div>
               <input
                 type="text"
@@ -379,17 +387,17 @@ export const AdminBroadcast = () => {
                 value={form.title}
                 onChange={(e) => setForm({ ...form, title: e.target.value })}
                 placeholder="e.g. ⚡ Flash Drop: Luxury Watch Editions Now 20% OFF"
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50/70 dark:bg-[#0c1421] border border-slate-200 dark:border-slate-800 text-xs font-bold text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-colors"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50/70 dark:bg-[#0c1421] border border-slate-200 dark:border-slate-800 text-xs sm:text-sm font-semibold text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-colors"
               />
             </div>
 
             {/* Message Body */}
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <label className="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">
                   MESSAGE BODY
                 </label>
-                <span className="text-[10px] text-slate-400">{form.message.length}/500</span>
+                <span className="text-xs text-slate-400 font-medium">{form.message.length}/500</span>
               </div>
               <textarea
                 required
@@ -398,16 +406,16 @@ export const AdminBroadcast = () => {
                 value={form.message}
                 onChange={(e) => setForm({ ...form, message: e.target.value })}
                 placeholder="Write the notification message displayed to users..."
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50/70 dark:bg-[#0c1421] border border-slate-200 dark:border-slate-800 text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-colors resize-none leading-relaxed"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50/70 dark:bg-[#0c1421] border border-slate-200 dark:border-slate-800 text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-colors resize-none leading-relaxed"
               />
             </div>
 
             {/* Target Audience Selector */}
             <div>
-              <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5 sm:mb-2">
                 TARGET AUDIENCE SCOPE
               </label>
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-3 gap-2 sm:gap-2.5">
                 {[
                   { id: 'all', label: 'All Users', icon: Users, desc: 'Storewide' },
                   { id: 'buyers', label: 'Buyers Only', icon: ShoppingBag, desc: 'Shoppers' },
@@ -417,15 +425,15 @@ export const AdminBroadcast = () => {
                     key={aud.id}
                     type="button"
                     onClick={() => setForm({ ...form, targetAudience: aud.id })}
-                    className={`p-2.5 rounded-xl border text-left transition-all ${
+                    className={`p-2.5 sm:p-3 rounded-xl border text-left transition-all ${
                       form.targetAudience === aud.id
                         ? 'bg-blue-600 text-white border-blue-600 shadow-xs'
                         : 'bg-slate-50 dark:bg-[#0c1421] border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-700'
                     }`}
                   >
-                    <aud.icon className={`w-4 h-4 mb-1 ${form.targetAudience === aud.id ? 'text-white' : 'text-slate-400'}`} />
-                    <p className="text-xs font-bold leading-none">{aud.label}</p>
-                    <p className={`text-[9px] mt-1 ${form.targetAudience === aud.id ? 'text-blue-100' : 'text-slate-400'}`}>
+                    <aud.icon className={`w-4 h-4 sm:w-5 sm:h-5 mb-1 ${form.targetAudience === aud.id ? 'text-white' : 'text-slate-400'}`} />
+                    <p className="text-xs sm:text-sm font-bold leading-tight">{aud.label}</p>
+                    <p className={`text-[10px] sm:text-xs mt-0.5 sm:mt-1 ${form.targetAudience === aud.id ? 'text-blue-100' : 'text-slate-400'}`}>
                       {aud.desc}
                     </p>
                   </button>
@@ -437,13 +445,13 @@ export const AdminBroadcast = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {/* Type */}
               <div>
-                <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5">
                   NOTIFICATION TYPE
                 </label>
                 <select
                   value={form.type}
                   onChange={(e) => setForm({ ...form, type: e.target.value })}
-                  className="w-full px-3 py-2.5 rounded-xl bg-slate-50/70 dark:bg-[#0c1421] border border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/30 cursor-pointer"
+                  className="w-full px-3 py-2.5 rounded-xl bg-slate-50/70 dark:bg-[#0c1421] border border-slate-200 dark:border-slate-800 text-xs sm:text-sm font-semibold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/30 cursor-pointer"
                 >
                   <option value="announcement">📢 Announcement</option>
                   <option value="offer">⚡ Promotion & Offer</option>
@@ -454,13 +462,13 @@ export const AdminBroadcast = () => {
 
               {/* Priority */}
               <div>
-                <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5">
                   DELIVERY URGENCY
                 </label>
                 <select
                   value={form.priority}
                   onChange={(e) => setForm({ ...form, priority: e.target.value })}
-                  className="w-full px-3 py-2.5 rounded-xl bg-slate-50/70 dark:bg-[#0c1421] border border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/30 cursor-pointer"
+                  className="w-full px-3 py-2.5 rounded-xl bg-slate-50/70 dark:bg-[#0c1421] border border-slate-200 dark:border-slate-800 text-xs sm:text-sm font-semibold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/30 cursor-pointer"
                 >
                   <option value="normal">Standard (Normal)</option>
                   <option value="high">High Priority</option>
@@ -471,7 +479,7 @@ export const AdminBroadcast = () => {
 
             {/* Action / Redirect Link */}
             <div>
-              <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5">
                 DESTINATION ACTION URL (OPTIONAL)
               </label>
               <input
@@ -479,7 +487,7 @@ export const AdminBroadcast = () => {
                 value={form.link}
                 onChange={(e) => setForm({ ...form, link: e.target.value })}
                 placeholder="e.g. /shop or /offers or /seller/coupons"
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50/70 dark:bg-[#0c1421] border border-slate-200 dark:border-slate-800 text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 transition-colors"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50/70 dark:bg-[#0c1421] border border-slate-200 dark:border-slate-800 text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 transition-colors"
               />
               <div className="flex flex-wrap gap-1.5 mt-2">
                 {QUICK_LINKS.map((ql) => (
@@ -487,7 +495,7 @@ export const AdminBroadcast = () => {
                     key={ql.url}
                     type="button"
                     onClick={() => setForm({ ...form, link: ql.url })}
-                    className="text-[9px] font-bold px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                    className="text-xs font-semibold px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                   >
                     +{ql.label}
                   </button>
@@ -497,45 +505,45 @@ export const AdminBroadcast = () => {
 
             {/* LIVE DEVICE NOTIFICATION CARD PREVIEW */}
             <div className="pt-3 border-t border-slate-100 dark:border-slate-800">
-              <span className="block text-[10px] font-black uppercase tracking-wider text-slate-400 mb-2">
+              <span className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">
                 LIVE CUSTOMER BELL DRAWER PREVIEW
               </span>
 
-              <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-[#0c1421] border border-slate-200 dark:border-slate-800 shadow-xs space-y-2">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5">
+              <div className="p-3.5 sm:p-4 rounded-xl bg-slate-50 dark:bg-[#0c1421] border border-slate-200 dark:border-slate-800 shadow-xs space-y-2.5">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex flex-wrap items-center gap-1.5">
                     <span
-                      className={`text-[9px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-md border ${
+                      className={`text-xs font-bold uppercase tracking-wide px-2.5 py-0.5 rounded-md border ${
                         getTypeBadge(form.type).bg
                       }`}
                     >
                       {getTypeBadge(form.type).label}
                     </span>
                     {form.priority !== 'normal' && (
-                      <span className={`text-[9px] px-1.5 py-0.5 rounded ${getPriorityBadge(form.priority)}`}>
+                      <span className={`text-xs font-bold px-2 py-0.5 rounded ${getPriorityBadge(form.priority)}`}>
                         {form.priority.toUpperCase()}
                       </span>
                     )}
                   </div>
-                  <span className="text-[10px] text-slate-400 font-medium flex items-center gap-1">
-                    <Clock className="w-3 h-3" /> Just now
+                  <span className="text-xs text-slate-500 dark:text-slate-400 font-medium flex items-center gap-1 shrink-0">
+                    <Clock className="w-3.5 h-3.5" /> Just now
                   </span>
                 </div>
 
                 <div>
-                  <h4 className="text-xs font-bold text-slate-900 dark:text-white">
+                  <h4 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">
                     {form.title.trim() || 'Sample Notification Headline'}
                   </h4>
-                  <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-1 leading-relaxed line-clamp-2">
+                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1 leading-relaxed line-clamp-2">
                     {form.message.trim() ||
                       'This is how the broadcast notification preview will render inside the customer navigation drawer...'}
                   </p>
                 </div>
 
                 {form.link && (
-                  <div className="pt-1 flex items-center gap-1 text-[10px] font-bold text-blue-600 dark:text-blue-400">
+                  <div className="pt-1 flex items-center gap-1 text-xs sm:text-sm font-semibold text-blue-600 dark:text-blue-400">
                     <span>Target: {form.link}</span>
-                    <ExternalLink className="w-3 h-3" />
+                    <ExternalLink className="w-3.5 h-3.5" />
                   </div>
                 )}
               </div>
@@ -545,7 +553,7 @@ export const AdminBroadcast = () => {
             <button
               type="submit"
               disabled={submitting}
-              className="w-full bg-blue-600 hover:bg-blue-500 active:scale-[0.99] text-white font-bold text-xs uppercase tracking-wider py-3.5 rounded-xl flex items-center justify-center gap-2 transition-all shadow-md disabled:opacity-50 cursor-pointer"
+              className="w-full bg-blue-600 hover:bg-blue-500 active:scale-[0.99] text-white font-bold text-sm sm:text-base uppercase tracking-wider py-3.5 rounded-xl flex items-center justify-center gap-2 transition-all shadow-md disabled:opacity-50 cursor-pointer"
             >
               <Send className={`w-4 h-4 ${submitting ? 'animate-bounce' : ''}`} />
               <span>{submitting ? 'DISPATCHING TO USERS...' : 'DISPATCH BROADCAST'}</span>
@@ -556,25 +564,25 @@ export const AdminBroadcast = () => {
         {/* =========================================================================
             RIGHT COLUMN: BROADCAST DISPATCH HISTORY & AUDIT LOG
            ========================================================================= */}
-        <div className="lg:col-span-7 bg-white dark:bg-[#131d2e] border border-slate-200 dark:border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xs space-y-5">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100 dark:border-slate-800">
+        <div className="lg:col-span-7 bg-white dark:bg-[#131d2e] border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-6 shadow-xs space-y-4 sm:space-y-5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3.5 sm:pb-4 border-b border-slate-100 dark:border-slate-800">
             <div>
-              <h2 className="text-xs sm:text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white">
+              <h2 className="text-sm sm:text-base font-extrabold uppercase tracking-wide text-slate-900 dark:text-white">
                 BROADCAST LOG & DISPATCH HISTORY
               </h2>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5 sm:mt-1">
                 Track previous broadcasts, delivery scope, and user read engagement
               </p>
             </div>
 
             {/* Filter Pills */}
-            <div className="flex items-center gap-1 bg-slate-100 dark:bg-[#0c1421] p-1 rounded-xl text-[11px] font-bold">
+            <div className="grid grid-cols-3 sm:flex items-center gap-1 bg-slate-100 dark:bg-[#0c1421] p-1 rounded-xl text-xs sm:text-sm font-bold w-full sm:w-auto">
               {['all', 'buyers', 'sellers'].map((aud) => (
                 <button
                   key={aud}
                   type="button"
                   onClick={() => setAudienceFilter(aud)}
-                  className={`px-2.5 py-1 rounded-lg capitalize transition-all ${
+                  className={`px-3 py-1.5 rounded-lg capitalize text-center transition-all ${
                     audienceFilter === aud
                       ? 'bg-white dark:bg-[#131d2e] text-slate-900 dark:text-white shadow-2xs'
                       : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
@@ -588,19 +596,19 @@ export const AdminBroadcast = () => {
 
           {/* Search bar */}
           <div className="relative">
-            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
               type="text"
               value={searchFilter}
               onChange={(e) => setSearchFilter(e.target.value)}
               placeholder="Search previous broadcasts by title or content..."
-              className="w-full pl-9 pr-3 py-2 rounded-xl bg-slate-50 dark:bg-[#0c1421] border border-slate-200 dark:border-slate-800 text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 transition-colors"
+              className="w-full pl-10 pr-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-[#0c1421] border border-slate-200 dark:border-slate-800 text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 transition-colors"
             />
           </div>
 
           {/* Broadcasts List */}
           {loading ? (
-            <div className="py-16 text-center text-xs text-slate-400">
+            <div className="py-16 text-center text-sm text-slate-400">
               <div className="w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
               Loading broadcast history...
             </div>
@@ -609,15 +617,15 @@ export const AdminBroadcast = () => {
               <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 mx-auto mb-3">
                 <Radio className="w-6 h-6" />
               </div>
-              <p className="font-bold text-slate-800 dark:text-slate-200 text-sm">
+              <p className="font-bold text-slate-800 dark:text-slate-200 text-base">
                 No Broadcasts Found
               </p>
-              <p className="text-xs text-slate-400 dark:text-slate-500 mt-1 max-w-sm mx-auto">
+              <p className="text-xs sm:text-sm text-slate-400 dark:text-slate-500 mt-1 max-w-sm mx-auto">
                 No notifications match your current filter. Compose a message on the left to broadcast to users.
               </p>
             </div>
           ) : (
-            <div className="space-y-3 max-h-[620px] overflow-y-auto pr-1">
+            <div className="space-y-3.5 max-h-[620px] overflow-y-auto pr-1">
               {filteredBroadcasts.map((b) => {
                 const aud = getAudienceLabel(b.targetAudience);
                 const typ = getTypeBadge(b.type);
@@ -632,86 +640,88 @@ export const AdminBroadcast = () => {
                 return (
                   <div
                     key={b._id}
-                    className="p-4 rounded-xl bg-slate-50/70 dark:bg-[#0c1421]/60 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-all space-y-3"
+                    className="p-3.5 sm:p-4.5 rounded-xl bg-slate-50/70 dark:bg-[#0c1421]/60 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-all space-y-2.5 sm:space-y-3"
                   >
                     {/* Card Header */}
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <div className="flex flex-wrap items-center gap-1.5">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                      <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
                         <span
-                          className={`inline-flex items-center gap-1 text-[9px] font-black uppercase px-2 py-0.5 rounded-md border ${typ.bg}`}
+                          className={`inline-flex items-center gap-1 text-[11px] sm:text-xs font-bold uppercase px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md border ${typ.bg}`}
                         >
-                          <typ.icon className="w-3 h-3" />
+                          <typ.icon className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                           <span>{typ.label}</span>
                         </span>
 
                         <span
-                          className={`inline-flex items-center gap-1 text-[9px] font-bold px-2 py-0.5 rounded-md border ${aud.color}`}
+                          className={`inline-flex items-center gap-1 text-[11px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md border ${aud.color}`}
                         >
-                          <aud.icon className="w-3 h-3" />
+                          <aud.icon className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                           <span>{aud.label}</span>
                         </span>
 
                         {b.priority !== 'normal' && (
-                          <span className={`text-[9px] px-1.5 py-0.5 rounded ${getPriorityBadge(b.priority)}`}>
+                          <span className={`text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded ${getPriorityBadge(b.priority)}`}>
                             {b.priority.toUpperCase()}
                           </span>
                         )}
                       </div>
 
-                      <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-medium text-slate-400 flex items-center gap-1">
-                          <Clock className="w-3 h-3" />
+                      <div className="flex items-center justify-between sm:justify-end gap-2 pt-1 sm:pt-0 border-t sm:border-t-0 border-slate-200/40 dark:border-slate-800/40">
+                        <span className="text-xs font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                          <Clock className="w-3.5 h-3.5" />
                           {formattedDate}
                         </span>
 
-                        {/* Duplicate Button */}
-                        <button
-                          type="button"
-                          onClick={() => handleDuplicate(b)}
-                          title="Copy details into composer"
-                          className="p-1 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950/40 transition-colors"
-                        >
-                          <Copy className="w-3.5 h-3.5" />
-                        </button>
+                        <div className="flex items-center gap-1">
+                          {/* Duplicate Button */}
+                          <button
+                            type="button"
+                            onClick={() => handleDuplicate(b)}
+                            title="Copy details into composer"
+                            className="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950/40 transition-colors"
+                          >
+                            <Copy className="w-4 h-4" />
+                          </button>
 
-                        {/* Delete Button */}
-                        <button
-                          type="button"
-                          onClick={() => handleDeleteBroadcast(b._id, b.title)}
-                          title="Delete broadcast record"
-                          className="p-1 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
+                          {/* Delete Button */}
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteBroadcast(b._id, b.title)}
+                            title="Delete broadcast record"
+                            className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
                       </div>
                     </div>
 
                     {/* Content */}
                     <div>
-                      <h3 className="text-xs font-bold text-slate-900 dark:text-white leading-snug">
+                      <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white leading-snug">
                         {b.title}
                       </h3>
-                      <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">
+                      <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1 sm:mt-1.5 leading-relaxed">
                         {b.message}
                       </p>
                     </div>
 
                     {/* Card Footer: Engagement & Links */}
-                    <div className="pt-2 border-t border-slate-200/60 dark:border-slate-800/60 flex flex-wrap items-center justify-between gap-2 text-[10px]">
-                      <div className="flex items-center gap-3 text-slate-500 dark:text-slate-400">
-                        <span className="inline-flex items-center gap-1 font-semibold text-emerald-600 dark:text-emerald-400">
-                          <CheckCircle2 className="w-3 h-3" />
+                    <div className="pt-2.5 border-t border-slate-200/60 dark:border-slate-800/60 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-2 text-xs sm:text-sm">
+                      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-slate-500 dark:text-slate-400">
+                        <span className="inline-flex items-center gap-1.5 font-bold text-emerald-600 dark:text-emerald-400">
+                          <CheckCircle2 className="w-3.5 h-3.5" />
                           {readCount} user{readCount === 1 ? '' : 's'} read
                         </span>
                         {b.sentBy?.name && (
-                          <span>Dispatched by: <strong className="text-slate-700 dark:text-slate-300">{b.sentBy.name}</strong></span>
+                          <span className="truncate">Dispatched by: <strong className="text-slate-700 dark:text-slate-300 font-semibold">{b.sentBy.name}</strong></span>
                         )}
                       </div>
 
                       {b.link && (
-                        <span className="inline-flex items-center gap-1 font-semibold text-blue-600 dark:text-blue-400">
+                        <span className="inline-flex items-center gap-1 font-semibold text-blue-600 dark:text-blue-400 truncate">
                           <span>Link: {b.link}</span>
-                          <ExternalLink className="w-2.5 h-2.5" />
+                          <ExternalLink className="w-3.5 h-3.5 shrink-0" />
                         </span>
                       )}
                     </div>
