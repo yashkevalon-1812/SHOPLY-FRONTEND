@@ -819,7 +819,7 @@ export const About = () => {
 
             <div className="divide-y divide-stone-100 dark:divide-slate-800/80">
               {comparisons.map((row, idx) => (
-                <div key={idx} className="grid grid-cols-1 md:grid-cols-12 p-4 sm:p-5 gap-3 sm:gap-4 items-center">
+                   <div key={idx} className="grid grid-cols-1 md:grid-cols-12 p-4 sm:p-5 gap-3 sm:gap-4 items-center">
                   <div className="md:col-span-4">
                     <p className="text-xs sm:text-sm font-bold text-slate-950 dark:text-white">
                       {row.feature}
