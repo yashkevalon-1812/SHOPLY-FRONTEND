@@ -101,9 +101,9 @@ export const Wishlist = () => {
               <div className="w-20 h-20 rounded-full bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 text-rose-500 dark:text-rose-400 flex items-center justify-center shadow-inner">
                 <Heart className="w-10 h-10 fill-rose-500/20 stroke-rose-500 dark:stroke-rose-400" />
               </div>
-              <span className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center shadow-xs">
+              {/* <span className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center shadow-xs">
                 <Sparkles className="w-3.5 h-3.5" />
-              </span>
+              </span> */}
             </div>
 
             <h2 className="text-xl sm:text-2xl font-black text-zinc-950 dark:text-white mb-2">

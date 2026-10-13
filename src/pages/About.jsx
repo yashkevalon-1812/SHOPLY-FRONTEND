@@ -812,7 +812,7 @@ export const About = () => {
               <div className="md:col-span-4">Experience & Standard</div>
               <div className="md:col-span-4 hidden md:block text-stone-400">Traditional Marketplaces</div>
               <div className="md:col-span-4 text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5" />
+                {/* <Sparkles className="w-3.5 h-3.5" /> */}
                 <span>The Shoply Standard</span>
               </div>
             </div>

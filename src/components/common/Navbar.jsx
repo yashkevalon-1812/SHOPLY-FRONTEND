@@ -304,10 +304,8 @@ export const Navbar = () => {
               )}
             </button>
 
-            {/* Notifications Dropdown (Desktop only, available in mobile drawer) */}
-            <div className="hidden lg:block">
-              <NotificationDropdown />
-            </div>
+            {/* Notifications Dropdown (Available on all devices: Mobile, Tablet & Desktop) */}
+            <NotificationDropdown />
 
             {/* Wishlist Heart Button (Desktop only - shifted to bottom bar on mobile phones) */}
             <Link
