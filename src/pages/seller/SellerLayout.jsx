@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { NavLink, Outlet, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { NotificationDropdown } from '../../components/common/NotificationDropdown';
@@ -21,6 +21,9 @@ export const SellerLayout = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
   const { user, logout } = useAuth();
+  const desktopAsideRef = useRef(null);
+  const mobileDrawerRef = useRef(null);
+
   // Scroll to top immediately when navigating between seller pages
   useEffect(() => {
     setMobileOpen(false);
@@ -37,6 +40,53 @@ export const SellerLayout = () => {
     } catch (_) {}
   }, [location.pathname, location.search]);
 
+  // Lock body scroll when mobile drawer is open to prevent background scrolling
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [mobileOpen]);
+
+  // Prevent wheel scroll over seller sidebar from scrolling the page or window
+  useEffect(() => {
+    const handleAsideWheel = (el, e) => {
+      e.preventDefault();
+      const maxScroll = el.scrollHeight - el.clientHeight;
+      if (maxScroll > 0) {
+        let delta = e.deltaY;
+        if (e.deltaMode === 1) delta *= 20;
+        else if (e.deltaMode === 2) delta *= el.clientHeight;
+        el.scrollTop += delta;
+      }
+    };
+
+    const desktopAside = desktopAsideRef.current;
+    const onDesktopWheel = (e) => desktopAside && handleAsideWheel(desktopAside, e);
+    if (desktopAside) {
+      desktopAside.addEventListener('wheel', onDesktopWheel, { passive: false });
+    }
+
+    const mobileDrawer = mobileDrawerRef.current;
+    const onMobileWheel = (e) => mobileDrawer && handleAsideWheel(mobileDrawer, e);
+    if (mobileDrawer) {
+      mobileDrawer.addEventListener('wheel', onMobileWheel, { passive: false });
+    }
+
+    return () => {
+      if (desktopAside) {
+        desktopAside.removeEventListener('wheel', onDesktopWheel);
+      }
+      if (mobileDrawer) {
+        mobileDrawer.removeEventListener('wheel', onMobileWheel);
+      }
+    };
+  }, []);
+
   const navItems = [
     { to: '/seller', end: true, label: 'Studio Analytics', icon: LayoutDashboard },
     { to: '/seller/products', label: 'Manage Vault Listings', icon: Package },
@@ -49,7 +99,7 @@ export const SellerLayout = () => {
   );
 
   const sidebarContent = (
-    <div className="flex flex-col h-full justify-between">
+    <div className="flex flex-col min-h-full justify-between">
       <div className="space-y-6">
         {/* Brand & Store Header */}
         <div>
@@ -202,7 +252,8 @@ export const SellerLayout = () => {
 
       {/* Mobile Slide-over Drawer */}
       <div
-        className={`fixed inset-y-0 left-0 w-72 max-w-[85vw] bg-white dark:bg-[#0c1427] z-50 p-6 flex flex-col justify-between shadow-2xl md:hidden transform transition-transform duration-300 ease-in-out ${
+        ref={mobileDrawerRef}
+        className={`fixed inset-y-0 left-0 w-72 max-w-[85vw] bg-white dark:bg-[#0c1427] z-50 p-6 flex flex-col justify-between shadow-2xl md:hidden overflow-y-auto overscroll-contain transform transition-transform duration-300 ease-in-out ${
           mobileOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
@@ -210,7 +261,10 @@ export const SellerLayout = () => {
       </div>
 
       {/* Desktop Fixed Sidebar */}
-      <aside className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 z-30 bg-white dark:bg-[#0c1427] border-r border-slate-200 dark:border-slate-800 p-6 shadow-xs overflow-y-auto">
+      <aside
+        ref={desktopAsideRef}
+        className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 z-30 bg-white dark:bg-[#0c1427] border-r border-slate-200 dark:border-slate-800 p-6 shadow-xs overflow-y-auto overscroll-contain select-none"
+      >
         {sidebarContent}
       </aside>
 
