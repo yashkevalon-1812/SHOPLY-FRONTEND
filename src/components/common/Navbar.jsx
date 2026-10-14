@@ -15,6 +15,7 @@ import {
   Sun,
   Moon,
   ArrowRight,
+  ArrowLeft,
   Package,
   Loader2,
   Star,
@@ -49,14 +50,20 @@ export const Navbar = () => {
   const [departments, setDepartments] = useState([]);
 
   const searchInputRef = useRef(null);
+  const mobileSearchInputRef = useRef(null);
   const searchContainerRef = useRef(null);
+  const mobileSearchRef = useRef(null);
   const accountRef = useRef(null);
 
   // Focus input on search toggle
   useEffect(() => {
     if (isSearchOpen) {
       const timer = setTimeout(() => {
-        searchInputRef.current?.focus();
+        if (window.innerWidth < 640) {
+          mobileSearchInputRef.current?.focus();
+        } else {
+          searchInputRef.current?.focus();
+        }
       }, 70);
       return () => clearTimeout(timer);
     }
@@ -87,7 +94,9 @@ export const Navbar = () => {
       if (accountRef.current && !accountRef.current.contains(event.target)) {
         setAccountDropdownOpen(false);
       }
-      if (searchContainerRef.current && !searchContainerRef.current.contains(event.target)) {
+      const clickedInsideDesktop = searchContainerRef.current && searchContainerRef.current.contains(event.target);
+      const clickedInsideMobile = mobileSearchRef.current && mobileSearchRef.current.contains(event.target);
+      if (!clickedInsideDesktop && !clickedInsideMobile) {
         handleCloseSearch();
       }
     };
@@ -230,7 +239,79 @@ export const Navbar = () => {
       {/* =========================================================================
           TIER 1: PRIMARY MARKETPLACE HEADER (Amazon / Flipkart Inspired)
          ========================================================================= */}
-      <div className="bg-white dark:bg-[#0b1329] border-b border-slate-200/90 dark:border-slate-800/90 transition-colors duration-200">
+      <div className="relative bg-white dark:bg-[#0b1329] border-b border-slate-200/90 dark:border-slate-800/90 transition-colors duration-200">
+        {/* =========================================================================
+            MOBILE DEDICATED SEARCH BAR TAKEOVER (<sm screens)
+            When search is activated on phone, it takes over the header with a clean,
+            spacious, full-width search input, back button, and clear/cancel controls.
+            Prevents squishing the logo or navbar icons.
+           ========================================================================= */}
+        {isSearchOpen && (
+          <div
+            ref={mobileSearchRef}
+            className="sm:hidden absolute inset-0 z-50 bg-white dark:bg-[#0b1329] px-2.5 flex items-center gap-2 animate-in fade-in duration-150"
+          >
+            {/* Back / Close Button */}
+            <button
+              type="button"
+              onClick={handleCloseSearch}
+              className="w-9 h-9 rounded-xl flex items-center justify-center text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/80 transition-colors shrink-0 cursor-pointer"
+              title="Close search"
+              aria-label="Close search"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+
+            {/* Spacious Mobile Input */}
+            <form
+              onSubmit={handleSearchSubmit}
+              className="flex-1 flex items-center h-10 px-3 rounded-xl border border-amber-500 bg-slate-50 dark:bg-slate-900 shadow-inner focus-within:ring-2 focus-within:ring-amber-500/20 transition-all overflow-hidden"
+            >
+              <Search className="w-4 h-4 text-amber-500 shrink-0 mr-2 pointer-events-none" />
+              <input
+                ref={mobileSearchInputRef}
+                type="text"
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setIsDropdownDismissed(false);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSearchSubmit(e);
+                  }
+                }}
+                placeholder="Search Shoply..."
+                className="w-full h-full text-[13.5px] text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 bg-transparent focus:outline-none min-w-0"
+              />
+              <button type="submit" className="hidden" tabIndex={-1} aria-hidden="true" />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearchQuery('');
+                    setSearchResults([]);
+                    mobileSearchInputRef.current?.focus();
+                  }}
+                  className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 shrink-0 cursor-pointer"
+                  aria-label="Clear input"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+            </form>
+
+            {/* Cancel Action */}
+            <button
+              type="button"
+              onClick={handleCloseSearch}
+              className="px-2 py-1.5 text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-amber-600 dark:hover:text-amber-400 shrink-0 cursor-pointer transition-colors"
+            >
+              Cancel
+            </button>
+          </div>
+        )}
+
         <div className="max-w-[1520px] mx-auto px-2.5 sm:px-4 lg:px-6 h-15 sm:h-16 flex items-center justify-between gap-2 sm:gap-3 lg:gap-4">
           
           {/* 1. BRAND AREA: Hamburger + Logo + Deliver To Badge */}
@@ -340,11 +421,11 @@ export const Navbar = () => {
                 <Search className="w-4 h-4" />
               </button>
 
-              {/* Absolute Popout Search Input to the left (Takes 0 flex layout space, preventing any movement of other navbar options) */}
+              {/* Desktop Popout Search Input to the left (sm: and up only) */}
               {isSearchOpen && (
                 <form
                   onSubmit={handleSearchSubmit}
-                  className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center h-8.5 sm:h-9.5 w-48 sm:w-52 md:w-56 lg:w-60 rounded-xl border border-amber-500 bg-white dark:bg-slate-900 shadow-xl overflow-hidden z-30 transition-all duration-200 animate-in fade-in slide-in-from-right-2"
+                  className="hidden sm:flex absolute right-0 top-1/2 -translate-y-1/2 items-center h-8.5 sm:h-9.5 sm:w-64 md:w-72 lg:w-80 rounded-xl border border-amber-500 bg-white dark:bg-slate-900 shadow-xl overflow-hidden z-30 transition-all duration-200 animate-in fade-in slide-in-from-right-2"
                 >
                   <Search className="w-3.5 h-3.5 text-amber-500 ml-2.5 shrink-0 pointer-events-none" />
                   <input
@@ -392,7 +473,7 @@ export const Navbar = () => {
               {/* Live Instant Search Dropdown (Displays automatically without pressing Enter) */}
               {isSearchOpen && !isDropdownDismissed && searchQuery.trim().length > 0 && (
                 <div
-                  className="fixed top-15.5 left-2.5 right-2.5 sm:absolute sm:top-[calc(100%+8px)] sm:left-auto sm:right-0 w-auto sm:w-92 md:w-[420px] max-h-[75vh] sm:max-h-[480px] flex flex-col bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-1 duration-150"
+                  className="fixed top-[62px] left-2.5 right-2.5 sm:absolute sm:top-[calc(100%+8px)] sm:left-auto sm:right-0 w-auto sm:w-92 md:w-[420px] max-h-[75vh] sm:max-h-[480px] flex flex-col bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl z-[60] sm:z-50 overflow-hidden animate-in fade-in slide-in-from-top-1 duration-150"
                   role="listbox"
                   aria-label="Search results"
                 >
@@ -763,39 +844,6 @@ export const Navbar = () => {
                     </div>
                   </div>
                 )}
-              </div>
-
-              {/* Quick Hub: Wishlist & Cart */}
-              <div className="grid grid-cols-2 gap-2 pb-1">
-                <Link
-                  to="/wishlist"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center justify-between p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-white text-xs font-bold transition-all shadow-2xs"
-                >
-                  <div className="flex items-center gap-2">
-                    <Heart className="w-4 h-4 text-rose-500 fill-rose-500/20" />
-                    <span>Wishlist</span>
-                  </div>
-                  {wishlistCount > 0 && (
-                    <span className="h-4.5 min-w-[18px] px-1 rounded-full bg-rose-600 text-white text-[10px] font-black flex items-center justify-center">
-                      {wishlistCount}
-                    </span>
-                  )}
-                </Link>
-
-                <Link
-                  to="/cart"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center justify-between p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-white text-xs font-bold transition-all shadow-2xs"
-                >
-                  <div className="flex items-center gap-2">
-                    <ShoppingCart className="w-4 h-4 text-amber-500" />
-                    <span>Cart</span>
-                  </div>
-                  <span className="h-4.5 min-w-[18px] px-1 rounded-full bg-amber-500 text-slate-950 text-[10px] font-black flex items-center justify-center">
-                    {totalItemsCount || 0}
-                  </span>
-                </Link>
               </div>
 
               {/* Main Navigation Grid */}

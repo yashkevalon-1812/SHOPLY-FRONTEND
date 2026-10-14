@@ -431,7 +431,7 @@ export const About = () => {
             </div>
 
             {/* Floating Top-Left Badge */}
-            <div className="absolute -top-4 -left-3 sm:-left-6 bg-white dark:bg-[#131d2e] border border-stone-200 dark:border-slate-700 rounded-2xl p-3 sm:p-4 shadow-xl flex items-center gap-3">
+            <div className="hidden sm:flex absolute -top-4 -left-3 sm:-left-6 bg-white dark:bg-[#131d2e] border border-stone-200 dark:border-slate-700 rounded-2xl p-3 sm:p-4 shadow-xl items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center font-black">
                 <Users className="w-5 h-5" />
               </div>
@@ -442,7 +442,7 @@ export const About = () => {
             </div>
 
             {/* Floating Bottom-Right Badge */}
-            <div className="absolute -bottom-4 -right-3 sm:-right-6 bg-white dark:bg-[#131d2e] border border-stone-200 dark:border-slate-700 rounded-2xl p-3 sm:p-4 shadow-xl flex items-center gap-3">
+            <div className="hidden sm:flex absolute -bottom-4 -right-3 sm:-right-6 bg-white dark:bg-[#131d2e] border border-stone-200 dark:border-slate-700 rounded-2xl p-3 sm:p-4 shadow-xl items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-black">
                 <ShieldCheck className="w-5 h-5" />
               </div>
@@ -457,48 +457,76 @@ export const About = () => {
         {/* =========================================================================
             3. KEY NUMBERS & IMPACT BENTO
            ========================================================================= */}
-        <section className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-          <div className="p-6 rounded-3xl bg-white dark:bg-[#131d2e] border border-stone-200/80 dark:border-slate-800 shadow-xs flex flex-col justify-between space-y-2">
-            <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center">
-              <Users className="w-5 h-5" />
+        <section className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
+          {/* 1. Conscious Shoppers */}
+          <div className="p-3.5 sm:p-5 md:p-6 rounded-2xl sm:rounded-3xl bg-white dark:bg-[#131d2e] border border-stone-200/80 dark:border-slate-800 shadow-xs flex flex-col justify-between min-h-[140px] sm:min-h-[170px] lg:min-h-[190px] hover:border-amber-500/40 dark:hover:border-amber-500/40 transition-all duration-200 group">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 mb-1.5 sm:mb-3">
+              <Users className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
-            <div>
-              <p className="text-3xl sm:text-5xl font-bold font-google-sans text-slate-950 dark:text-white tracking-tight"><AnimatedCounter target={500000} suffix="+" /></p>
-              <h3 className="text-xs sm:text-sm font-bold text-stone-700 dark:text-slate-300 mt-1">Conscious Shoppers</h3>
-              <p className="text-[11px] text-stone-500 dark:text-slate-400 mt-0.5">Across every state and union territory</p>
-            </div>
-          </div>
-
-          <div className="p-6 rounded-3xl bg-white dark:bg-[#131d2e] border border-stone-200/80 dark:border-slate-800 shadow-xs flex flex-col justify-between space-y-2">
-            <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center">
-              <ShoppingBag className="w-5 h-5" />
-            </div>
-            <div>
-              <p className="text-3xl sm:text-5xl font-bold font-google-sans text-slate-950 dark:text-white tracking-tight"><AnimatedCounter target={50000} suffix="+" /></p>
-              <h3 className="text-xs sm:text-sm font-bold text-stone-700 dark:text-slate-300 mt-1">Curated Products</h3>
-              <p className="text-[11px] text-stone-500 dark:text-slate-400 mt-0.5">Electronics, fashion, home & lifestyle</p>
+            <div className="min-w-0">
+              <p className="text-xl sm:text-3xl md:text-4xl lg:text-3xl xl:text-4xl font-extrabold font-google-sans text-slate-950 dark:text-white tracking-tight leading-none truncate">
+                <AnimatedCounter target={500000} suffix="+" />
+              </p>
+              <h3 className="text-xs sm:text-sm font-bold text-stone-800 dark:text-slate-200 mt-1.5 sm:mt-2 truncate">
+                Conscious Shoppers
+              </h3>
+              <p className="text-[10px] sm:text-[11px] lg:text-xs text-stone-500 dark:text-slate-400 mt-0.5 leading-snug line-clamp-2">
+                Across every state and union territory
+              </p>
             </div>
           </div>
 
-          <div className="p-6 rounded-3xl bg-white dark:bg-[#131d2e] border border-stone-200/80 dark:border-slate-800 shadow-xs flex flex-col justify-between space-y-2">
-            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
-              <Truck className="w-5 h-5" />
+          {/* 2. Curated Products */}
+          <div className="p-3.5 sm:p-5 md:p-6 rounded-2xl sm:rounded-3xl bg-white dark:bg-[#131d2e] border border-stone-200/80 dark:border-slate-800 shadow-xs flex flex-col justify-between min-h-[140px] sm:min-h-[170px] lg:min-h-[190px] hover:border-blue-500/40 dark:hover:border-blue-500/40 transition-all duration-200 group">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 mb-1.5 sm:mb-3">
+              <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
-            <div>
-              <p className="text-3xl sm:text-5xl font-bold font-google-sans text-slate-950 dark:text-white tracking-tight"><AnimatedCounter target={10000} suffix="+" /></p>
-              <h3 className="text-xs sm:text-sm font-bold text-stone-700 dark:text-slate-300 mt-1">Pincodes Delivered</h3>
-              <p className="text-[11px] text-stone-500 dark:text-slate-400 mt-0.5">99.8% on-time transit precision</p>
+            <div className="min-w-0">
+              <p className="text-xl sm:text-3xl md:text-4xl lg:text-3xl xl:text-4xl font-extrabold font-google-sans text-slate-950 dark:text-white tracking-tight leading-none truncate">
+                <AnimatedCounter target={50000} suffix="+" />
+              </p>
+              <h3 className="text-xs sm:text-sm font-bold text-stone-800 dark:text-slate-200 mt-1.5 sm:mt-2 truncate">
+                Curated Products
+              </h3>
+              <p className="text-[10px] sm:text-[11px] lg:text-xs text-stone-500 dark:text-slate-400 mt-0.5 leading-snug line-clamp-2">
+                Electronics, fashion, home & lifestyle
+              </p>
             </div>
           </div>
 
-          <div className="p-6 rounded-3xl bg-white dark:bg-[#131d2e] border border-stone-200/80 dark:border-slate-800 shadow-xs flex flex-col justify-between space-y-2">
-            <div className="w-10 h-10 rounded-xl bg-rose-500/10 text-rose-600 dark:text-rose-400 flex items-center justify-center">
-              <Star className="w-5 h-5 fill-rose-500 text-rose-500" />
+          {/* 3. Pincodes Delivered */}
+          <div className="p-3.5 sm:p-5 md:p-6 rounded-2xl sm:rounded-3xl bg-white dark:bg-[#131d2e] border border-stone-200/80 dark:border-slate-800 shadow-xs flex flex-col justify-between min-h-[140px] sm:min-h-[170px] lg:min-h-[190px] hover:border-emerald-500/40 dark:hover:border-emerald-500/40 transition-all duration-200 group">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 mb-1.5 sm:mb-3">
+              <Truck className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
-            <div>
-              <p className="text-3xl sm:text-5xl font-bold font-google-sans text-slate-950 dark:text-white tracking-tight"><AnimatedCounter target={4.9} decimals={1} suffix=" / 5.0" /></p>
-              <h3 className="text-xs sm:text-sm font-bold text-stone-700 dark:text-slate-300 mt-1">Customer Rating</h3>
-              <p className="text-[11px] text-stone-500 dark:text-slate-400 mt-0.5">Over 120,000 verified buyer reviews</p>
+            <div className="min-w-0">
+              <p className="text-xl sm:text-3xl md:text-4xl lg:text-3xl xl:text-4xl font-extrabold font-google-sans text-slate-950 dark:text-white tracking-tight leading-none truncate">
+                <AnimatedCounter target={10000} suffix="+" />
+              </p>
+              <h3 className="text-xs sm:text-sm font-bold text-stone-800 dark:text-slate-200 mt-1.5 sm:mt-2 truncate">
+                Pincodes Delivered
+              </h3>
+              <p className="text-[10px] sm:text-[11px] lg:text-xs text-stone-500 dark:text-slate-400 mt-0.5 leading-snug line-clamp-2">
+                99.8% on-time transit precision
+              </p>
+            </div>
+          </div>
+
+          {/* 4. Customer Rating */}
+          <div className="p-3.5 sm:p-5 md:p-6 rounded-2xl sm:rounded-3xl bg-white dark:bg-[#131d2e] border border-stone-200/80 dark:border-slate-800 shadow-xs flex flex-col justify-between min-h-[140px] sm:min-h-[170px] lg:min-h-[190px] hover:border-rose-500/40 dark:hover:border-rose-500/40 transition-all duration-200 group">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-rose-500/10 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0 mb-1.5 sm:mb-3">
+              <Star className="w-4 h-4 sm:w-5 sm:h-5 fill-rose-500 text-rose-500" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-xl sm:text-3xl md:text-4xl lg:text-3xl xl:text-4xl font-extrabold font-google-sans text-slate-950 dark:text-white tracking-tight leading-none truncate">
+                <AnimatedCounter target={4.9} decimals={1} suffix=" / 5.0" />
+              </p>
+              <h3 className="text-xs sm:text-sm font-bold text-stone-800 dark:text-slate-200 mt-1.5 sm:mt-2 truncate">
+                Customer Rating
+              </h3>
+              <p className="text-[10px] sm:text-[11px] lg:text-xs text-stone-500 dark:text-slate-400 mt-0.5 leading-snug line-clamp-2">
+                Over 120,000 verified buyer reviews
+              </p>
             </div>
           </div>
         </section>
