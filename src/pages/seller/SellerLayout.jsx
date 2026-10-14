@@ -21,11 +21,21 @@ export const SellerLayout = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
   const { user, logout } = useAuth();
-
-  // Close mobile drawer on route changes
+  // Scroll to top immediately when navigating between seller pages
   useEffect(() => {
     setMobileOpen(false);
-  }, [location.pathname]);
+    try {
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    } catch (_) {
+      window.scrollTo(0, 0);
+    }
+    if (document.documentElement) document.documentElement.scrollTop = 0;
+    if (document.body) document.body.scrollTop = 0;
+    try {
+      const main = document.querySelector('main');
+      if (main) main.scrollTop = 0;
+    } catch (_) {}
+  }, [location.pathname, location.search]);
 
   const navItems = [
     { to: '/seller', end: true, label: 'Studio Analytics', icon: LayoutDashboard },

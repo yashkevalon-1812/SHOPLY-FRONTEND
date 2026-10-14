@@ -67,7 +67,6 @@ const StorefrontLayout = () => {
       <Footer />
       <CompareFloatingBar />
       <CompareModal />
-      <ScrollToTop />
     </div>
   );
 };
@@ -95,6 +94,7 @@ function App() {
             <CompareProvider>
               <WishlistProvider>
                 <BrowserRouter>
+                <ScrollToTop />
                 <Routes>
                   {/* Storefront Layout */}
                   <Route element={<StorefrontLayout />}>

@@ -26,6 +26,15 @@ export const ScrollToTop = () => {
     if (root) {
       root.scrollTop = 0;
     }
+    try {
+      const mains = document.querySelectorAll('main, [role="main"], .overflow-y-auto');
+      mains.forEach((el) => {
+        // Reset scroll position on main containers, excluding fixed sidebar
+        if (!el.closest('aside')) {
+          el.scrollTop = 0;
+        }
+      });
+    } catch (_) {}
   };
 
   // Prevent browser's native scroll restoration from restoring bottom position on route change
