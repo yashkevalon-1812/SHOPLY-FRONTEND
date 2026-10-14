@@ -451,39 +451,44 @@ export const Home = () => {
       <section className="py-6 sm:py-8 bg-zinc-50 dark:bg-[#090e1a] transition-colors">
         <div className="max-w-[1520px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
-            <div className="lg:col-span-6 space-y-3.5">
-              <span className="text-[11px] font-black uppercase tracking-widest text-amber-600 dark:text-amber-400">
+            <div className="lg:col-span-6 flex flex-col justify-center">
+              <span className="text-[11px] font-black uppercase tracking-widest text-amber-600 dark:text-amber-400 mb-2">
                 The Shoply Standard
               </span>
-              <h2 className="text-2xl sm:text-3xl font-black text-zinc-950 dark:text-white leading-tight">
-                Designed for Those Who Notice Every Single Micro-Detail.
+              <h2 className="text-xl sm:text-2xl lg:text-[27px] font-black text-zinc-950 dark:text-white leading-tight tracking-tight sm:whitespace-nowrap mb-3 sm:mb-3.5">
+                Designed for Those Who Notice Every Detail.
               </h2>
-              <p className="text-zinc-600 dark:text-slate-300 text-xs sm:text-sm leading-relaxed">
+              <p className="text-zinc-600 dark:text-slate-300 text-xs sm:text-sm leading-relaxed mb-6 sm:mb-8">
                 In an era of mass commoditization, Shoply stands for bespoke intention. We partner exclusively with certified independent horologists, acoustic engineers, and luxury workshops who honor patient craftsmanship.
               </p>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 pt-1.5">
-                <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 flex items-center justify-center shrink-0 mt-0.5">
-                    <ShieldCheck className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+              {/* Feature Highlights Box */}
+              <div className="p-3 sm:p-3.5 rounded-2xl bg-white dark:bg-[#111827] border border-zinc-200/80 dark:border-slate-800 shadow-2xs">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 sm:divide-x divide-zinc-200/70 dark:divide-slate-800">
+                  {/* Vetted Merchant Guild */}
+                  <div className="flex items-start gap-2.5 sm:pr-3">
+                    <div className="w-7 h-7 rounded-lg bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 flex items-center justify-center shrink-0 mt-0.5">
+                      <ShieldCheck className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+                    </div>
+                    <div className="min-w-0">
+                      <h4 className="text-xs font-bold text-zinc-900 dark:text-white">Vetted Merchant Guild</h4>
+                      <p className="text-[11px] text-zinc-500 dark:text-slate-400 mt-0.5 leading-snug">
+                        Every seller passes manual verification before any product is listed.
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="text-xs font-bold text-zinc-900 dark:text-white">Vetted Merchant Guild</h4>
-                    <p className="text-[11px] text-zinc-500 dark:text-slate-400 mt-0.5 leading-relaxed">
-                      Every seller passes manual verification by our curation panel before a single product is listed.
-                    </p>
-                  </div>
-                </div>
 
-                <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/60 flex items-center justify-center shrink-0 mt-0.5">
-                    <Zap className="w-4 h-4 text-rose-600 dark:text-rose-400" />
-                  </div>
-                  <div>
-                    <h4 className="text-xs font-bold text-zinc-900 dark:text-white">Express Global Logistics</h4>
-                    <p className="text-[11px] text-zinc-500 dark:text-slate-400 mt-0.5 leading-relaxed">
-                      Automated tracking, insured express customs clearance, and carbon-offset fulfillment.
-                    </p>
+                  {/* Express Global Logistics */}
+                  <div className="flex items-start gap-2.5 pt-2.5 sm:pt-0 sm:pl-3 border-t sm:border-t-0 border-zinc-100 dark:border-slate-800/80">
+                    <div className="w-7 h-7 rounded-lg bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/60 flex items-center justify-center shrink-0 mt-0.5">
+                      <Zap className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400" />
+                    </div>
+                    <div className="min-w-0">
+                      <h4 className="text-xs font-bold text-zinc-900 dark:text-white">Express Global Logistics</h4>
+                      <p className="text-[11px] text-zinc-500 dark:text-slate-400 mt-0.5 leading-snug">
+                        Insured express customs clearance and carbon-offset fulfillment.
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
