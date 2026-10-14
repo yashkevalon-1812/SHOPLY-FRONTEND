@@ -8,6 +8,8 @@ import {
   Zap,
   Clock,
   ChevronDown,
+  ChevronRight,
+  Home,
   TrendingUp,
   Truck,
   RotateCcw,
@@ -347,8 +349,52 @@ export const About = () => {
   ];
 
   return (
-    <div className="bg-slate-50 text-slate-900 dark:bg-[#0b1120] dark:text-slate-100 min-h-screen py-8 sm:py-14 transition-colors duration-200 font-sans selection:bg-amber-500 selection:text-slate-950">
-      <div className="max-w-[1560px] mx-auto px-4 sm:px-6 lg:px-8 space-y-16 sm:space-y-24">
+    <div className="bg-slate-50 text-slate-900 dark:bg-[#0b1120] dark:text-slate-100 min-h-screen py-5 sm:py-8 transition-colors duration-200 font-sans selection:bg-amber-500 selection:text-slate-950">
+      <div className="max-w-[1560px] mx-auto px-4 sm:px-6 lg:px-8">
+
+        {/* =========================================================================
+            1. BREADCRUMB BANNER WITH IMAGES
+           ========================================================================= */}
+        <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-stone-200/80 dark:border-slate-800/80 shadow-sm mb-10 sm:mb-16 bg-slate-900 min-h-[220px] sm:min-h-[280px] lg:min-h-[320px] flex items-center">
+          {/* Background image with softened, lighter overlay */}
+          <div className="absolute inset-0 z-0">
+            <img
+              src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1920&q=80"
+              alt="Shoply Headquarters Architecture"
+              className="w-full h-full object-cover object-center filter brightness-[0.78] contrast-100 scale-105"
+            />
+            {/* Softened gradient with decreased shadow overlay for a cleaner, brighter presentation */}
+            <div className="absolute inset-0 bg-gradient-to-r from-slate-950/80 via-slate-950/60 to-slate-950/45 backdrop-blur-[0.5px]"></div>
+          </div>
+
+          {/* Banner content */}
+          <div className="relative z-10 w-full px-6 sm:px-12 lg:px-16 py-10 sm:py-14 lg:py-16 flex flex-col justify-center">
+            {/* Proper Breadcrumbs Navigation */}
+            <nav
+              aria-label="Breadcrumb"
+              className="flex items-center gap-2 sm:gap-2.5 text-sm sm:text-base text-slate-300 font-medium mb-3 sm:mb-4"
+            >
+              <Link
+                to="/"
+                className="inline-flex items-center gap-2 hover:text-amber-400 text-slate-300 transition-colors"
+              >
+                <Home className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400" />
+                <span className="font-semibold">Home</span>
+              </Link>
+              <ChevronRight className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-slate-400 shrink-0" />
+              <span className="text-amber-400 font-bold">About Us</span>
+            </nav>
+
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight">
+              About Us
+            </h1>
+            <p className="text-xs sm:text-base text-slate-300 font-normal mt-2 sm:mt-3 max-w-xl leading-relaxed">
+              Discover our story, curated quality, and transparent multi-seller marketplace values.
+            </p>
+          </div>
+        </div>
+
+        <div className="space-y-16 sm:space-y-24">
 
         {/* =========================================================================
             2. HERO SECTION (EDITORIAL, WARM & INSPIRING)
@@ -1048,6 +1094,7 @@ export const About = () => {
           </div>
         </section>
 
+        </div>
       </div>
     </div>
   );
