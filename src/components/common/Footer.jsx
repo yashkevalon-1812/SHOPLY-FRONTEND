@@ -36,62 +36,62 @@ export const Footer = () => {
          ========================================================================= */}
       <div className="border-b border-zinc-200 dark:border-slate-800 py-4 sm:py-6 bg-white dark:bg-[#0b1120] transition-colors">
         <div className="max-w-[1490px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 lg:gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4 lg:gap-6">
             {/* Delivery */}
-            <div className="flex items-center gap-2.5 sm:gap-3.5 p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-zinc-50/70 dark:bg-slate-900/40 border border-zinc-200/60 dark:border-slate-800/60 lg:bg-transparent lg:border-none lg:p-0">
-              <div className="w-8 h-8 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 flex items-center justify-center shrink-0">
-                <Truck className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600 dark:text-amber-400" />
+            <div className="flex items-center gap-2.5 sm:gap-3.5 p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/90 dark:border-slate-800 shadow-2xs lg:bg-transparent lg:border-none lg:shadow-none lg:p-0 h-full">
+              <div className="w-8.5 h-8.5 sm:w-11 sm:h-11 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 flex items-center justify-center shrink-0">
+                <Truck className="w-4.5 h-4.5 sm:w-5 sm:h-5 text-amber-600 dark:text-amber-400" />
               </div>
-              <div className="min-w-0">
-                <h4 className="text-xs sm:text-sm font-bold text-zinc-950 dark:text-white leading-tight truncate">
+              <div className="min-w-0 flex-1">
+                <h4 className="text-xs sm:text-sm font-extrabold text-slate-950 dark:text-white leading-tight tracking-tight">
                   Insured Delivery
                 </h4>
-                <p className="text-[10px] sm:text-xs text-zinc-500 dark:text-slate-400 truncate">
+                <p className="text-[11px] sm:text-xs font-semibold text-slate-700 dark:text-slate-200 leading-snug mt-0.5">
                   Complimentary over ₹1,999
                 </p>
               </div>
             </div>
 
             {/* Authenticity */}
-            <div className="flex items-center gap-2.5 sm:gap-3.5 p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-zinc-50/70 dark:bg-slate-900/40 border border-zinc-200/60 dark:border-slate-800/60 lg:bg-transparent lg:border-none lg:p-0">
-              <div className="w-8 h-8 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/60 flex items-center justify-center shrink-0">
-                <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5 text-rose-600 dark:text-rose-400" />
+            <div className="flex items-center gap-2.5 sm:gap-3.5 p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/90 dark:border-slate-800 shadow-2xs lg:bg-transparent lg:border-none lg:shadow-none lg:p-0 h-full">
+              <div className="w-8.5 h-8.5 sm:w-11 sm:h-11 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/60 flex items-center justify-center shrink-0">
+                <ShieldCheck className="w-4.5 h-4.5 sm:w-5 sm:h-5 text-rose-600 dark:text-rose-400" />
               </div>
-              <div className="min-w-0">
-                <h4 className="text-xs sm:text-sm font-bold text-zinc-950 dark:text-white leading-tight truncate">
+              <div className="min-w-0 flex-1">
+                <h4 className="text-xs sm:text-sm font-extrabold text-slate-950 dark:text-white leading-tight tracking-tight">
                   100% Authentic
                 </h4>
-                <p className="text-[10px] sm:text-xs text-zinc-500 dark:text-slate-400 truncate">
+                <p className="text-[11px] sm:text-xs font-semibold text-slate-700 dark:text-slate-200 leading-snug mt-0.5">
                   Certified by expert curators
                 </p>
               </div>
             </div>
 
             {/* Returns */}
-            <div className="flex items-center gap-2.5 sm:gap-3.5 p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-zinc-50/70 dark:bg-slate-900/40 border border-zinc-200/60 dark:border-slate-800/60 lg:bg-transparent lg:border-none lg:p-0">
-              <div className="w-8 h-8 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800/60 flex items-center justify-center shrink-0">
-                <RefreshCw className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-600 dark:text-indigo-400" />
+            <div className="flex items-center gap-2.5 sm:gap-3.5 p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/90 dark:border-slate-800 shadow-2xs lg:bg-transparent lg:border-none lg:shadow-none lg:p-0 h-full">
+              <div className="w-8.5 h-8.5 sm:w-11 sm:h-11 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800/60 flex items-center justify-center shrink-0">
+                <RefreshCw className="w-4.5 h-4.5 sm:w-5 sm:h-5 text-indigo-600 dark:text-indigo-400" />
               </div>
-              <div className="min-w-0">
-                <h4 className="text-xs sm:text-sm font-bold text-zinc-950 dark:text-white leading-tight truncate">
+              <div className="min-w-0 flex-1">
+                <h4 className="text-xs sm:text-sm font-extrabold text-slate-950 dark:text-white leading-tight tracking-tight">
                   30-Day Returns
                 </h4>
-                <p className="text-[10px] sm:text-xs text-zinc-500 dark:text-slate-400 truncate">
+                <p className="text-[11px] sm:text-xs font-semibold text-slate-700 dark:text-slate-200 leading-snug mt-0.5">
                   Hassle-free prepaid labels
                 </p>
               </div>
             </div>
 
             {/* Concierge */}
-            <div className="flex items-center gap-2.5 sm:gap-3.5 p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-zinc-50/70 dark:bg-slate-900/40 border border-zinc-200/60 dark:border-slate-800/60 lg:bg-transparent lg:border-none lg:p-0">
-              <div className="w-8 h-8 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 flex items-center justify-center shrink-0">
-                <Headphones className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600 dark:text-emerald-400" />
+            <div className="flex items-center gap-2.5 sm:gap-3.5 p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/90 dark:border-slate-800 shadow-2xs lg:bg-transparent lg:border-none lg:shadow-none lg:p-0 h-full">
+              <div className="w-8.5 h-8.5 sm:w-11 sm:h-11 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 flex items-center justify-center shrink-0">
+                <Headphones className="w-4.5 h-4.5 sm:w-5 sm:h-5 text-emerald-600 dark:text-emerald-400" />
               </div>
-              <div className="min-w-0">
-                <h4 className="text-xs sm:text-sm font-bold text-zinc-950 dark:text-white leading-tight truncate">
+              <div className="min-w-0 flex-1">
+                <h4 className="text-xs sm:text-sm font-extrabold text-slate-950 dark:text-white leading-tight tracking-tight">
                   24/7 Concierge
                 </h4>
-                <p className="text-[10px] sm:text-xs text-zinc-500 dark:text-slate-400 truncate">
+                <p className="text-[11px] sm:text-xs font-semibold text-slate-700 dark:text-slate-200 leading-snug mt-0.5">
                   Dedicated client advisors
                 </p>
               </div>
