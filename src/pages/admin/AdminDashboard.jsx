@@ -14,7 +14,7 @@ import {
   ArrowRight,
   ShieldAlert,
 } from 'lucide-react';
-import { formatINR } from '../../utils/format';
+import { formatINR, formatINRPair } from '../../utils/format';
 
 export const AdminDashboard = () => {
   const [stats, setStats] = useState(null);
@@ -67,68 +67,76 @@ export const AdminDashboard = () => {
         </p>
       </div>
 
-      {/* KPI Stats Grid - Responsive 2-Col Mobile, 3-Col Tablet, 6-Col Desktop */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-2.5 sm:gap-3.5 lg:gap-4">
-        <div className="bg-white dark:bg-[#0c1427] border border-slate-200 dark:border-slate-800 p-3.5 sm:p-4.5 rounded-2xl shadow-xs transition-colors flex flex-col justify-between min-w-0">
+      {/* KPI Stats Grid - Responsive 2-Col Mobile (Revenue & Pending highlight), 3-Col Tablet/Laptop, 6-Col Ultra-Wide */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-6 gap-3 sm:gap-4 lg:gap-5">
+        <div className="col-span-2 sm:col-span-1 bg-white dark:bg-[#0c1427] border border-slate-200 dark:border-slate-800 p-4 sm:p-5 rounded-2xl shadow-xs transition-colors flex flex-col justify-between min-w-0">
           <div>
             <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-2 sm:mb-3">
               <IndianRupee className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
-            <p className="text-[10px] sm:text-[11px] font-semibold text-slate-500 dark:text-slate-400 truncate">Total Revenue</p>
+            <p className="text-[10px] sm:text-[11px] font-semibold text-slate-500 dark:text-slate-400">Total Revenue</p>
           </div>
-          <p className="text-base sm:text-xl xl:text-2xl font-black text-slate-900 dark:text-white mt-1 truncate" title={formatINR(stats?.totalRevenue)}>
-            {formatINR(stats?.totalRevenue)}
+          <p
+            className="text-base sm:text-xl md:text-2xl font-black text-slate-900 dark:text-white mt-1.5 tracking-tight whitespace-nowrap overflow-visible"
+            title={formatINRPair(stats?.totalRevenue).full}
+          >
+            <span>{formatINRPair(stats?.totalRevenue).rupees}</span>
+            {formatINRPair(stats?.totalRevenue).paise && (
+              <span className="text-xs sm:text-sm font-bold text-slate-500 dark:text-slate-400 ml-0.5">
+                {formatINRPair(stats?.totalRevenue).paise}
+              </span>
+            )}
           </p>
         </div>
 
-        <div className="bg-white dark:bg-[#0c1427] border border-slate-200 dark:border-slate-800 p-3.5 sm:p-4.5 rounded-2xl shadow-xs transition-colors flex flex-col justify-between min-w-0">
+        <div className="bg-white dark:bg-[#0c1427] border border-slate-200 dark:border-slate-800 p-4 sm:p-5 rounded-2xl shadow-xs transition-colors flex flex-col justify-between min-w-0">
           <div>
             <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 text-amber-600 dark:text-amber-400 flex items-center justify-center mb-2 sm:mb-3">
               <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <p className="text-[10px] sm:text-[11px] font-semibold text-slate-500 dark:text-slate-400 truncate">Total Orders</p>
           </div>
-          <p className="text-base sm:text-xl xl:text-2xl font-black text-slate-900 dark:text-white mt-1 truncate">{stats?.totalOrders || 0}</p>
+          <p className="text-base sm:text-xl md:text-2xl font-black text-slate-900 dark:text-white mt-1.5 truncate">{stats?.totalOrders || 0}</p>
         </div>
 
-        <div className="bg-white dark:bg-[#0c1427] border border-slate-200 dark:border-slate-800 p-3.5 sm:p-4.5 rounded-2xl shadow-xs transition-colors flex flex-col justify-between min-w-0">
+        <div className="bg-white dark:bg-[#0c1427] border border-slate-200 dark:border-slate-800 p-4 sm:p-5 rounded-2xl shadow-xs transition-colors flex flex-col justify-between min-w-0">
           <div>
             <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center mb-2 sm:mb-3">
               <Package className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <p className="text-[10px] sm:text-[11px] font-semibold text-slate-500 dark:text-slate-400 truncate">Active Listings</p>
           </div>
-          <p className="text-base sm:text-xl xl:text-2xl font-black text-slate-900 dark:text-white mt-1 truncate">{stats?.totalProducts || 0}</p>
+          <p className="text-base sm:text-xl md:text-2xl font-black text-slate-900 dark:text-white mt-1.5 truncate">{stats?.totalProducts || 0}</p>
         </div>
 
-        <div className="bg-white dark:bg-[#0c1427] border border-slate-200 dark:border-slate-800 p-3.5 sm:p-4.5 rounded-2xl shadow-xs transition-colors flex flex-col justify-between min-w-0">
+        <div className="bg-white dark:bg-[#0c1427] border border-slate-200 dark:border-slate-800 p-4 sm:p-5 rounded-2xl shadow-xs transition-colors flex flex-col justify-between min-w-0">
           <div>
             <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-purple-50 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-800/60 text-purple-600 dark:text-purple-400 flex items-center justify-center mb-2 sm:mb-3">
               <Users className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <p className="text-[10px] sm:text-[11px] font-semibold text-slate-500 dark:text-slate-400 truncate">Total Users</p>
           </div>
-          <p className="text-base sm:text-xl xl:text-2xl font-black text-slate-900 dark:text-white mt-1 truncate">{stats?.totalUsers || 0}</p>
+          <p className="text-base sm:text-xl md:text-2xl font-black text-slate-900 dark:text-white mt-1.5 truncate">{stats?.totalUsers || 0}</p>
         </div>
 
-        <div className="bg-white dark:bg-[#0c1427] border border-slate-200 dark:border-slate-800 p-3.5 sm:p-4.5 rounded-2xl shadow-xs transition-colors flex flex-col justify-between min-w-0">
+        <div className="bg-white dark:bg-[#0c1427] border border-slate-200 dark:border-slate-800 p-4 sm:p-5 rounded-2xl shadow-xs transition-colors flex flex-col justify-between min-w-0">
           <div>
             <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-sky-50 dark:bg-sky-950/40 border border-sky-200 dark:border-sky-800/60 text-sky-600 dark:text-sky-400 flex items-center justify-center mb-2 sm:mb-3">
               <Store className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <p className="text-[10px] sm:text-[11px] font-semibold text-slate-500 dark:text-slate-400 truncate">Registered Sellers</p>
           </div>
-          <p className="text-base sm:text-xl xl:text-2xl font-black text-slate-900 dark:text-white mt-1 truncate">{stats?.totalSellers || 0}</p>
+          <p className="text-base sm:text-xl md:text-2xl font-black text-slate-900 dark:text-white mt-1.5 truncate">{stats?.totalSellers || 0}</p>
         </div>
 
-        <div className="bg-white dark:bg-[#0c1427] border border-amber-300 dark:border-amber-700/60 p-3.5 sm:p-4.5 rounded-2xl shadow-xs bg-gradient-to-br from-amber-50/50 dark:from-amber-950/30 to-white dark:to-[#0c1427] flex flex-col justify-between min-w-0">
+        <div className="col-span-2 sm:col-span-1 bg-white dark:bg-[#0c1427] border border-amber-300 dark:border-amber-700/60 p-4 sm:p-5 rounded-2xl shadow-xs bg-gradient-to-br from-amber-50/50 dark:from-amber-950/30 to-white dark:to-[#0c1427] flex flex-col justify-between min-w-0">
           <div>
             <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-amber-100 dark:bg-amber-900/60 text-amber-700 dark:text-amber-400 flex items-center justify-center mb-2 sm:mb-3">
               <Clock className="w-4 h-4 sm:w-5 sm:h-5 animate-pulse" />
             </div>
             <p className="text-[10px] sm:text-[11px] font-bold text-amber-800 dark:text-amber-300 truncate">Pending Sellers</p>
           </div>
-          <p className="text-base sm:text-xl xl:text-2xl font-black text-amber-900 dark:text-amber-200 mt-1 truncate">
+          <p className="text-base sm:text-xl md:text-2xl font-black text-amber-900 dark:text-amber-200 mt-1.5 truncate">
             {stats?.pendingSellers || 0}
           </p>
         </div>

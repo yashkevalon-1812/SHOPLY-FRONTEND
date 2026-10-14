@@ -12,7 +12,7 @@ import {
   AlertCircle,
   ArrowRight,
 } from 'lucide-react';
-import { formatINR } from '../../utils/format';
+import { formatINR, formatINRPair } from '../../utils/format';
 
 export const SellerDashboard = () => {
   const { user } = useAuth();
@@ -65,10 +65,18 @@ export const SellerDashboard = () => {
             <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-2.5 sm:mb-4">
               <IndianRupee className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
-            <p className="text-[10px] sm:text-xs font-semibold text-slate-500 dark:text-slate-400 truncate">Merchant Revenue</p>
+            <p className="text-[10px] sm:text-xs font-semibold text-slate-500 dark:text-slate-400">Merchant Revenue</p>
           </div>
-          <p className="text-base sm:text-xl md:text-2xl font-black text-slate-900 dark:text-white mt-1 truncate" title={formatINR(stats?.totalRevenue)}>
-            {formatINR(stats?.totalRevenue)}
+          <p
+            className="text-base sm:text-xl md:text-2xl font-black text-slate-900 dark:text-white mt-1.5 tracking-tight whitespace-nowrap overflow-visible"
+            title={formatINRPair(stats?.totalRevenue).full}
+          >
+            <span>{formatINRPair(stats?.totalRevenue).rupees}</span>
+            {formatINRPair(stats?.totalRevenue).paise && (
+              <span className="text-xs sm:text-sm font-bold text-slate-500 dark:text-slate-400 ml-0.5">
+                {formatINRPair(stats?.totalRevenue).paise}
+              </span>
+            )}
           </p>
         </div>
 
