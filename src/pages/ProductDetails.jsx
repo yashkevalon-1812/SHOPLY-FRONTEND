@@ -28,7 +28,7 @@ export const ProductDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const { addToCart } = useCart();
+  const { addToCart, cartItems, updateQty, removeFromCart } = useCart();
   const { isAuthenticated } = useAuth();
   const { addToast } = useToast();
   const { toggleWishlist, isInWishlist } = useWishlist();
@@ -36,8 +36,10 @@ export const ProductDetails = () => {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState('');
-  const [quantity, setQuantity] = useState(0);
   const [activeTab, setActiveTab] = useState('description');
+
+  const cartItem = cartItems?.find((item) => item.product === product?._id);
+  const inCartQuantity = cartItem ? cartItem.qty : 0;
 
   const [reviewRating, setReviewRating] = useState(5);
   const [reviewComment, setReviewComment] = useState('');
@@ -65,13 +67,15 @@ export const ProductDetails = () => {
 
   const handleAddToCart = () => {
     if (!product) return;
-    addToCart(product, quantity);
-    addToast(`Added ${quantity} × "${product.title}" to cart`, 'success');
+    addToCart(product, 1);
+    addToast(`Added "${product.title}" to cart`, 'success');
   };
 
   const handleBuyNow = () => {
     if (!product) return;
-    addToCart(product, quantity);
+    if (inCartQuantity === 0) {
+      addToCart(product, 1);
+    }
     navigate('/checkout');
   };
 
@@ -340,23 +344,49 @@ export const ProductDetails = () => {
                 )}
               </div>
 
-              {/* Quantity Stepper */}
-              {product.stock > 0 && (
-                <div className="flex items-center gap-4 pt-2">
-                  <span className="text-xs font-bold text-zinc-700 dark:text-slate-300">Quantity:</span>
-                  <div className="flex items-center bg-zinc-50 dark:bg-slate-800/80 border border-zinc-200 dark:border-slate-700 rounded-xl">
+              {/* Quantity Stepper (Hidden when 0 / not in cart; shown only when item is in cart) */}
+              {product.stock > 0 && inCartQuantity > 0 && (
+                <div className="flex items-center gap-4 pt-2 animate-in fade-in slide-in-from-top-1 duration-200">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-bold text-zinc-700 dark:text-slate-300">Quantity:</span>
+                    <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                      <Check className="w-3 h-3 stroke-[2.5]" />
+                      <span>In Cart ({inCartQuantity})</span>
+                    </span>
+                  </div>
+                  <div className="flex items-center bg-zinc-50 dark:bg-slate-800/80 border border-zinc-200 dark:border-slate-700 rounded-xl shadow-2xs">
                     <button
-                      onClick={() => setQuantity((q) => Math.max(0, q - 1))}
+                      type="button"
+                      onClick={() => {
+                        if (inCartQuantity <= 1) {
+                          removeFromCart(product._id);
+                          addToast(`Removed "${product.title}" from cart`, 'info');
+                        } else {
+                          updateQty(product._id, inCartQuantity - 1);
+                        }
+                      }}
                       className="p-2.5 text-zinc-600 dark:text-slate-400 hover:text-zinc-950 dark:hover:text-white transition-colors cursor-pointer"
+                      title="Decrease quantity"
+                      aria-label="Decrease quantity"
                     >
                       <Minus className="w-3.5 h-3.5" />
                     </button>
                     <span className="w-10 text-center text-xs font-bold text-zinc-900 dark:text-white">
-                      {quantity}
+                      {inCartQuantity}
                     </span>
                     <button
-                      onClick={() => setQuantity((q) => Math.min(product.stock, q + 1))}
-                      className="p-2.5 text-zinc-600 dark:text-slate-400 hover:text-zinc-950 dark:hover:text-white transition-colors cursor-pointer"
+                      type="button"
+                      onClick={() => {
+                        if (inCartQuantity < product.stock) {
+                          updateQty(product._id, inCartQuantity + 1);
+                        } else {
+                          addToast(`Maximum available stock reached (${product.stock})`, 'warning');
+                        }
+                      }}
+                      disabled={inCartQuantity >= product.stock}
+                      className="p-2.5 text-zinc-600 dark:text-slate-400 hover:text-zinc-950 dark:hover:text-white disabled:opacity-40 transition-colors cursor-pointer"
+                      title="Increase quantity"
+                      aria-label="Increase quantity"
                     >
                       <Plus className="w-3.5 h-3.5" />
                     </button>
@@ -384,16 +414,28 @@ export const ProductDetails = () => {
 
               {/* Conversion Buttons: Add to Cart & Buy Now (Side by Side) */}
               <div className="grid grid-cols-2 gap-2 sm:gap-3 pt-2">
-                <button
-                  onClick={handleAddToCart}
-                  disabled={product.stock === 0}
-                  className="w-full bg-zinc-100 hover:bg-zinc-200 dark:bg-slate-800 dark:hover:bg-slate-700 disabled:opacity-50 text-zinc-900 dark:text-white font-bold text-xs sm:text-sm py-3.5 sm:py-4 rounded-xl sm:rounded-2xl flex items-center justify-center gap-1.5 sm:gap-2 border border-zinc-200 dark:border-slate-700 transition-all cursor-pointer whitespace-nowrap shadow-xs"
-                >
-                  <ShoppingBag className="w-4 h-4 text-zinc-600 dark:text-slate-300 shrink-0" />
-                  <span>Add to Cart</span>
-                </button>
+                {inCartQuantity > 0 ? (
+                  <Link
+                    to="/cart"
+                    className="w-full bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:hover:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 font-bold text-xs sm:text-sm py-3.5 sm:py-4 rounded-xl sm:rounded-2xl flex items-center justify-center gap-1.5 sm:gap-2 border border-emerald-300 dark:border-emerald-700/80 transition-all cursor-pointer whitespace-nowrap shadow-xs"
+                  >
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                    <span>View in Cart</span>
+                  </Link>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handleAddToCart}
+                    disabled={product.stock === 0}
+                    className="w-full bg-zinc-100 hover:bg-zinc-200 dark:bg-slate-800 dark:hover:bg-slate-700 disabled:opacity-50 text-zinc-900 dark:text-white font-bold text-xs sm:text-sm py-3.5 sm:py-4 rounded-xl sm:rounded-2xl flex items-center justify-center gap-1.5 sm:gap-2 border border-zinc-200 dark:border-slate-700 transition-all cursor-pointer whitespace-nowrap shadow-xs"
+                  >
+                    <ShoppingBag className="w-4 h-4 text-zinc-600 dark:text-slate-300 shrink-0" />
+                    <span>Add to Cart</span>
+                  </button>
+                )}
 
                 <button
+                  type="button"
                   onClick={handleBuyNow}
                   disabled={product.stock === 0}
                   className="w-full bg-zinc-950 hover:bg-zinc-800 dark:bg-amber-500 dark:hover:bg-amber-400 dark:text-slate-950 disabled:opacity-50 text-white font-black text-xs sm:text-sm py-3.5 sm:py-4 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-xl shadow-zinc-950/10 dark:shadow-amber-500/10 transition-all hover:scale-[1.01] cursor-pointer whitespace-nowrap"
