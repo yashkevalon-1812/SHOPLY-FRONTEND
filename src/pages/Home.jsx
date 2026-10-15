@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import api from '../api/axios';
-import { ProductCard } from '../components/product/ProductCard';
-import { handleImageError } from '../utils/imageHelper';
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import api from "../api/axios";
+import { ProductCard } from "../components/product/ProductCard";
+import { handleImageError } from "../utils/imageHelper";
 import {
   ArrowRight,
   Sparkles,
@@ -16,60 +16,64 @@ import {
   Truck,
   RotateCcw,
   Headphones,
-} from 'lucide-react';
+} from "lucide-react";
 
 const heroSlides = [
   {
     id: 1,
-    image: '/hero-everything-store.jpg',
-    kicker: 'ALL CATEGORIES / ONE DESTINATION',
-    titleLine1: 'Everything You Need,',
-    titleAccent: 'All in',
-    titleLine2: 'One Place',
-    subtitle: 'From fashion and electronics to home essentials and more — discover top quality products, unbeatable deals and a better way to shop, all at Shoply.',
-    badgeTitle: 'Better Choices',
-    badgeSubtitle: 'Brighter Days ✨',
-    ctaText: 'Shop Now',
-    ctaLink: '/shop',
+    image: "/hero-everything-store.jpg",
+    kicker: "ALL CATEGORIES / ONE DESTINATION",
+    titleLine1: "Everything You Need,",
+    titleAccent: "All in",
+    titleLine2: "One Place",
+    subtitle:
+      "From fashion and electronics to home essentials and more — discover top quality products, unbeatable deals and a better way to shop, all at Shoply.",
+    badgeTitle: "Better Choices",
+    badgeSubtitle: "Brighter Days ✨",
+    ctaText: "Shop Now",
+    ctaLink: "/shop",
   },
   {
     id: 2,
-    image: '/hero-studio.jpg',
-    kicker: 'CURATED STUDIO / EXCLUSIVE DROPS',
-    titleLine1: 'Elevate Your Daily Living,',
-    titleAccent: 'Crafted with',
-    titleLine2: 'Precision',
-    subtitle: 'Explore limited studio releases, designer electronics, and bespoke lifestyle essentials engineered for uncompromising quality.',
-    badgeTitle: 'Curated Essentials',
-    badgeSubtitle: 'Studio Edition ✨',
-    ctaText: 'Explore Studio',
-    ctaLink: '/shop',
+    image: "/hero-studio.jpg",
+    kicker: "CURATED STUDIO / EXCLUSIVE DROPS",
+    titleLine1: "Elevate Your Daily Living,",
+    titleAccent: "Crafted with",
+    titleLine2: "Precision",
+    subtitle:
+      "Explore limited studio releases, designer electronics, and bespoke lifestyle essentials engineered for uncompromising quality.",
+    badgeTitle: "Curated Essentials",
+    badgeSubtitle: "Studio Edition ✨",
+    ctaText: "Explore Studio",
+    ctaLink: "/shop",
   },
   {
     id: 3,
-    image: '/hero-fashion.jpg',
-    kicker: 'CURATED FASHION / TRENDING APPAREL',
-    titleLine1: 'Define Your Modern Style,',
-    titleAccent: 'Tailored for',
-    titleLine2: 'Bold Confidence',
-    subtitle: 'From seasonal runway collections to everyday statement pieces — discover wardrobe staples designed to turn heads everywhere you go.',
-    badgeTitle: 'Seasonal Picks',
-    badgeSubtitle: 'Urban Luxury 🔥',
-    ctaText: 'Shop Fashion',
-    ctaLink: '/shop?category=Fashion',
+    image: "/hero-fashion.jpg",
+    kicker: "CURATED FASHION / TRENDING APPAREL",
+    titleLine1: "Define Your Modern Style,",
+    titleAccent: "Tailored for",
+    titleLine2: "Bold Confidence",
+    subtitle:
+      "From seasonal runway collections to everyday statement pieces — discover wardrobe staples designed to turn heads everywhere you go.",
+    badgeTitle: "Seasonal Picks",
+    badgeSubtitle: "Urban Luxury 🔥",
+    ctaText: "Shop Fashion",
+    ctaLink: "/shop?category=Fashion",
   },
   {
     id: 4,
-    image: '/hero-lifestyle.jpg',
-    kicker: 'HOME & LIVING / ARTISANAL DECOR',
-    titleLine1: 'Transform Your Home Space,',
-    titleAccent: 'Curated for',
-    titleLine2: 'Cozy Comfort',
-    subtitle: 'Create your sanctuary with warm textures, handcrafted homeware, and functional aesthetic accents made for inspired everyday living.',
-    badgeTitle: 'Modern Spaces',
-    badgeSubtitle: 'Cozy Living 🌿',
-    ctaText: 'Shop Home & Living',
-    ctaLink: '/shop?category=Home%20%26%20Kitchen',
+    image: "/hero-lifestyle.jpg",
+    kicker: "HOME & LIVING / ARTISANAL DECOR",
+    titleLine1: "Transform Your Home Space,",
+    titleAccent: "Curated for",
+    titleLine2: "Cozy Comfort",
+    subtitle:
+      "Create your sanctuary with warm textures, handcrafted homeware, and functional aesthetic accents made for inspired everyday living.",
+    badgeTitle: "Modern Spaces",
+    badgeSubtitle: "Cozy Living 🌿",
+    ctaText: "Shop Home & Living",
+    ctaLink: "/shop?category=Home%20%26%20Kitchen",
   },
 ];
 
@@ -88,7 +92,11 @@ export const Home = () => {
   }, []);
 
   // Live countdown timer for Mega Sale & Flash Deals
-  const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
+  const [timeLeft, setTimeLeft] = useState({
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
 
   useEffect(() => {
     if (!flashDeals || flashDeals.length === 0) return;
@@ -97,7 +105,9 @@ export const Home = () => {
       const withExpiry = flashDeals.filter((p) => p.flashSaleExpiresAt);
       let targetTime;
       if (withExpiry.length > 0) {
-        targetTime = Math.min(...withExpiry.map((p) => new Date(p.flashSaleExpiresAt).getTime()));
+        targetTime = Math.min(
+          ...withExpiry.map((p) => new Date(p.flashSaleExpiresAt).getTime()),
+        );
       } else {
         const midnight = new Date();
         midnight.setHours(23, 59, 59, 999);
@@ -125,15 +135,15 @@ export const Home = () => {
     const loadHomeData = async () => {
       try {
         const [featRes, flashRes, catRes] = await Promise.all([
-          api.get('/products/featured').catch(() => ({ data: [] })),
-          api.get('/products/flash-deals').catch(() => ({ data: [] })),
-          api.get('/products/categories').catch(() => ({ data: [] })),
+          api.get("/products/featured").catch(() => ({ data: [] })),
+          api.get("/products/flash-deals").catch(() => ({ data: [] })),
+          api.get("/products/categories").catch(() => ({ data: [] })),
         ]);
         setFeaturedProducts(Array.isArray(featRes.data) ? featRes.data : []);
         setFlashDeals(Array.isArray(flashRes.data) ? flashRes.data : []);
         setCategories(Array.isArray(catRes.data) ? catRes.data : []);
       } catch (err) {
-        console.error('Error fetching curated drops:', err);
+        console.error("Error fetching curated drops:", err);
       }
     };
     loadHomeData();
@@ -170,12 +180,15 @@ export const Home = () => {
             style={{ transform: `translateX(-${currentSlide * 100}%)` }}
           >
             {heroSlides.map((slide, idx) => (
-              <div key={slide.id} className="min-w-full h-full relative shrink-0">
+              <div
+                key={slide.id}
+                className="min-w-full h-full relative shrink-0"
+              >
                 <img
                   src={slide.image}
                   alt={slide.kicker}
                   className="w-full h-full object-cover hero-bg-img select-none pointer-events-none"
-                  loading={idx === 0 ? 'eager' : 'lazy'}
+                  loading={idx === 0 ? "eager" : "lazy"}
                 />
               </div>
             ))}
@@ -216,7 +229,7 @@ export const Home = () => {
               <span className="block mt-0.5 sm:mt-1">
                 <span className="font-serif italic font-normal text-slate-900 dark:text-amber-200">
                   {heroSlides[currentSlide].titleAccent}
-                </span>{' '}
+                </span>{" "}
                 <span className="font-caslon">
                   {heroSlides[currentSlide].titleLine2}
                 </span>
@@ -231,10 +244,12 @@ export const Home = () => {
             {/* CTA Buttons - Side by Side on all mobile devices and desktop */}
             <div className="grid grid-cols-2 gap-2 sm:gap-3.5 pt-1.5 sm:pt-2.5 max-w-sm sm:max-w-md">
               <Link
-                to={heroSlides[currentSlide].ctaLink || '/shop'}
+                to={heroSlides[currentSlide].ctaLink || "/shop"}
                 className="w-full inline-flex items-center justify-center gap-1.5 sm:gap-2 bg-[#171717] hover:bg-black dark:bg-amber-500 dark:hover:bg-amber-400 text-white dark:text-slate-950 font-bold text-xs sm:text-sm px-2.5 sm:px-6 py-2.5 sm:py-3 rounded-full shadow-md transition-all hover:scale-105 active:scale-95 text-center"
               >
-                <span className="truncate">{heroSlides[currentSlide].ctaText || 'Shop Now'}</span>
+                <span className="truncate">
+                  {heroSlides[currentSlide].ctaText || "Shop Now"}
+                </span>
                 <ArrowRight className="w-3.5 h-3.5 shrink-0" />
               </Link>
               <Link
@@ -258,8 +273,12 @@ export const Home = () => {
                   <Truck className="w-4 h-4 sm:w-5 sm:h-5 text-slate-900 dark:text-amber-400" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-[11px] sm:text-sm md:text-[15px] font-bold text-slate-900 dark:text-white leading-tight truncate">Free Shipping</p>
-                  <p className="text-[10px] sm:text-xs text-stone-500 dark:text-slate-400 font-medium mt-0.5 leading-tight truncate">Over ₹1,999</p>
+                  <p className="text-[11px] sm:text-sm md:text-[15px] font-bold text-slate-900 dark:text-white leading-tight truncate">
+                    Free Shipping
+                  </p>
+                  <p className="text-[10px] sm:text-xs text-stone-500 dark:text-slate-400 font-medium mt-0.5 leading-tight truncate">
+                    Over ₹1,999
+                  </p>
                 </div>
               </div>
 
@@ -271,8 +290,12 @@ export const Home = () => {
                   <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5 text-slate-900 dark:text-amber-400" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-[11px] sm:text-sm md:text-[15px] font-bold text-slate-900 dark:text-white leading-tight truncate">Secure Pay</p>
-                  <p className="text-[10px] sm:text-xs text-stone-500 dark:text-slate-400 font-medium mt-0.5 leading-tight truncate">100% Encrypted</p>
+                  <p className="text-[11px] sm:text-sm md:text-[15px] font-bold text-slate-900 dark:text-white leading-tight truncate">
+                    Secure Pay
+                  </p>
+                  <p className="text-[10px] sm:text-xs text-stone-500 dark:text-slate-400 font-medium mt-0.5 leading-tight truncate">
+                    100% Encrypted
+                  </p>
                 </div>
               </div>
 
@@ -284,8 +307,12 @@ export const Home = () => {
                   <RotateCcw className="w-4 h-4 sm:w-5 sm:h-5 text-slate-900 dark:text-amber-400" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-[11px] sm:text-sm md:text-[15px] font-bold text-slate-900 dark:text-white leading-tight truncate">Easy Returns</p>
-                  <p className="text-[10px] sm:text-xs text-stone-500 dark:text-slate-400 font-medium mt-0.5 leading-tight truncate">7-Day Window</p>
+                  <p className="text-[11px] sm:text-sm md:text-[15px] font-bold text-slate-900 dark:text-white leading-tight truncate">
+                    Easy Returns
+                  </p>
+                  <p className="text-[10px] sm:text-xs text-stone-500 dark:text-slate-400 font-medium mt-0.5 leading-tight truncate">
+                    7-Day Window
+                  </p>
                 </div>
               </div>
 
@@ -297,8 +324,12 @@ export const Home = () => {
                   <Headphones className="w-4 h-4 sm:w-5 sm:h-5 text-slate-900 dark:text-amber-400" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-[11px] sm:text-sm md:text-[15px] font-bold text-slate-900 dark:text-white leading-tight truncate">Call Support</p>
-                  <p className="text-[10px] sm:text-xs text-stone-500 dark:text-slate-400 font-medium mt-0.5 leading-tight truncate">24/7 Service</p>
+                  <p className="text-[11px] sm:text-sm md:text-[15px] font-bold text-slate-900 dark:text-white leading-tight truncate">
+                    Call Support
+                  </p>
+                  <p className="text-[10px] sm:text-xs text-stone-500 dark:text-slate-400 font-medium mt-0.5 leading-tight truncate">
+                    24/7 Service
+                  </p>
                 </div>
               </div>
             </div>
@@ -322,32 +353,36 @@ export const Home = () => {
                   <span>MEGA SALE & FLASH DROPS</span>
                   <span className="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
                   <span className="font-bold lowercase text-orange-600 dark:text-orange-300">
-                    {flashDeals.length} {flashDeals.length === 1 ? 'deal' : 'deals'} active
+                    {flashDeals.length}{" "}
+                    {flashDeals.length === 1 ? "deal" : "deals"} active
                   </span>
                 </div>
                 <h2 className="text-xl sm:text-2xl font-black text-zinc-950 dark:text-white tracking-tight">
                   Mega Sale & Flash Vault Drops
                 </h2>
                 <p className="text-xs sm:text-sm text-zinc-600 dark:text-slate-400 mt-0.5">
-                  Exclusive limited-time event pricing. Up to 70% off high-demand editions. Quantities strictly limited.
+                  Exclusive limited-time event pricing. Up to 70% off
+                  high-demand editions. Quantities strictly limited.
                 </p>
               </div>
 
               {/* Countdown Box */}
               <div className="flex items-center gap-2.5 bg-white dark:bg-[#131d2e] border border-orange-200/80 dark:border-orange-900/40 px-3.5 py-1.5 rounded-xl shadow-xs transition-colors">
                 <Clock className="w-3.5 h-3.5 text-orange-600 dark:text-orange-400 shrink-0" />
-                <span className="text-xs sm:text-sm text-zinc-600 dark:text-slate-300 font-semibold mr-0.5">Sale Ends In:</span>
+                <span className="text-xs sm:text-sm text-zinc-600 dark:text-slate-300 font-semibold mr-0.5">
+                  Sale Ends In:
+                </span>
                 <div className="flex items-center gap-1 font-mono text-xs font-black">
                   <span className="bg-zinc-100 dark:bg-slate-800 px-2 py-0.5 rounded border border-zinc-200 dark:border-slate-700 text-zinc-900 dark:text-white">
-                    {String(timeLeft.hours).padStart(2, '0')}h
+                    {String(timeLeft.hours).padStart(2, "0")}h
                   </span>
                   <span>:</span>
                   <span className="bg-zinc-100 dark:bg-slate-800 px-2 py-0.5 rounded border border-zinc-200 dark:border-slate-700 text-zinc-900 dark:text-white">
-                    {String(timeLeft.minutes).padStart(2, '0')}m
+                    {String(timeLeft.minutes).padStart(2, "0")}m
                   </span>
                   <span>:</span>
                   <span className="bg-zinc-100 dark:bg-slate-800 px-2 py-0.5 rounded border border-zinc-200 dark:border-slate-700 text-orange-600 dark:text-orange-400">
-                    {String(timeLeft.seconds).padStart(2, '0')}s
+                    {String(timeLeft.seconds).padStart(2, "0")}s
                   </span>
                 </div>
               </div>
@@ -393,7 +428,10 @@ export const Home = () => {
                 className="group relative rounded-2xl overflow-hidden aspect-[4/5] bg-zinc-100 dark:bg-slate-800 border border-zinc-200 dark:border-slate-800 hover:border-zinc-400 dark:hover:border-slate-600 transition-all shadow-xs hover:shadow-lg"
               >
                 <img
-                  src={cat.image || 'https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=500&q=80'}
+                  src={
+                    cat.image ||
+                    "https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=500&q=80"
+                  }
                   alt={cat.name}
                   referrerPolicy="no-referrer"
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
@@ -402,11 +440,11 @@ export const Home = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/85 via-zinc-950/25 to-transparent"></div>
                 <div className="absolute bottom-3 left-3 right-3">
                   <p className="text-[10px] text-amber-400 font-bold uppercase tracking-wider">
-                    {cat.count ? `${cat.count} ${cat.count === 1 ? 'Product' : 'Products'}` : 'Collection'}
+                    {cat.count
+                      ? `${cat.count} ${cat.count === 1 ? "Product" : "Products"}`
+                      : "Collection"}
                   </p>
-                  <h3 className="text-sm font-black text-white">
-                    {cat.name}
-                  </h3>
+                  <h3 className="text-sm font-black text-white">{cat.name}</h3>
                 </div>
               </Link>
             ))}
@@ -449,63 +487,59 @@ export const Home = () => {
       {/* =========================================================================
           5. BRAND ETHOS / WHY SHOPLY (Minimal Spacing)
          ========================================================================= */}
-      <section className="py-6 sm:py-8 bg-zinc-50 dark:bg-[#090e1a] transition-colors">
-        <div className="max-w-[1520px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
-            <div className="lg:col-span-6 flex flex-col justify-center">
+      <section className="py-8 sm:py-10 bg-zinc-50 dark:bg-[#090e1a] transition-colors">
+        <div className="max-w-[1520px] px-4 sm:px-6 lg:px-8">
+          <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 items-center gap-6 sm:gap-10">
+            <div className="mb-0">
               <span className="text-[11px] font-black uppercase tracking-widest text-amber-600 dark:text-amber-400 mb-2">
                 The Shoply Standard
               </span>
-              <h2 className="text-xl sm:text-2xl lg:text-[27px] font-black text-zinc-950 dark:text-white leading-tight tracking-tight sm:whitespace-nowrap mb-3 sm:mb-3.5">
+              <h2 className="text-xl sm:text-2xl lg:text-[27px] font-black text-zinc-950 dark:text-white leading-tight tracking-tight mb-3 sm:mb-3.5">
                 Designed for Those Who Notice Every Detail.
               </h2>
-              <p className="text-zinc-600 dark:text-slate-300 text-xs sm:text-sm leading-relaxed mb-6 sm:mb-8">
-                In an era of mass commoditization, Shoply stands for bespoke intention. We partner exclusively with certified independent horologists, acoustic engineers, and luxury workshops who honor patient craftsmanship.
+              <p className="text-zinc-600 dark:text-slate-300 text-xs sm:text-sm leading-relaxed mb-6 sm:mb-8 max-w-2xl">
+                In an era of mass commoditization, Shoply stands for bespoke
+                intention. We partner exclusively with certified independent
+                horologists, acoustic engineers, and luxury workshops who honor
+                patient craftsmanship.
               </p>
+            </div>
 
-              {/* Feature Highlights Box */}
-              <div className="p-3 sm:p-3.5 rounded-2xl bg-white dark:bg-[#111827] border border-zinc-200/80 dark:border-slate-800 shadow-2xs">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 sm:divide-x divide-zinc-200/70 dark:divide-slate-800">
-                  {/* Vetted Merchant Guild */}
-                  <div className="flex items-start gap-2.5 sm:pr-3">
-                    <div className="w-7 h-7 rounded-lg bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 flex items-center justify-center shrink-0 mt-0.5">
-                      <ShieldCheck className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
-                    </div>
-                    <div className="min-w-0">
-                      <h4 className="text-xs font-bold text-zinc-900 dark:text-white">Vetted Merchant Guild</h4>
-                      <p className="text-[11px] text-zinc-500 dark:text-slate-400 mt-0.5 leading-snug">
-                        Every seller passes manual verification before any product is listed.
-                      </p>
-                    </div>
+            {/* Feature Highlights Box */}
+            <div className="w-full p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#111827] border border-zinc-200/80 dark:border-slate-800 shadow-2xs">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 sm:divide-x divide-zinc-200/70 dark:divide-slate-800">
+                {/* Vetted Merchant Guild */}
+                <div className="flex items-start text-left gap-3 sm:gap-3.5 sm:pr-4">
+                  <div className="w-8 h-8 rounded-lg bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 flex items-center justify-center shrink-0 mt-0.5">
+                    <ShieldCheck className="w-4 h-4 text-amber-600 dark:text-amber-400" />
                   </div>
+                  <div className="min-w-0">
+                    <h4 className="text-xs sm:text-sm font-bold text-zinc-900 dark:text-white">
+                      Vetted Merchant Guild
+                    </h4>
+                    <p className="text-[11px] sm:text-xs text-zinc-500 dark:text-slate-400 mt-0.5 leading-snug">
+                      Every seller passes manual verification before any product
+                      is listed.
+                    </p>
+                  </div>
+                </div>
 
-                  {/* Express Global Logistics */}
-                  <div className="flex items-start gap-2.5 pt-2.5 sm:pt-0 sm:pl-3 border-t sm:border-t-0 border-zinc-100 dark:border-slate-800/80">
-                    <div className="w-7 h-7 rounded-lg bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/60 flex items-center justify-center shrink-0 mt-0.5">
-                      <Zap className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400" />
-                    </div>
-                    <div className="min-w-0">
-                      <h4 className="text-xs font-bold text-zinc-900 dark:text-white">Express Global Logistics</h4>
-                      <p className="text-[11px] text-zinc-500 dark:text-slate-400 mt-0.5 leading-snug">
-                        Insured express customs clearance and carbon-offset fulfillment.
-                      </p>
-                    </div>
+                {/* Express Global Logistics */}
+                <div className="flex items-start text-left gap-3 sm:gap-3.5 pt-3.5 sm:pt-0 sm:pl-4 border-t sm:border-t-0 border-zinc-100 dark:border-slate-800/80">
+                  <div className="w-8 h-8 rounded-lg bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/60 flex items-center justify-center shrink-0 mt-0.5">
+                    <Zap className="w-4 h-4 text-rose-600 dark:text-rose-400" />
+                  </div>
+                  <div className="min-w-0">
+                    <h4 className="text-xs sm:text-sm font-bold text-zinc-900 dark:text-white">
+                      Express Global Logistics
+                    </h4>
+                    <p className="text-[11px] sm:text-xs text-zinc-500 dark:text-slate-400 mt-0.5 leading-snug">
+                      Insured express customs clearance and carbon-offset
+                      fulfillment.
+                    </p>
                   </div>
                 </div>
               </div>
-            </div>
-
-            <div className="lg:col-span-6 grid grid-cols-2 gap-3 sm:gap-4">
-              <img
-                src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=600&q=80"
-                alt="Watchmaker craft"
-                className="rounded-2xl object-cover h-48 sm:h-56 w-full border border-zinc-200 dark:border-slate-800 shadow-md"
-              />
-              <img
-                src="https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=600&q=80"
-                alt="Acoustic craft"
-                className="rounded-2xl object-cover h-48 sm:h-56 w-full border border-zinc-200 dark:border-slate-800 shadow-md mt-4 sm:mt-6"
-              />
             </div>
           </div>
         </div>
