@@ -9,28 +9,65 @@ import {
   Loader2,
 } from 'lucide-react';
 
-// Social Media Icons
-const FacebookIcon = ({ className = 'w-4 h-4' }) => (
-  <svg className={className} fill="currentColor" viewBox="0 0 24 24">
-    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+// Official Brand Social Media Icons (Authentic Colors & Exact Vector Geometry)
+const FacebookIcon = ({ className = 'w-10 h-10' }) => (
+  <svg className={className} viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="20" cy="20" r="20" fill="#1877F2" />
+    <path
+      d="M26.8 20.8H22.4V36H16.2V20.8H13.2V15.5H16.2V11.9C16.2 8.9 18 6.5 22.8 6.5C24.8 6.5 26.2 6.7 26.2 6.7V11.6H24C22.5 11.6 22.4 12.4 22.4 13.6V15.5H27.1L26.8 20.8Z"
+      fill="white"
+    />
   </svg>
 );
 
-const InstagramIcon = ({ className = 'w-4 h-4' }) => (
-  <svg className={className} fill="currentColor" viewBox="0 0 24 24">
-    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+const InstagramIcon = ({ className = 'w-10 h-10' }) => (
+  <svg className={className} viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="ig-rg" cx="30%" cy="107%" r="150%">
+        <stop offset="0%" stopColor="#fdf497" />
+        <stop offset="5%" stopColor="#fdf497" />
+        <stop offset="45%" stopColor="#fd5949" />
+        <stop offset="60%" stopColor="#d6249f" />
+        <stop offset="90%" stopColor="#285AEB" />
+      </radialGradient>
+    </defs>
+    <rect width="40" height="40" rx="20" fill="url(#ig-rg)" />
+    <rect x="10.5" y="10.5" width="19" height="19" rx="5.5" stroke="white" strokeWidth="2.2" fill="none" />
+    <circle cx="20" cy="20" r="4.6" stroke="white" strokeWidth="2.2" fill="none" />
+    <circle cx="24.8" cy="15.2" r="1.3" fill="white" />
   </svg>
 );
 
-const TwitterIcon = ({ className = 'w-4 h-4' }) => (
-  <svg className={className} fill="currentColor" viewBox="0 0 24 24">
-    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+const TwitterIcon = ({ className = 'w-10 h-10' }) => (
+  <svg className={className} viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="20" cy="20" r="20" fill="#000000" />
+    <path
+      d="M25.4 12H28.4L21.8 19.5L29.6 29.5H23.5L18.7 23.2L13.2 29.5H10.2L17.2 21.5L9.8 12H16.1L20.4 17.7L25.4 12ZM24.3 27.7H26L15.3 13.7H13.5L24.3 27.7Z"
+      fill="white"
+    />
   </svg>
 );
 
-const YoutubeIcon = ({ className = 'w-4 h-4' }) => (
-  <svg className={className} fill="currentColor" viewBox="0 0 24 24">
-    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+
+const LinkedinIcon = ({ className = 'w-10 h-10' }) => (
+  <svg className={className} viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="20" cy="20" r="20" fill="#0A66C2" />
+    <path
+      d="M13.8 16.5H17.2V27.5H13.8V16.5ZM15.5 11.2C16.6 11.2 17.5 12.1 17.5 13.2C17.5 14.3 16.6 15.2 15.5 15.2C14.4 15.2 13.5 14.3 13.5 13.2C13.5 12.1 14.4 11.2 15.5 11.2ZM18.7 16.5H21.9V18.1H22C22.5 17.2 23.6 16.2 25.3 16.2C28.8 16.2 29.5 18.5 29.5 21.5V27.5H26V22C26 20.7 25.9 19 24.1 19C22.3 19 22 20.4 22 21.9V27.5H18.7V16.5Z"
+      fill="white"
+    />
+  </svg>
+);
+
+const WhatsappIcon = ({ className = 'w-10 h-10' }) => (
+  <svg className={className} viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="20" cy="20" r="20" fill="#25D366" />
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M20 9C13.925 9 9 13.925 9 20C9 22.062 9.57 23.987 10.562 25.632L9.2 30.6L14.332 29.268C15.932 30.207 17.9 30.75 20 30.75C26.075 30.75 31 25.825 31 20C31 13.925 26.075 9 20 9ZM20 10.875C25.04 10.875 29.125 14.96 29.125 20C29.125 25.04 25.04 29.125 20 29.125C18.258 29.125 16.623 28.636 15.228 27.79L14.9 27.592L11.378 28.513L12.316 25.074L12.098 24.726C11.196 23.284 10.875 21.68 10.875 20C10.875 14.96 14.96 10.875 20 10.875ZM16.35 14.832C16.14 14.832 15.825 14.912 15.545 15.215C15.265 15.517 14.5 16.237 14.5 17.7C14.5 19.162 15.57 20.575 15.715 20.772C15.86 20.97 17.815 23.982 20.81 25.275C21.522 25.582 22.08 25.768 22.512 25.905C23.228 26.132 23.882 26.1 24.4 26.022C24.978 25.935 26.175 25.295 26.425 24.595C26.675 23.895 26.675 23.3 26.6 23.175C26.525 23.05 26.315 22.98 26 22.825C25.685 22.67 24.17 21.925 23.89 21.825C23.61 21.725 23.41 21.675 23.2 21.975C22.99 22.275 22.41 22.975 22.23 23.175C22.05 23.375 21.87 23.4 21.56 23.245C21.25 23.09 20.25 22.762 19.06 21.7C18.13 20.87 17.5 19.845 17.32 19.535C17.14 19.225 17.3 19.057 17.45 18.91C17.58 18.78 17.74 18.57 17.89 18.395C18.04 18.22 18.09 18.095 18.19 17.89C18.29 17.685 18.24 17.51 18.165 17.355C18.09 17.2 17.47 15.67 17.21 15.07C16.96 14.485 16.705 14.565 16.515 14.555L16.35 14.832Z"
+      fill="white"
+    />
   </svg>
 );
 
@@ -187,42 +224,66 @@ export const Contact = () => {
                 <h3 className="text-xs sm:text-sm font-bold text-zinc-950 dark:text-white mb-3.5">
                   Follow our social media
                 </h3>
-                <div className="flex items-center gap-2.5">
+                <div className="flex items-center gap-2.5 sm:gap-3 flex-wrap">
+                  {/* Facebook */}
                   <a
                     href="https://facebook.com"
                     target="_blank"
-                    rel="noreferrer"
-                    aria-label="Facebook"
-                    className="w-9 h-9 rounded-full bg-slate-900 hover:bg-amber-500 text-white hover:text-slate-950 dark:bg-slate-800 dark:hover:bg-amber-500 dark:hover:text-slate-950 flex items-center justify-center transition-all hover:scale-105 shadow-sm shadow-slate-900/20"
+                    rel="noopener noreferrer"
+                    aria-label="Follow Shoply on Facebook"
+                    title="Facebook"
+                    className="group inline-flex items-center justify-center rounded-full transition-all duration-200 hover:scale-110 hover:-translate-y-0.5 active:scale-95 shadow-sm shadow-blue-500/20 hover:shadow-md hover:shadow-blue-500/35 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
                   >
-                    <FacebookIcon className="w-4 h-4" />
+                    <FacebookIcon className="w-9.5 h-9.5 sm:w-10 sm:h-10" />
                   </a>
+
+                  {/* Instagram */}
                   <a
                     href="https://instagram.com"
                     target="_blank"
-                    rel="noreferrer"
-                    aria-label="Instagram"
-                    className="w-9 h-9 rounded-full bg-slate-900 hover:bg-amber-500 text-white hover:text-slate-950 dark:bg-slate-800 dark:hover:bg-amber-500 dark:hover:text-slate-950 flex items-center justify-center transition-all hover:scale-105 shadow-sm shadow-slate-900/20"
+                    rel="noopener noreferrer"
+                    aria-label="Follow Shoply on Instagram"
+                    title="Instagram"
+                    className="group inline-flex items-center justify-center rounded-full transition-all duration-200 hover:scale-110 hover:-translate-y-0.5 active:scale-95 shadow-sm shadow-pink-500/20 hover:shadow-md hover:shadow-pink-500/35 focus:outline-none focus:ring-2 focus:ring-pink-500/50"
                   >
-                    <InstagramIcon className="w-4 h-4" />
+                    <InstagramIcon className="w-9.5 h-9.5 sm:w-10 sm:h-10" />
                   </a>
+
+                  {/* Twitter / X */}
                   <a
                     href="https://twitter.com"
                     target="_blank"
-                    rel="noreferrer"
-                    aria-label="Twitter / X"
-                    className="w-9 h-9 rounded-full bg-slate-900 hover:bg-amber-500 text-white hover:text-slate-950 dark:bg-slate-800 dark:hover:bg-amber-500 dark:hover:text-slate-950 flex items-center justify-center transition-all hover:scale-105 shadow-sm shadow-slate-900/20"
+                    rel="noopener noreferrer"
+                    aria-label="Follow Shoply on X (Twitter)"
+                    title="X (Twitter)"
+                    className="group inline-flex items-center justify-center rounded-full transition-all duration-200 hover:scale-110 hover:-translate-y-0.5 active:scale-95 shadow-sm shadow-black/20 hover:shadow-md hover:shadow-black/35 ring-1 ring-slate-200 dark:ring-slate-700/80 focus:outline-none focus:ring-2 focus:ring-slate-500/50"
                   >
-                    <TwitterIcon className="w-4 h-4" />
+                    <TwitterIcon className="w-9.5 h-9.5 sm:w-10 sm:h-10" />
                   </a>
+
+
+                  {/* LinkedIn */}
                   <a
-                    href="https://youtube.com"
+                    href="https://linkedin.com"
                     target="_blank"
-                    rel="noreferrer"
-                    aria-label="YouTube"
-                    className="w-9 h-9 rounded-full bg-slate-900 hover:bg-amber-500 text-white hover:text-slate-950 dark:bg-slate-800 dark:hover:bg-amber-500 dark:hover:text-slate-950 flex items-center justify-center transition-all hover:scale-105 shadow-sm shadow-slate-900/20"
+                    rel="noopener noreferrer"
+                    aria-label="Follow Shoply on LinkedIn"
+                    title="LinkedIn"
+                    className="group inline-flex items-center justify-center rounded-full transition-all duration-200 hover:scale-110 hover:-translate-y-0.5 active:scale-95 shadow-sm shadow-blue-600/20 hover:shadow-md hover:shadow-blue-600/35 focus:outline-none focus:ring-2 focus:ring-blue-600/50"
                   >
-                    <YoutubeIcon className="w-4 h-4" />
+                    <LinkedinIcon className="w-9.5 h-9.5 sm:w-10 sm:h-10" />
+                  </a>
+
+                  {/* WhatsApp */}
+                  <a
+                    href="https://whatsapp.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Chat with Shoply on WhatsApp"
+                    title="WhatsApp"
+                    className="group inline-flex items-center justify-center rounded-full transition-all duration-200 hover:scale-110 hover:-translate-y-0.5 active:scale-95 shadow-sm shadow-emerald-500/20 hover:shadow-md hover:shadow-emerald-500/35 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                  >
+                    <WhatsappIcon className="w-9.5 h-9.5 sm:w-10 sm:h-10" />
                   </a>
                 </div>
               </div>
