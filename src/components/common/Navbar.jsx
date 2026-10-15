@@ -418,16 +418,16 @@ export const Navbar = () => {
                 title={isSearchOpen ? 'Close search' : 'Search'}
                 aria-label={isSearchOpen ? 'Close search' : 'Search'}
               >
-                <Search className="w-4 h-4" />
+                {isSearchOpen ? <X className="w-4 h-4" /> : <Search className="w-4 h-4" />}
               </button>
 
-              {/* Desktop Popout Search Input to the left (sm: and up only) */}
+              {/* Desktop Downward Search Input Bar (sm: and up only - opens directly below search button) */}
               {isSearchOpen && (
                 <form
                   onSubmit={handleSearchSubmit}
-                  className="hidden sm:flex absolute right-0 top-1/2 -translate-y-1/2 items-center h-8.5 sm:h-9.5 sm:w-64 md:w-72 lg:w-80 rounded-xl border border-amber-500 bg-white dark:bg-slate-900 shadow-xl overflow-hidden z-30 transition-all duration-200 animate-in fade-in slide-in-from-right-2"
+                  className="hidden sm:flex absolute left-1/2 -translate-x-1/2 top-full mt-2.5 items-center h-10 sm:h-10.5 w-72 sm:w-84 md:w-96 rounded-2xl border border-amber-500 bg-white dark:bg-slate-900 shadow-2xl overflow-hidden z-50 transition-all duration-200 animate-in fade-in slide-in-from-top-2 px-1.5"
                 >
-                  <Search className="w-3.5 h-3.5 text-amber-500 ml-2.5 shrink-0 pointer-events-none" />
+                  <Search className="w-4 h-4 text-amber-500 ml-2 shrink-0 pointer-events-none" />
                   <input
                     ref={searchInputRef}
                     type="text"
@@ -442,7 +442,7 @@ export const Navbar = () => {
                       }
                     }}
                     placeholder="Search Shoply..."
-                    className="w-full h-full px-2 text-xs sm:text-[13px] text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 bg-transparent focus:outline-none min-w-0"
+                    className="w-full h-full px-2.5 text-xs sm:text-sm font-semibold text-slate-950 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 placeholder:font-normal bg-transparent focus:outline-none min-w-0"
                   />
                   <button type="submit" className="hidden" tabIndex={-1} aria-hidden="true" />
                   {searchQuery && (
@@ -451,17 +451,18 @@ export const Navbar = () => {
                       onClick={() => {
                         setSearchQuery('');
                         setSearchResults([]);
+                        searchInputRef.current?.focus();
                       }}
                       className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 shrink-0 cursor-pointer"
                       aria-label="Clear input"
                     >
-                      <X className="w-3 h-3" />
+                      <X className="w-3.5 h-3.5" />
                     </button>
                   )}
                   <button
                     type="button"
                     onClick={handleCloseSearch}
-                    className="h-full px-2.5 text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shrink-0 cursor-pointer border-l border-slate-200 dark:border-slate-800"
+                    className="h-7 px-2.5 text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors shrink-0 cursor-pointer border-l border-slate-200 dark:border-slate-800"
                     title="Close search"
                     aria-label="Close search"
                   >
@@ -473,7 +474,7 @@ export const Navbar = () => {
               {/* Live Instant Search Dropdown (Displays automatically without pressing Enter) */}
               {isSearchOpen && !isDropdownDismissed && searchQuery.trim().length > 0 && (
                 <div
-                  className="fixed top-[62px] left-2.5 right-2.5 sm:absolute sm:top-[calc(100%+8px)] sm:left-auto sm:right-0 w-auto sm:w-92 md:w-[420px] max-h-[75vh] sm:max-h-[480px] flex flex-col bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl z-[60] sm:z-50 overflow-hidden animate-in fade-in slide-in-from-top-1 duration-150"
+                  className="fixed top-[62px] left-2.5 right-2.5 sm:absolute sm:top-[calc(100%+56px)] sm:left-1/2 sm:-translate-x-1/2 sm:right-auto w-auto sm:w-84 md:w-96 max-h-[75vh] sm:max-h-[480px] flex flex-col bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl z-[60] sm:z-50 overflow-hidden animate-in fade-in slide-in-from-top-1 duration-150"
                   role="listbox"
                   aria-label="Search results"
                 >
