@@ -38,7 +38,7 @@ const heroSlides = [
     kicker: 'CURATED STUDIO / EXCLUSIVE DROPS',
     titleLine1: 'Elevate Your Daily Living,',
     titleAccent: 'Crafted with',
-    titleLine2: 'Artisanal Precision',
+    titleLine2: 'Precision',
     subtitle: 'Explore limited studio releases, designer electronics, and bespoke lifestyle essentials engineered for uncompromising quality.',
     badgeTitle: 'Curated Essentials',
     badgeSubtitle: 'Studio Edition ✨',
@@ -201,7 +201,7 @@ export const Home = () => {
         <div className="relative z-10 w-full max-w-[1520px] mx-auto px-4 sm:px-6 lg:px-12 flex-1 flex flex-col justify-center pt-3 sm:pt-6 md:pt-0 pb-3 sm:pb-6">
           <div
             key={currentSlide}
-            className="max-w-xl lg:max-w-2xl space-y-3 sm:space-y-4 text-left animate-in fade-in duration-500"
+            className="max-w-xl lg:max-w-2xl xl:max-w-3xl space-y-3 sm:space-y-4 text-left animate-in fade-in duration-500"
           >
             {/* Category Kicker */}
             <div className="text-[10px] sm:text-xs font-bold tracking-[0.16em] sm:tracking-[0.25em] text-amber-700 dark:text-amber-400 sm:text-stone-500 sm:dark:text-stone-400 uppercase transition-all duration-300">
@@ -210,15 +210,16 @@ export const Home = () => {
 
             {/* Main Headline */}
             <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-[3.25rem] xl:text-[3.6rem] font-bold text-slate-950 dark:text-white tracking-tight leading-[1.18] sm:leading-[1.12]">
-              <span className="font-caslon">
+              <span className="font-caslon block">
                 {heroSlides[currentSlide].titleLine1}
-              </span>{' '}
-              <br />
-              <span className="font-serif italic font-normal text-slate-900 dark:text-amber-200">
-                {heroSlides[currentSlide].titleAccent}
-              </span>{' '}
-              <span className="font-caslon">
-                {heroSlides[currentSlide].titleLine2}
+              </span>
+              <span className="block mt-0.5 sm:mt-1">
+                <span className="font-serif italic font-normal text-slate-900 dark:text-amber-200">
+                  {heroSlides[currentSlide].titleAccent}
+                </span>{' '}
+                <span className="font-caslon">
+                  {heroSlides[currentSlide].titleLine2}
+                </span>
               </span>
             </h1>
 

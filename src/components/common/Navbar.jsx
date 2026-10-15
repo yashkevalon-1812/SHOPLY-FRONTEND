@@ -624,28 +624,24 @@ export const Navbar = () => {
               )}
             </Link>
 
-            {/* 2-LINE AMAZON-STYLE ACCOUNT & LISTS TRIGGER (Desktop only - shifted to bottom bar on mobile phones) */}
+            {/* ACCOUNT TRIGGER (Only Icon and User or Admin Name) */}
             <div className="relative hidden lg:block" ref={accountRef}>
               <button
                 onClick={() => {
                   setAccountDropdownOpen(!accountDropdownOpen);
                   setMobileMenuOpen(false);
                 }}
-                className="h-8.5 sm:h-9.5 md:h-10 px-2 sm:px-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/60 hover:bg-slate-100 dark:hover:bg-slate-800/80 flex items-center gap-1.5 text-left transition-colors shadow-2xs shrink-0 cursor-pointer"
-                title="Account & Lists"
+                className="h-8.5 sm:h-9.5 md:h-10 px-2.5 sm:px-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/60 hover:bg-slate-100 dark:hover:bg-slate-800/80 flex items-center gap-2 text-left transition-colors shadow-2xs shrink-0 cursor-pointer"
+                title={user ? user.name : 'Sign in'}
+                aria-label={user ? user.name : 'User Account'}
               >
                 <div className="w-6 h-6 rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400 flex items-center justify-center font-black text-xs shrink-0">
                   <User className="w-3.5 h-3.5" />
                 </div>
-                <div className="hidden lg:flex flex-col text-left leading-tight">
-                  <span className="text-[10px] text-slate-500 dark:text-slate-400 truncate max-w-[100px]">
-                    {user ? `Hi, ${user.name.split(' ')[0]}` : 'Hello, Sign in'}
-                  </span>
-                  <span className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-0.5">
-                    <span>Account & Lists</span>
-                    <ChevronDown className="w-3 h-3 text-slate-400" />
-                  </span>
-                </div>
+                <span className="text-xs font-bold text-slate-900 dark:text-white truncate max-w-[120px]">
+                  {user ? (user.name.split(' ')[0] || user.name) : 'Sign In'}
+                </span>
+                <ChevronDown className="w-3 h-3 text-slate-400 shrink-0" />
               </button>
 
               {/* Rich Account & Orders Dropdown Menu */}
