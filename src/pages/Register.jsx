@@ -124,7 +124,7 @@ export const Register = () => {
                   onChange={(e) => setName(e.target.value)}
                   placeholder="e.g. Marcus Vance"
                   autoComplete="name"
-                  className={`w-full rounded-lg border bg-white dark:bg-slate-800 dark:border-slate-700 px-3.5 py-2.5 pl-11 text-sm text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-slate-500 focus:outline-none focus:ring-4 focus:ring-amber-500/10 ${
+                  className={`w-full rounded-xl border bg-white dark:bg-slate-800 dark:border-slate-700 px-4 py-3 pl-11 text-sm sm:text-base font-semibold text-zinc-950 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-slate-400 placeholder:font-normal focus:outline-none focus:ring-4 focus:ring-amber-500/10 ${
                     errors.name ? errClass : okClass
                   }`}
                 />
@@ -135,16 +135,16 @@ export const Register = () => {
             </div>
 
             <div>
-              <label className="mb-1.5 block text-xs font-bold text-zinc-800 dark:text-slate-200">Email address</label>
+              <label className="mb-1.5 block text-xs sm:text-sm font-bold text-zinc-800 dark:text-slate-200">Email address</label>
               <div className="relative">
-                <Mail className="pointer-events-none absolute left-3 top-3 h-4 w-4 text-zinc-400" />
+                <Mail className="pointer-events-none absolute left-3.5 top-3.5 h-4 w-4 text-zinc-400" />
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="name@example.com"
                   autoComplete="email"
-                  className={`w-full rounded-lg border bg-white dark:bg-slate-800 dark:border-slate-700 px-3.5 py-2.5 pl-11 text-sm text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-slate-500 focus:outline-none focus:ring-4 focus:ring-amber-500/10 ${
+                  className={`w-full rounded-xl border bg-white dark:bg-slate-800 dark:border-slate-700 px-4 py-3 pl-11 text-sm sm:text-base font-semibold text-zinc-950 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-slate-400 placeholder:font-normal focus:outline-none focus:ring-4 focus:ring-amber-500/10 ${
                     errors.email ? errClass : okClass
                   }`}
                 />
@@ -155,16 +155,16 @@ export const Register = () => {
             </div>
 
             <div>
-              <label className="mb-1.5 block text-xs font-bold text-zinc-800 dark:text-slate-200">Password</label>
+              <label className="mb-1.5 block text-xs sm:text-sm font-bold text-zinc-800 dark:text-slate-200">Password</label>
               <div className="relative">
-                <Lock className="pointer-events-none absolute left-3 top-3 h-4 w-4 text-zinc-400" />
+                <Lock className="pointer-events-none absolute left-3.5 top-3.5 h-4 w-4 text-zinc-400" />
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Minimum 6 characters"
                   autoComplete="new-password"
-                  className={`w-full rounded-lg border bg-white dark:bg-slate-800 dark:border-slate-700 px-3.5 py-2.5 pl-11 text-sm text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-slate-500 focus:outline-none focus:ring-4 focus:ring-amber-500/10 ${
+                  className={`w-full rounded-xl border bg-white dark:bg-slate-800 dark:border-slate-700 px-4 py-3 pl-11 text-sm sm:text-base font-semibold text-zinc-950 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-slate-400 placeholder:font-normal focus:outline-none focus:ring-4 focus:ring-amber-500/10 ${
                     errors.password ? errClass : okClass
                   }`}
                 />
@@ -177,7 +177,7 @@ export const Register = () => {
             </div>
 
             <div>
-              <label className="mb-1.5 block text-xs font-bold text-zinc-800 dark:text-slate-200">
+              <label className="mb-1.5 block text-xs sm:text-sm font-bold text-zinc-800 dark:text-slate-200">
                 Phone <span className="font-normal text-zinc-400 dark:text-slate-500">(optional)</span>
               </label>
               <input
@@ -186,7 +186,7 @@ export const Register = () => {
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="+1 (555) 000-0000"
                 autoComplete="tel"
-                className="w-full rounded-lg border border-zinc-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3.5 py-2.5 text-sm text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-slate-500 focus:border-amber-500 focus:outline-none focus:ring-4 focus:ring-amber-500/10"
+                className="w-full rounded-xl border border-zinc-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-3 text-sm sm:text-base font-semibold text-zinc-950 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-slate-400 placeholder:font-normal focus:border-amber-500 focus:outline-none focus:ring-4 focus:ring-amber-500/10"
               />
             </div>
 

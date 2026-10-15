@@ -77,9 +77,9 @@ export const Login = () => {
         )}
 
         {/* Login Form */}
-        <form onSubmit={handleSubmit} className="bg-white dark:bg-slate-900 border border-zinc-200 dark:border-slate-800 rounded-3xl p-7 space-y-4 shadow-xl text-xs">
+        <form onSubmit={handleSubmit} className="bg-white dark:bg-slate-900 border border-zinc-200 dark:border-slate-800 rounded-3xl p-7 space-y-4 shadow-xl">
           <div>
-            <label className="text-zinc-700 dark:text-slate-300 font-bold block mb-1">Email Address</label>
+            <label className="text-xs sm:text-sm font-bold text-zinc-900 dark:text-zinc-100 block mb-1.5">Email Address</label>
             <div className="relative">
               <input
                 type="email"
@@ -87,15 +87,15 @@ export const Login = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="name@example.com"
-                className="w-full bg-slate-50 dark:bg-slate-800 border border-zinc-200 dark:border-slate-700 rounded-xl px-3.5 py-3 pl-10 text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-slate-500 focus:outline-none focus:border-amber-500"
+                className="w-full bg-slate-50/90 dark:bg-slate-800/90 border border-zinc-300 dark:border-slate-600 rounded-xl px-4 py-3 pl-10 text-sm sm:text-base font-semibold text-zinc-950 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-slate-400 placeholder:font-normal focus:outline-none focus:border-amber-500 dark:focus:border-amber-400 focus:ring-2 focus:ring-amber-500/20 transition-all shadow-2xs"
               />
               <Mail className="w-4 h-4 text-zinc-400 absolute left-3.5 top-3.5" />
             </div>
           </div>
 
           <div>
-            <div className="flex justify-between items-center mb-1">
-              <label className="text-zinc-700 dark:text-slate-300 font-bold">Password</label>
+            <div className="flex justify-between items-center mb-1.5">
+              <label className="text-xs sm:text-sm font-bold text-zinc-900 dark:text-zinc-100">Password</label>
               <Link
                 to="/forgot-password"
                 className="text-[11px] text-zinc-500 dark:text-slate-400 hover:text-zinc-900 dark:hover:text-amber-400 cursor-pointer font-medium hover:underline transition-colors"
@@ -110,7 +110,7 @@ export const Login = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full bg-slate-50 dark:bg-slate-800 border border-zinc-200 dark:border-slate-700 rounded-xl px-3.5 py-3 pl-10 text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-slate-500 focus:outline-none focus:border-amber-500"
+                className="w-full bg-slate-50/90 dark:bg-slate-800/90 border border-zinc-300 dark:border-slate-600 rounded-xl px-4 py-3 pl-10 text-sm sm:text-base font-semibold text-zinc-950 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-slate-400 placeholder:font-normal focus:outline-none focus:border-amber-500 dark:focus:border-amber-400 focus:ring-2 focus:ring-amber-500/20 transition-all shadow-2xs"
               />
               <Lock className="w-4 h-4 text-zinc-400 absolute left-3.5 top-3.5" />
             </div>

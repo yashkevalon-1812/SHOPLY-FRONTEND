@@ -378,9 +378,9 @@ export const Checkout = () => {
                 <span>1. Insured Delivery Address</span>
               </h2>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
                 <div>
-                  <label className="text-zinc-700 dark:text-slate-300 font-bold block mb-1">Full Name</label>
+                  <label className="block text-xs sm:text-sm font-bold text-zinc-900 dark:text-zinc-100 mb-1.5">Full Name</label>
                   <input
                     type="text"
                     required
@@ -389,12 +389,12 @@ export const Checkout = () => {
                       setShippingAddress({ ...shippingAddress, fullName: e.target.value })
                     }
                     placeholder="Recipient name"
-                    className="w-full bg-slate-50 dark:bg-slate-800 border border-zinc-200 dark:border-slate-700 rounded-xl p-3 text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-slate-500 focus:outline-none focus:border-amber-500"
+                    className="w-full bg-slate-50/90 dark:bg-slate-800/90 border border-zinc-300 dark:border-slate-600 rounded-xl px-4 py-3 sm:py-3.5 text-sm sm:text-base font-semibold text-zinc-950 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-slate-400 placeholder:font-normal focus:outline-none focus:border-amber-500 dark:focus:border-amber-400 focus:ring-2 focus:ring-amber-500/20 transition-all shadow-2xs"
                   />
                 </div>
 
                 <div>
-                  <label className="text-zinc-700 dark:text-slate-300 font-bold block mb-1">Mobile Phone (Delivery SMS)</label>
+                  <label className="block text-xs sm:text-sm font-bold text-zinc-900 dark:text-zinc-100 mb-1.5">Mobile Phone (Delivery SMS)</label>
                   <input
                     type="tel"
                     required
@@ -403,12 +403,12 @@ export const Checkout = () => {
                       setShippingAddress({ ...shippingAddress, phone: e.target.value })
                     }
                     placeholder="+1 (555) 000-0000"
-                    className="w-full bg-slate-50 dark:bg-slate-800 border border-zinc-200 dark:border-slate-700 rounded-xl p-3 text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-slate-500 focus:outline-none focus:border-amber-500"
+                    className="w-full bg-slate-50/90 dark:bg-slate-800/90 border border-zinc-300 dark:border-slate-600 rounded-xl px-4 py-3 sm:py-3.5 text-sm sm:text-base font-semibold text-zinc-950 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-slate-400 placeholder:font-normal focus:outline-none focus:border-amber-500 dark:focus:border-amber-400 focus:ring-2 focus:ring-amber-500/20 transition-all shadow-2xs"
                   />
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label className="text-zinc-700 dark:text-slate-300 font-bold block mb-1">Street Address</label>
+                  <label className="block text-xs sm:text-sm font-bold text-zinc-900 dark:text-zinc-100 mb-1.5">Street Address</label>
                   <input
                     type="text"
                     required
@@ -417,12 +417,12 @@ export const Checkout = () => {
                       setShippingAddress({ ...shippingAddress, street: e.target.value })
                     }
                     placeholder="Apt, Suite, Street name"
-                    className="w-full bg-slate-50 dark:bg-slate-800 border border-zinc-200 dark:border-slate-700 rounded-xl p-3 text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-slate-500 focus:outline-none focus:border-amber-500"
+                    className="w-full bg-slate-50/90 dark:bg-slate-800/90 border border-zinc-300 dark:border-slate-600 rounded-xl px-4 py-3 sm:py-3.5 text-sm sm:text-base font-semibold text-zinc-950 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-slate-400 placeholder:font-normal focus:outline-none focus:border-amber-500 dark:focus:border-amber-400 focus:ring-2 focus:ring-amber-500/20 transition-all shadow-2xs"
                   />
                 </div>
 
                 <div>
-                  <label className="text-zinc-700 dark:text-slate-300 font-bold block mb-1">City</label>
+                  <label className="block text-xs sm:text-sm font-bold text-zinc-900 dark:text-zinc-100 mb-1.5">City</label>
                   <input
                     type="text"
                     required
@@ -431,12 +431,12 @@ export const Checkout = () => {
                       setShippingAddress({ ...shippingAddress, city: e.target.value })
                     }
                     placeholder="City"
-                    className="w-full bg-slate-50 dark:bg-slate-800 border border-zinc-200 dark:border-slate-700 rounded-xl p-3 text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-slate-500 focus:outline-none focus:border-amber-500"
+                    className="w-full bg-slate-50/90 dark:bg-slate-800/90 border border-zinc-300 dark:border-slate-600 rounded-xl px-4 py-3 sm:py-3.5 text-sm sm:text-base font-semibold text-zinc-950 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-slate-400 placeholder:font-normal focus:outline-none focus:border-amber-500 dark:focus:border-amber-400 focus:ring-2 focus:ring-amber-500/20 transition-all shadow-2xs"
                   />
                 </div>
 
                 <div>
-                  <label className="text-zinc-700 dark:text-slate-300 font-bold block mb-1">State / Province</label>
+                  <label className="block text-xs sm:text-sm font-bold text-zinc-900 dark:text-zinc-100 mb-1.5">State / Province</label>
                   <input
                     type="text"
                     required
@@ -445,12 +445,12 @@ export const Checkout = () => {
                       setShippingAddress({ ...shippingAddress, state: e.target.value })
                     }
                     placeholder="State"
-                    className="w-full bg-slate-50 dark:bg-slate-800 border border-zinc-200 dark:border-slate-700 rounded-xl p-3 text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-slate-500 focus:outline-none focus:border-amber-500"
+                    className="w-full bg-slate-50/90 dark:bg-slate-800/90 border border-zinc-300 dark:border-slate-600 rounded-xl px-4 py-3 sm:py-3.5 text-sm sm:text-base font-semibold text-zinc-950 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-slate-400 placeholder:font-normal focus:outline-none focus:border-amber-500 dark:focus:border-amber-400 focus:ring-2 focus:ring-amber-500/20 transition-all shadow-2xs"
                   />
                 </div>
 
                 <div>
-                  <label className="text-zinc-700 dark:text-slate-300 font-bold block mb-1">Postal Code</label>
+                  <label className="block text-xs sm:text-sm font-bold text-zinc-900 dark:text-zinc-100 mb-1.5">Postal Code</label>
                   <input
                     type="text"
                     required
@@ -459,12 +459,12 @@ export const Checkout = () => {
                       setShippingAddress({ ...shippingAddress, postalCode: e.target.value })
                     }
                     placeholder="ZIP / Postal Code"
-                    className="w-full bg-slate-50 dark:bg-slate-800 border border-zinc-200 dark:border-slate-700 rounded-xl p-3 text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-slate-500 focus:outline-none focus:border-amber-500"
+                    className="w-full bg-slate-50/90 dark:bg-slate-800/90 border border-zinc-300 dark:border-slate-600 rounded-xl px-4 py-3 sm:py-3.5 text-sm sm:text-base font-semibold text-zinc-950 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-slate-400 placeholder:font-normal focus:outline-none focus:border-amber-500 dark:focus:border-amber-400 focus:ring-2 focus:ring-amber-500/20 transition-all shadow-2xs"
                   />
                 </div>
 
                 <div>
-                  <label className="text-zinc-700 dark:text-slate-300 font-bold block mb-1">Country</label>
+                  <label className="block text-xs sm:text-sm font-bold text-zinc-900 dark:text-zinc-100 mb-1.5">Country</label>
                   <input
                     type="text"
                     required
@@ -473,7 +473,7 @@ export const Checkout = () => {
                       setShippingAddress({ ...shippingAddress, country: e.target.value })
                     }
                     placeholder="Country"
-                    className="w-full bg-slate-50 dark:bg-slate-800 border border-zinc-200 dark:border-slate-700 rounded-xl p-3 text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-slate-500 focus:outline-none focus:border-amber-500"
+                    className="w-full bg-slate-50/90 dark:bg-slate-800/90 border border-zinc-300 dark:border-slate-600 rounded-xl px-4 py-3 sm:py-3.5 text-sm sm:text-base font-semibold text-zinc-950 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-slate-400 placeholder:font-normal focus:outline-none focus:border-amber-500 dark:focus:border-amber-400 focus:ring-2 focus:ring-amber-500/20 transition-all shadow-2xs"
                   />
                 </div>
               </div>

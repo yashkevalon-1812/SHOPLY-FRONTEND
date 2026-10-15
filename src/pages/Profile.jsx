@@ -363,7 +363,7 @@ export const Profile = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {/* Full Name */}
                     <div className="space-y-1.5">
-                      <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                      <label className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200">
                         Full Legal Name
                       </label>
                       <div className="relative flex items-center">
@@ -374,14 +374,14 @@ export const Profile = () => {
                           onChange={(e) => setName(e.target.value)}
                           placeholder="e.g. Alexander Vance"
                           required
-                          className="w-full pl-10 pr-3 py-2.5 text-xs font-medium rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/60 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all text-slate-900 dark:text-white"
+                          className="w-full pl-10 pr-3.5 py-3 text-sm sm:text-base font-semibold rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-900/80 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all text-slate-950 dark:text-white placeholder:text-slate-400 placeholder:font-normal shadow-2xs"
                         />
                       </div>
                     </div>
 
                     {/* Phone Number */}
                     <div className="space-y-1.5">
-                      <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                      <label className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200">
                         Phone Number
                       </label>
                       <div className="relative flex items-center">
@@ -391,7 +391,7 @@ export const Profile = () => {
                           value={phone}
                           onChange={(e) => setPhone(e.target.value)}
                           placeholder="e.g. +91 98765 43210"
-                          className="w-full pl-10 pr-3 py-2.5 text-xs font-medium rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/60 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all text-slate-900 dark:text-white"
+                          className="w-full pl-10 pr-3.5 py-3 text-sm sm:text-base font-semibold rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-900/80 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all text-slate-950 dark:text-white placeholder:text-slate-400 placeholder:font-normal shadow-2xs"
                         />
                       </div>
                     </div>
@@ -399,7 +399,7 @@ export const Profile = () => {
                     {/* Email (Read-Only) */}
                     <div className="space-y-1.5 sm:col-span-2">
                       <div className="flex items-center justify-between">
-                        <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                        <label className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200">
                           Registered Email Address
                         </label>
                         <span className="text-[10px] text-slate-400 font-semibold">Primary Login (Read-Only)</span>
@@ -410,7 +410,7 @@ export const Profile = () => {
                           type="email"
                           value={user.email}
                           disabled
-                          className="w-full pl-10 pr-3 py-2.5 text-xs font-medium rounded-xl border border-slate-200/70 dark:border-slate-800 bg-slate-100 dark:bg-slate-900 text-slate-500 dark:text-slate-400 cursor-not-allowed"
+                          className="w-full pl-10 pr-3.5 py-3 text-sm sm:text-base font-semibold rounded-xl border border-slate-200/70 dark:border-slate-800 bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400 cursor-not-allowed"
                         />
                       </div>
                       <p className="text-[11px] text-slate-400">
@@ -436,7 +436,7 @@ export const Profile = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {/* Street Address */}
                     <div className="space-y-1.5 sm:col-span-2">
-                      <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                      <label className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200">
                         Street & Landmark
                       </label>
                       <div className="relative flex items-center">
@@ -446,14 +446,14 @@ export const Profile = () => {
                           value={street}
                           onChange={(e) => setStreet(e.target.value)}
                           placeholder="e.g. 42 Grand Horizon Avenue, Suite 501"
-                          className="w-full pl-10 pr-3 py-2.5 text-xs font-medium rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/60 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all text-slate-900 dark:text-white"
+                          className="w-full pl-10 pr-3.5 py-3 text-sm sm:text-base font-semibold rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-900/80 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all text-slate-950 dark:text-white placeholder:text-slate-400 placeholder:font-normal shadow-2xs"
                         />
                       </div>
                     </div>
 
                     {/* City */}
                     <div className="space-y-1.5">
-                      <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                      <label className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200">
                         City / Metropolis
                       </label>
                       <div className="relative flex items-center">
@@ -463,14 +463,14 @@ export const Profile = () => {
                           value={city}
                           onChange={(e) => setCity(e.target.value)}
                           placeholder="e.g. Mumbai"
-                          className="w-full pl-10 pr-3 py-2.5 text-xs font-medium rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/60 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all text-slate-900 dark:text-white"
+                          className="w-full pl-10 pr-3.5 py-3 text-sm sm:text-base font-semibold rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-900/80 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all text-slate-950 dark:text-white placeholder:text-slate-400 placeholder:font-normal shadow-2xs"
                         />
                       </div>
                     </div>
 
                     {/* State */}
                     <div className="space-y-1.5">
-                      <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                      <label className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200">
                         State / Province
                       </label>
                       <input
@@ -478,13 +478,13 @@ export const Profile = () => {
                         value={state}
                         onChange={(e) => setState(e.target.value)}
                         placeholder="e.g. Maharashtra"
-                        className="w-full px-3.5 py-2.5 text-xs font-medium rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/60 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all text-slate-900 dark:text-white"
+                        className="w-full px-4 py-3 text-sm sm:text-base font-semibold rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-900/80 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all text-slate-950 dark:text-white placeholder:text-slate-400 placeholder:font-normal shadow-2xs"
                       />
                     </div>
 
                     {/* Postal Code */}
                     <div className="space-y-1.5">
-                      <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                      <label className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200">
                         Postal / PIN Code
                       </label>
                       <input
@@ -492,13 +492,13 @@ export const Profile = () => {
                         value={postalCode}
                         onChange={(e) => setPostalCode(e.target.value)}
                         placeholder="e.g. 400001"
-                        className="w-full px-3.5 py-2.5 text-xs font-medium rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/60 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all text-slate-900 dark:text-white"
+                        className="w-full px-4 py-3 text-sm sm:text-base font-semibold rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-900/80 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all text-slate-950 dark:text-white placeholder:text-slate-400 placeholder:font-normal shadow-2xs"
                       />
                     </div>
 
                     {/* Country */}
                     <div className="space-y-1.5">
-                      <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                      <label className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200">
                         Country
                       </label>
                       <div className="relative flex items-center">
@@ -508,7 +508,7 @@ export const Profile = () => {
                           value={country}
                           onChange={(e) => setCountry(e.target.value)}
                           placeholder="e.g. India"
-                          className="w-full pl-10 pr-3 py-2.5 text-xs font-medium rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/60 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all text-slate-900 dark:text-white"
+                          className="w-full pl-10 pr-3.5 py-3 text-sm sm:text-base font-semibold rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-900/80 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all text-slate-950 dark:text-white placeholder:text-slate-400 placeholder:font-normal shadow-2xs"
                         />
                       </div>
                     </div>
@@ -531,7 +531,7 @@ export const Profile = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {/* New Password */}
                     <div className="space-y-1.5">
-                      <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                      <label className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200">
                         New Passcode (Min. 6 characters)
                       </label>
                       <div className="relative flex items-center">
@@ -541,7 +541,7 @@ export const Profile = () => {
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
                           placeholder="Leave blank to preserve current"
-                          className="w-full pl-10 pr-10 py-2.5 text-xs font-medium rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/60 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all text-slate-900 dark:text-white"
+                          className="w-full pl-10 pr-10 py-3 text-sm sm:text-base font-semibold rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-900/80 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all text-slate-950 dark:text-white placeholder:text-slate-400 placeholder:font-normal shadow-2xs"
                         />
                         <button
                           type="button"
@@ -555,7 +555,7 @@ export const Profile = () => {
 
                     {/* Confirm Password */}
                     <div className="space-y-1.5">
-                      <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                      <label className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200">
                         Confirm New Passcode
                       </label>
                       <div className="relative flex items-center">
@@ -565,7 +565,7 @@ export const Profile = () => {
                           value={confirmPassword}
                           onChange={(e) => setConfirmPassword(e.target.value)}
                           placeholder="Re-type new passcode"
-                          className="w-full pl-10 pr-3 py-2.5 text-xs font-medium rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/60 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all text-slate-900 dark:text-white"
+                          className="w-full pl-10 pr-3.5 py-3 text-sm sm:text-base font-semibold rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-900/80 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all text-slate-950 dark:text-white placeholder:text-slate-400 placeholder:font-normal shadow-2xs"
                         />
                       </div>
                     </div>
