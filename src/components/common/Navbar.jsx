@@ -50,20 +50,14 @@ export const Navbar = () => {
   const [departments, setDepartments] = useState([]);
 
   const searchInputRef = useRef(null);
-  const mobileSearchInputRef = useRef(null);
   const searchContainerRef = useRef(null);
-  const mobileSearchRef = useRef(null);
   const accountRef = useRef(null);
 
   // Focus input on search toggle
   useEffect(() => {
     if (isSearchOpen) {
       const timer = setTimeout(() => {
-        if (window.innerWidth < 640) {
-          mobileSearchInputRef.current?.focus();
-        } else {
-          searchInputRef.current?.focus();
-        }
+        searchInputRef.current?.focus();
       }, 70);
       return () => clearTimeout(timer);
     }
@@ -88,20 +82,23 @@ export const Navbar = () => {
     setIsDropdownDismissed(false);
   };
 
-  // Close dropdowns and search when clicking outside
+  // Close dropdowns and search when clicking or tapping outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (accountRef.current && !accountRef.current.contains(event.target)) {
         setAccountDropdownOpen(false);
       }
-      const clickedInsideDesktop = searchContainerRef.current && searchContainerRef.current.contains(event.target);
-      const clickedInsideMobile = mobileSearchRef.current && mobileSearchRef.current.contains(event.target);
-      if (!clickedInsideDesktop && !clickedInsideMobile) {
+      const clickedInsideSearch = searchContainerRef.current && searchContainerRef.current.contains(event.target);
+      if (!clickedInsideSearch) {
         handleCloseSearch();
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside, { passive: true });
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
   }, []);
 
   // Prevent background scrolling when mobile drawer or account sheet is open
@@ -240,76 +237,13 @@ export const Navbar = () => {
           TIER 1: PRIMARY MARKETPLACE HEADER (Amazon / Flipkart Inspired)
          ========================================================================= */}
       <div className="relative bg-white dark:bg-[#0b1329] border-b border-slate-200/90 dark:border-slate-800/90 transition-colors duration-200">
-        {/* =========================================================================
-            MOBILE DEDICATED SEARCH BAR TAKEOVER (<sm screens)
-            When search is activated on phone, it takes over the header with a clean,
-            spacious, full-width search input, back button, and clear/cancel controls.
-            Prevents squishing the logo or navbar icons.
-           ========================================================================= */}
+        {/* Mobile Backdrop Overlay - closes downward search on mobile when tapped */}
         {isSearchOpen && (
           <div
-            ref={mobileSearchRef}
-            className="sm:hidden absolute inset-0 z-50 bg-white dark:bg-[#0b1329] px-2.5 flex items-center gap-2 animate-in fade-in duration-150"
-          >
-            {/* Back / Close Button */}
-            <button
-              type="button"
-              onClick={handleCloseSearch}
-              className="w-9 h-9 rounded-xl flex items-center justify-center text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/80 transition-colors shrink-0 cursor-pointer"
-              title="Close search"
-              aria-label="Close search"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </button>
-
-            {/* Spacious Mobile Input */}
-            <form
-              onSubmit={handleSearchSubmit}
-              className="flex-1 flex items-center h-10 px-3 rounded-xl border border-amber-500 bg-slate-50 dark:bg-slate-900 shadow-inner focus-within:ring-2 focus-within:ring-amber-500/20 transition-all overflow-hidden"
-            >
-              <Search className="w-4 h-4 text-amber-500 shrink-0 mr-2 pointer-events-none" />
-              <input
-                ref={mobileSearchInputRef}
-                type="text"
-                value={searchQuery}
-                onChange={(e) => {
-                  setSearchQuery(e.target.value);
-                  setIsDropdownDismissed(false);
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    handleSearchSubmit(e);
-                  }
-                }}
-                placeholder="Search Shoply..."
-                className="w-full h-full text-[13.5px] text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 bg-transparent focus:outline-none min-w-0"
-              />
-              <button type="submit" className="hidden" tabIndex={-1} aria-hidden="true" />
-              {searchQuery && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSearchQuery('');
-                    setSearchResults([]);
-                    mobileSearchInputRef.current?.focus();
-                  }}
-                  className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 shrink-0 cursor-pointer"
-                  aria-label="Clear input"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              )}
-            </form>
-
-            {/* Cancel Action */}
-            <button
-              type="button"
-              onClick={handleCloseSearch}
-              className="px-2 py-1.5 text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-amber-600 dark:hover:text-amber-400 shrink-0 cursor-pointer transition-colors"
-            >
-              Cancel
-            </button>
-          </div>
+            className="sm:hidden fixed inset-0 top-[60px] bg-black/40 backdrop-blur-xs z-40 animate-in fade-in duration-150"
+            onClick={handleCloseSearch}
+            aria-hidden="true"
+          />
         )}
 
         <div className="max-w-[1520px] mx-auto px-2.5 sm:px-4 lg:px-6 h-15 sm:h-16 flex items-center justify-between gap-2 sm:gap-3 lg:gap-4">
@@ -421,13 +355,13 @@ export const Navbar = () => {
                 {isSearchOpen ? <X className="w-4 h-4" /> : <Search className="w-4 h-4" />}
               </button>
 
-              {/* Desktop Downward Search Input Bar (sm: and up only - opens directly below search button) */}
+              {/* Downward Search Input Bar (Responsive on Mobile, Tablet & Desktop) */}
               {isSearchOpen && (
                 <form
                   onSubmit={handleSearchSubmit}
-                  className="hidden sm:flex absolute left-1/2 -translate-x-1/2 top-full mt-2.5 items-center h-10 sm:h-10.5 w-72 sm:w-84 md:w-96 rounded-2xl border border-amber-500 bg-white dark:bg-slate-900 shadow-2xl overflow-hidden z-50 transition-all duration-200 animate-in fade-in slide-in-from-top-2 px-1.5"
+                  className="fixed top-[64px] left-2.5 right-2.5 sm:absolute sm:top-full sm:mt-2.5 sm:left-1/2 sm:-translate-x-1/2 sm:right-auto flex items-center h-11 sm:h-10.5 sm:w-84 md:w-96 rounded-2xl border border-amber-500 bg-white dark:bg-slate-900 shadow-2xl overflow-hidden z-50 transition-all duration-200 animate-in fade-in slide-in-from-top-2 px-2"
                 >
-                  <Search className="w-4 h-4 text-amber-500 ml-2 shrink-0 pointer-events-none" />
+                  <Search className="w-4 h-4 text-amber-500 ml-1 sm:ml-1.5 shrink-0 pointer-events-none" />
                   <input
                     ref={searchInputRef}
                     type="text"
@@ -462,7 +396,7 @@ export const Navbar = () => {
                   <button
                     type="button"
                     onClick={handleCloseSearch}
-                    className="h-7 px-2.5 text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors shrink-0 cursor-pointer border-l border-slate-200 dark:border-slate-800"
+                    className="h-7 px-2.5 text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors shrink-0 cursor-pointer border-l border-slate-200 dark:border-slate-800 text-xs font-semibold"
                     title="Close search"
                     aria-label="Close search"
                   >
@@ -474,7 +408,7 @@ export const Navbar = () => {
               {/* Live Instant Search Dropdown (Displays automatically without pressing Enter) */}
               {isSearchOpen && !isDropdownDismissed && searchQuery.trim().length > 0 && (
                 <div
-                  className="fixed top-[62px] left-2.5 right-2.5 sm:absolute sm:top-[calc(100%+56px)] sm:left-1/2 sm:-translate-x-1/2 sm:right-auto w-auto sm:w-84 md:w-96 max-h-[75vh] sm:max-h-[480px] flex flex-col bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl z-[60] sm:z-50 overflow-hidden animate-in fade-in slide-in-from-top-1 duration-150"
+                  className="fixed top-[118px] left-2.5 right-2.5 sm:absolute sm:top-[calc(100%+56px)] sm:left-1/2 sm:-translate-x-1/2 sm:right-auto w-auto sm:w-84 md:w-96 max-h-[70vh] sm:max-h-[480px] flex flex-col bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl z-[60] sm:z-50 overflow-hidden animate-in fade-in slide-in-from-top-1 duration-150"
                   role="listbox"
                   aria-label="Search results"
                 >
